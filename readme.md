@@ -49,6 +49,6 @@ python3 conflict_detector.py
 
 ## Saída
 
-Os resultados serão armazenados no arquivo answers.csv
+Os resultados serão armazenados no arquivo response.csv
 
 
