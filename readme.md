@@ -44,11 +44,11 @@ pip install -r requirements.txt
 ## Execucao
 
 ```
-python3 conflict_detector.py
+python3 -m src.conflict_detector --provider groq   # ou gemini / ollama
 ```
 
 ## Saída
 
-Os resultados serão armazenados no arquivo response.csv
+Os resultados serão armazenados em `results/<provider>_response.csv`
 
 

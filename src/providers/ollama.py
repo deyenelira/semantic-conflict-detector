@@ -8,7 +8,7 @@ client = OpenAI(
 MODEL = "codellama:7b-instruct"  # mudar para: "codellama:70b-instruct"
 
 def ask(prompt):
-    print("Asking prompt to OpenAI...")
+    print("Asking prompt to Ollama...")
     response = client.chat.completions.create(
         model=MODEL,
         messages=[

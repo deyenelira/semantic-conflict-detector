@@ -1,0 +1,75 @@
+id,prompt,response
+c01_porcentagem_fracao,prompt_intencao_estado,"SIM
+
+1. INTENÇÃO:
+- LEFT alterou o contrato da função `obter_desconto` para retornar uma fração decimal (0 a 1 em vez de 0 a 100) e ajustou `preco_final` de acordo.
+- RIGHT introduziu a função `preco_frete`, calculando o frete com desconto sob a premissa de que `obter_desconto` retorna uma porcentagem (0 a 100).
+
+2. ESTADO:
+- Valor retornado por `obter_desconto(cliente)` (lido por `preco_final` e `preco_frete`).
+- Valor retornado por `preco_final(produto, cliente)`.
+- Valor retornado por `preco_frete(frete, cliente)`.
+
+3. TABELA:
+| Elemento | BASE | LEFT | RIGHT | MERGE |
+| :--- | :--- | :--- | :--- | :--- |
+| `obter_desconto(vip)` | `15` | `0.15` | `15` | `0.15` |
+| `preco_final(100, vip)` | `85.0` | `85.0` | `85.0` | `85.0` |
+| `preco_frete(100, vip)` | Não existe | Não existe | `85.0` | `99.85` |
+
+4. CRITÉRIO:
+- Há conflito pelo critério (b): o comportamento de `preco_frete` introduzido em RIGHT (conceder 15% de desconto no frete) difere de BASE e não foi preservado em MERGE (onde aplica apenas 0,15% de desconto devido à divisão redundante por 100 após a alteração de escala feita em LEFT)."
+c01_porcentagem_fracao,prompt_one_shot_cleantext,"SIM
+
+1. INTENÇÃO:
+- LEFT: alterou a escala do retorno de `obter_desconto` de porcentagem (0 a 100) para fração decimal (0 a 1), ajustando `preco_final` de acordo.
+- RIGHT: adicionou a função `preco_frete`, calculando o frete com o desconto obtido de `obter_desconto` sob a premissa de que o valor retornado é uma porcentagem (0 a 100).
+
+2. ESTADO:
+- Valor retornado por `obter_desconto(cliente)` (para `cliente.vip = True`).
+- Valor retornado por `preco_frete(frete, cliente)` (para `cliente.vip = True`).
+
+3. TABELA:
+
+| Elemento | BASE | LEFT | RIGHT | MERGE |
+| :--- | :--- | :--- | :--- | :--- |
+| Retorno de `obter_desconto(vip)` | `15` (porcentagem) | `0.15` (fração) | `15` (porcentagem) | `0.15` (fração) |
+| Retorno de `preco_frete(100, vip)` | Inexistente | Inexistente | `85.0` (15% de desconto) | `99.85` (0,15% de desconto) |
+
+4. CRITÉRIO:
+Há conflito pelo critério (b): o valor/comportamento esperado por RIGHT para `preco_frete` (que deveria aplicar 15% de desconto, resultando em 85 para um frete de 100) não foi preservado no MERGE (que divide a fração `0.15` por 100, aplicando apenas 0,15% de desconto e resultando em 99.85)."
+c01_porcentagem_fracao,prompt_teste_mental,"SIM
+
+### PASSO 1 - ENTENDER O CÓDIGO
+- **BASE:** O código calcula o preço com desconto para um produto com base no status VIP do cliente. A função `obter_desconto` retorna a porcentagem de desconto como um número de 0 a 100 (ex.: `15`), e `preco_final` divide esse valor por 100 para aplicar o desconto.
+- **LEFT:** O desenvolvedor alterou o contrato da função `obter_desconto` para retornar um valor fracionário entre 0 e 1 (ex.: `0.15` em vez de `15`). Para manter a consistência, atualizou `preco_final` para não mais dividir por 100.
+- **RIGHT:** O desenvolvedor manteve a convenção de porcentagem (0 a 100) e adicionou uma nova função `preco_frete`, que também aplica o desconto de `obter_desconto` dividindo por 100.
+- **MERGE:** O merge combinou a versão de `obter_desconto` e `preco_final` de LEFT (onde `obter_desconto` retorna fração 0 a 1) com a função `preco_frete` de RIGHT (que divide o retorno de `obter_desconto` por 100).
+
+---
+
+### PASSO 2 - IDENTIFICAR AS VARIÁVEIS DE ESTADO
+- **Valor de retorno de `obter_desconto(cliente)`:** Modificado por LEFT (passou a retornar fração de 0 a 1 em vez de 0 a 100); consumido por `preco_frete` introduzido em RIGHT.
+- **Valor de retorno de `preco_frete(frete, cliente)`:** Introduzido em RIGHT assumindo o contrato de BASE, mas afetado pela mudança na unidade do retorno de `obter_desconto(cliente)` feita em LEFT.
+
+---
+
+### PASSO 3 - SIMULAR UM CASO QUE SATISFAÇA OS CRITÉRIOS
+Considere um cliente VIP (`cliente.vip = True`) e um frete no valor de `frete = 100.0`.
+Avaliamos a variável de retorno de `preco_frete(100.0, cliente)`:
+
+- **BASE:** Função não existe.
+- **LEFT:** Função não existe.
+- **RIGHT:** 
+  - `obter_desconto(cliente)` retorna `15`.
+  - `preco_frete` calcula: `100.0 * (1 - 15 / 100) = 100.0 * 0.85 = 85.0`.
+- **MERGE:** 
+  - `obter_desconto(cliente)` retorna `0.15`.
+  - `preco_frete` calcula: `100.0 * (1 - 0.15 / 100) = 100.0 * (1 - 0.0015) = 100.0 * 0.9985 = 99.85`.
+
+Critério atendido: **(b)** — O valor retornado por `preco_frete` em MER (`99.85`) difere drasticamente do esperado e implementado em RIGHT (`85.0`).
+
+---
+
+### PASSO 4 - CONCLUIR
+Houve um conflito semântico. A intenção do desenvolvedor de **RIGHT** foi violada: em vez de conceder 15% de desconto no frete para clientes VIP, o código resultante no MERGE concede apenas 0,15% de desconto, devido à alteração no contrato de retorno de `obter_desconto` introduzida por LEFT."
