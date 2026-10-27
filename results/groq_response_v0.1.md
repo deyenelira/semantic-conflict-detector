@@ -1,0 +1,498 @@
+# Groq Responses (v0.1)
+
+## c01_porcentagem_fracao
+
+**Prompt:** `prompt_intencao_estado`
+
+### Resposta
+
+**SIM**
+
+---
+
+### 1. INTENÇÃO  
+
+- **LEFT**: mudar a API de `obter_desconto` para devolver a fração do desconto (0 → 1) e adaptar `preco_final` ao novo formato (removendo a divisão por 100).  
+- **RIGHT**: manter a API original (desconto em porcentagem) e acrescentar a função `preco_frete`, que calcula o preço do frete usando `obter_desconto` da forma “porcentagem / 100”.
+
+---
+
+### 2. ESTADO  
+
+| Elemento de estado | Onde é lido / escrito | Observação de ordem |
+|--------------------|-----------------------|----------------------|
+| **cliente.vip** (leitura) | `obter_desconto` (ambos) | – |
+| **valor retornado por `obter_desconto`** (denominado **D**) | Lido por `preco_final` e por `preco_frete` (quando existe) | `preco_final` e `preco_frete` são chamadas independentemente. |
+| **produto.preco** (leitura) | `preco_final` | – |
+| **frete** (leitura) | `preco_frete` | – |
+| **valor retornado por `preco_final`** (preço do produto) | – | – |
+| **valor retornado por `preco_frete`** (preço do frete) | – | – |
+
+---
+
+### 3. TABELA DE VALORES/COMPORTAMENTO  
+
+Considerando um cliente **VIP** (`cliente.vip == True`) e valores genéricos `produto.preco = P`, `frete = F`.
+
+| Elemento | BASE | LEFT | RIGHT | MERGE |
+|----------|------|------|-------|-------|
+| **D** (valor de `obter_desconto`) | 15 (porcentagem) | 0.15 (fração) | 15 (porcentagem) | 0.15 (fração) |
+| **preco_final** (`P * (1 - D/100)` ou `P * (1 - D)`) | `P * 0.85` | `P * 0.85` | `P * 0.85` | `P * 0.85` |
+| **preco_frete** (`F * (1 - D/100)`) | — (não existe) | — | `F * 0.85` | `F * (1 - 0.15/100) = F * 0.9985` |
+
+*(Para cliente não‑VIP, D = 0 em todos os casos e todos os preços permanecem iguais a P ou F.)*
+
+---
+
+### 4. CRITÉRIO DE CONFLITO  
+
+- **Regra (a)** não se aplica (nenhum elemento permanece igual em BASE = LEFT = RIGHT e muda no MERGE).  
+- **Regra (b)** aplica‑se ao elemento **D**:  
+  - Em **LEFT**, `D` difere de **BASE** (15 → 0.15).  
+  - O **MERGE** preserva o valor alterado por LEFT (0.15) e **não** preserva o valor que RIGHT esperava (15).  
+  - Consequentemente, o comportamento de `preco_frete` no MERGE (`F * 0.9985`) difere do comportamento desejado por RIGHT (`F * 0.85`).  
+
+Portanto, há um **conflito semântico** introduzido pelo merge.
+
+---
+
+---
+
+## c01_porcentagem_fracao
+
+**Prompt:** `prompt_one_shot_cleantext`
+
+### Resposta
+
+SIM  
+
+**1. INTENÇÃO**  
+- **LEFT:** Alterar a representação do desconto de *porcentagem* (0‑100) para *fração* (0‑1) e adaptar o cálculo do preço final para usar a fração.  
+- **RIGHT:** Manter a representação original (porcentagem) e acrescentar a nova função `preco_frete`, que calcula o preço do frete usando o mesmo desconto em porcentagem (divide por 100).  
+
+**2. ESTADO**  
+Elementos de estado lidos ou escritos pelos trechos alterados:
+
+| Elemento de estado | Onde é lido / escrito | Observações de ordem |
+|--------------------|-----------------------|----------------------|
+| Valor retornado por `obter_desconto(cliente)` (desconto) | - `preco_final` (LEFT e RIGHT) <br> - `preco_frete` (RIGHT e MERGE) | Cada função lê o valor imediatamente antes de usá‑lo no cálculo. |
+| Valor retornado por `preco_frete(frete, cliente)` (resultado do cálculo) | Apenas na própria função (RIGHT e MERGE) | Não há dependência de outras chamadas. |
+| Valor retornado por `preco_final(produto, cliente)` (resultado do cálculo) | Apenas na própria função (BASE, LEFT, RIGHT, MERGE) | Não interfere em `preco_frete`. |
+
+**3. TABELA** (exemplo com `cliente.vip == True` e `frete = 100`)  
+
+| Elemento X | BASE | LEFT | RIGHT | MERGE |
+|------------|------|------|-------|-------|
+| `obter_desconto(vip)` | `15` (porcentagem) | `0.15` (fração) | `15` (porcentagem) | `0.15` (fração) |
+| `preco_final` (produto preço = 100) | `85.0` | `85.0` | `85.0` | `85.0` (mantém intenção LEFT) |
+| `preco_frete` (frete = 100) | *não existe* | *não existe* | `85.0` (`100 * (1 - 15/100)`) | `99.85` (`100 * (1 - 0.15/100)`) |
+
+**4. CRITÉRIO**  
+
+- **Condição (a):** Não há elemento que seja idêntico em BASE, LEFT e RIGHT e diferente em MERGE (BASE não possuía `preco_frete`).  
+- **Condição (b):**  
+  - O elemento `preco_frete` difere entre RIGHT (85.0) e MERGE (99.85).  
+  - RIGHT esperava que `obter_desconto` retornasse um **valor em porcentagem** e que o cálculo fizesse a divisão por 100.  
+  - MERGE preservou a alteração de LEFT (desconto como fração) e **não preservou** o valor esperado por RIGHT; o cálculo de `preco_frete` agora aplica a divisão por 100 a uma fração, produzindo um resultado incorreto.  
+
+Portanto, há um conflito semântico introduzido pelo merge.
+
+---
+
+## c01_porcentagem_fracao
+
+**Prompt:** `prompt_teste_mental`
+
+### Resposta
+
+SIM  
+
+**PASSO 1 – ENTENDER O CÓDIGO**  
+
+| Versão | O que o código faz | Mudanças em relação à BASE | Intenção provável do desenvolvedor |
+|--------|-------------------|----------------------------|-------------------------------------|
+| **BASE** | `obter_desconto` devolve o desconto como **porcentagem** (0 – 100). `preco_final` aplica esse desconto dividindo por 100. `formatar_preco` só formata. | — | Fornecer desconto em % e usá‑lo nos cálculos de preço. |
+| **LEFT** | `obter_desconto` passa a devolver o desconto como **fração** (0 – 1). `preco_final` foi ajustado para não dividir por 100. | Alterou a API de `obter_desconto` (porcentagem → fração) e adaptou `preco_final` ao novo retorno. | Tornar o desconto mais “Pythonic”, usar frações ao invés de porcentagens. |
+| **RIGHT** | Mantém a API original (porcentagem). Adiciona a nova função `preco_frete` que calcula o preço do frete usando a mesma lógica de desconto que `preco_final`. | Nenhuma mudança na lógica existente; só acrescentou `preco_frete`. | Permitir cálculo do frete com desconto, reutilizando a lógica de porcentagem. |
+| **MERGE** | Herdou de **LEFT** a definição de `obter_desconto` (fração) e `preco_final`. Também incorporou de **RIGHT** a nova função `preco_frete`, que ainda **divide o desconto por 100** como se fosse porcentagem. | O merge combinou as mudanças: primeiro aplicou as alterações de LEFT (sobrescrevendo `obter_desconto`), depois adicionou a função nova de RIGHT sem adaptar seu corpo ao novo retorno de `obter_desconto`. | O código resultante tenta usar a nova API (fração) mas a função recém‑adicionada ainda assume a antiga API (porcentagem). |
+
+**PASSO 2 – IDENTIFICAR AS VARIÁVEIS DE ESTADO**  
+
+1. **desconto** – valor retornado por `obter_desconto(cliente)`.  
+2. **preco_final** – resultado de `produto.preco * (1 - desconto)` (ou com divisão).  
+3. **preco_frete** – resultado de `frete * (1 - desconto / 100)` (na BASE/RIGHT) ou `frete * (1 - desconto)` (na LEFT).  
+4. **texto_formatado** – saída de `formatar_preco`, mas não afeta lógica de cálculo.  
+
+**PASSO 3 – SIMULAR UM CASO QUE SATISFAÇA OS CRITÉRIOS**  
+
+Escolha de dados de teste:
+
+```python
+class Cliente:
+    def __init__(self, vip): self.vip = vip
+
+class Produto:
+    def __init__(self, preco): self.preco = preco
+
+cliente = Cliente(vip=True)      # cliente VIP
+produto = Produto(preco=100.0)   # preço do produto
+frete   = 20.0                    # valor do frete
+```
+
+| Versão | desconto (valor) | preco_final | preco_frete (se existir) |
+|--------|------------------|-------------|--------------------------|
+| **BASE** | 15               | 100 * (1‑15/100) = **85.0** | 20 * (1‑15/100) = **17.0** |
+| **LEFT** | 0.15             | 100 * (1‑0.15)   = **85.0** | *não existe* |
+| **RIGHT**| 15               | 85.0 | 20 * (1‑15/100) = **17.0** |
+| **MERGE**| 0.15 (fração)    | 85.0 | 20 * (1‑0.15/100) = **19.97** (≈20 × 0.9985) |
+
+Observações:  
+
+- A **variável `desconto`** tem o mesmo efeito sobre `preco_final` nas três primeiras versões (85.0), mas **em MERGE** o valor continua 0.15 (fração).  
+- **`preco_frete`** em MERGE (**19.97**) difere de **BASE** e **RIGHT** (**17.0**) e ainda difere do que LEFT pretendia (não existia, mas, se fosse adaptado, seria `20 * (1‑0.15) = 17.0`).  
+
+Isso satisfaz o critério **(b)**: a mudança introduzida por RIGHT (cálculo de frete usando porcentagem) não foi preservada corretamente no MERGE, porque o MERGE manteve a implementação de LEFT para `obter_desconto` (fração) mas não ajustou `preco_frete` para a nova semântica.
+
+**PASSO 4 – CONCLUIR**  
+
+- **Conflito semântico detectado**: o MERGE quebra a lógica de `preco_frete`.  
+- **Desenvolvedor afetado**: o autor da mudança em **RIGHT**, que queria que o frete fosse descontado da mesma forma que o preço do produto (usando porcentagem). No código mergeado, o frete recebe quase nenhum desconto, violando a intenção original.  
+
+Portanto, há um conflito semântico introduzido pelo merge.
+
+---
+
+## n02_nova_view_sem_duplicar
+
+**Prompt:** `prompt_intencao_estado`
+
+### Resposta
+
+NAO  
+
+**1. INTENÇÃO**  
+- **LEFT**: Quer registrar, além do log, um incremento de métrica por página acessada (`metricas.incrementar`).  
+- **RIGHT**: Quer expor uma nova rota `view_categoria` que também registra o acesso (log) e renderiza a página de categoria.  
+
+**2. ESTADO**  
+
+| Elemento de estado (segundo a definição) | Onde é lido/escrito | Ordem de execução relevante |
+|---|---|---|
+| **Log** (`log.info`) | `registrar_acesso` (escreve) | Sempre antes de qualquer outra ação em `registrar_acesso`. |
+| **Contador de métrica** (`metricas.incrementar("acessos:{pagina}")`) | `registrar_acesso` (escreve) | Executado após o log, somente na versão LEFT (e na MERGE). |
+| **Chave de métrica** (`"acessos:{pagina}"`) | Construída a partir do parâmetro `pagina`. | Valor depende de `pagina` passado. |
+| **Resposta HTTP** (objeto retornado por `render`) | `view_produto` e `view_categoria` (escrevem) | Cada view chama `registrar_acesso` (que tem efeitos colaterais) e depois retorna `render`. |
+| **Parâmetro `request.user`** | Lido por `registrar_acesso`. | Lido antes de registrar log/métrica. |
+| **Parâmetro `produto_id` / `slug`** | Lido para montar a string de página e o dicionário do template. | Lido antes de chamar `render`. |
+
+**3. TABELA DE VALORES/COMPORTAMENTO**  
+
+| Elemento de estado | BASE | LEFT | RIGHT | MERGE |
+|---|---|---|---|---|
+| **Log** (`log.info`) | Escrita do log com `"usuario acessou pagina"` | Idêntico ao BASE (escreve log) | Idêntico ao BASE | Idêntico ao BASE |
+| **Métrica** (`metricas.incrementar`) | **não** incrementa nenhuma métrica | Incrementa a métrica `"acessos:{pagina}"` | **não** incrementa | Incrementa a métrica `"acessos:{pagina}"` (preserva LEFT) |
+| **Função `view_categoria`** | Não existe | Não existe | Existe (registra acesso + render) | Existe (mesmo código de RIGHT) |
+| **Função `view_produto`** | Registra acesso (log) + render | Registra acesso (log + métrica) + render | Registra acesso (log) + render | Registra acesso (log + métrica) + render |
+
+**4. CRITÉRIO DE CONFLITO**  
+
+- **(a) X igual em BASE, LEFT e RIGHT, mas diferente em MERGE:**  
+  - Não há nenhum elemento que satisfaça isso. O único elemento que difere entre LEFT e BASE (a métrica) permanece igual ao LEFT na MERGE.  
+
+- **(b) X em LEFT (ou RIGHT) difere de BASE e o MERGE não preserva a mudança:**  
+  - **Métrica:** LEFT difere de BASE (incrementa). O MERGE **preserva** esse incremento.  
+  - **`view_categoria`:** RIGHT difere de BASE (adiciona nova função). O MERGE **preserva** a presença da função.  
+
+Nenhum dos critérios de conflito é atendido.
+
+**5. Conclusão**  
+A mesclagem combina ambas as intenções sem sobrescrever ou remover nenhuma das alterações semânticas introduzidas pelos pais. Portanto, **não há conflito semântico**.
+
+---
+
+## n02_nova_view_sem_duplicar
+
+**Prompt:** `prompt_one_shot_cleantext`
+
+### Resposta
+
+NAO
+
+**1. INTENÇÃO**  
+- **LEFT**: além de registrar o acesso no log, contabilizar a visualização incrementando a métrica `acessos:{pagina}`.  
+- **RIGHT**: adicionar uma nova view `view_categoria` que também registra o acesso (apenas no log, como antes).
+
+**2. ESTADO**  
+- **Elemento de estado**: o serviço `metricas` (contador associado à chave `acessos:{pagina}`) escrito pela chamada `metricas.incrementar(...)` dentro de `registrar_acesso`.  
+- Não há outros elementos de estado compartilhados entre as alterações (o log continua sendo escrito em ambas as ramas e não há conflito de ordem de chamadas).
+
+**3. TABELA**
+
+| Elemento de Estado                     | BASE (sem alteração) | LEFT (alteração) | RIGHT (sem alteração) | MERGE (resultado) |
+|----------------------------------------|----------------------|------------------|-----------------------|-------------------|
+| `metricas.incrementar("acessos:{pagina}")` | não escrito          | escrito          | não escrito           | escrito (preserva LEFT) |
+
+**4. CRITÉRIO**  
+- **Caso (a)**: não há elemento cujo valor seja igual em BASE, LEFT e RIGHT e diferente em MERGE.  
+- **Caso (b)**: o único elemento que LEFT mudou em relação a BASE (`metricas.incrementar`) **é preservado** no MERGE.  
+
+Portanto, não há conflito semântico introduzido pelo merge.
+
+---
+
+## n02_nova_view_sem_duplicar
+
+**Prompt:** `prompt_teste_mental`
+
+### Resposta
+
+NAO  
+
+**PASSO 1 – ENTENDER O CÓDIGO**  
+
+- **BASE**  
+  - `registrar_acesso(usuario, pagina)`: grava no log a mensagem “\<usuario> acessou \<pagina>”.  
+  - `view_produto(request, produto_id)`: chama `registrar_acesso` para a URL do produto e devolve a página *produto.html* com o `produto_id` no contexto.  
+  - *Intenção*: apenas registrar a visita no log.
+
+- **LEFT** (diferença em relação à BASE)  
+  - `registrar_acesso` agora, além do log, incrementa uma métrica: `metricas.incrementar(f"acessos:{pagina}")`.  
+  - *Intenção*: contabilizar, via serviço de métricas, **todas** as visitas registradas (produtos, categorias, etc.).
+
+- **RIGHT** (diferença em relação à BASE)  
+  - Adiciona a função `view_categoria(request, slug)`, que registra o acesso da mesma forma que `view_produto` e devolve *categoria.html*.  
+  - *Intenção*: oferecer uma página de categoria, mantendo o mesmo registro de acesso que já existia para produtos.
+
+- **MERGE**  
+  - Mantém a alteração de LEFT (contagem de métricas dentro de `registrar_acesso`).  
+  - Mantém a adição de RIGHT (`view_categoria`).  
+  - Não há conflitos de texto; o merge simplesmente uniu as duas mudanças, resultando em:  
+    1. `registrar_acesso` com log + incremento de métrica.  
+    2. `view_produto` (como antes).  
+    3. `view_categoria` (nova funcionalidade) que, ao ser chamada, também dispara o incremento de métrica porque usa a mesma `registrar_acesso`.
+
+**PASSO 2 – IDENTIFICAR AS VARIÁVEIS DE ESTADO**  
+
+- `log` (objeto de logger) – recebe a mensagem de log.  
+- `metricas` (serviço externo) – seu contador interno para a chave `"acessos:<pagina>"`.  
+- Parâmetros de entrada das funções (`usuario`, `pagina`, `request`, `produto_id`, `slug`).  
+- Valor retornado por `render` (objeto/response HTTP).  
+- Qualquer estado interno de `metricas` (por ex., contagem armazenada).  
+
+**PASSO 3 – SIMULAR UM CASO QUE SATISFAÇA OS CRITÉRIOS**  
+
+Vamos focar na métrica, pois é a única variável cujo valor muda entre as versões.
+
+| Versão | Ação executada | Métrica `"acessos:/produto/42"` | Métrica `"acessos:/categoria/eletronicos"` |
+|--------|----------------|--------------------------------|--------------------------------------------|
+| **BASE** | `view_produto(request, 42)` | **não existe** (não há chamada a `metricas.incrementar`) | **não existe** |
+| **LEFT** | `view_produto(request, 42)` | **1** (incrementada) | **não existe** |
+| **RIGHT** | `view_produto(request, 42)` | **não existe** | **não existe** |
+| **MERGE** | `view_produto(request, 42)` | **1** (incrementada) | **não existe** |
+| **MERGE** | `view_categoria(request, "eletronicos")` | **não existe** | **1** (incrementada) |
+
+Critério (b) pede: “X em LEFT (ou RIGHT) difere de BASE, e o MERGE não preserva o valor desse pai.”  
+
+- Para a métrica `"acessos:/produto/42"`:  
+  - BASE: ausente (0).  
+  - LEFT: 1.  
+  - MERGE: 1 → **preserva** a mudança de LEFT.  
+
+- Para a métrica `"acessos:/categoria/eletronicos"`:  
+  - BASE: ausente (0).  
+  - RIGHT: não há chamada (0).  
+  - MERGE: 1 (por causa da adição de `view_categoria` + contagem).  
+  - Aqui o MERGE introduz **um novo valor** que não existia nem em BASE nem em RIGHT. Isso corresponde ao critério (a): “X tem o mesmo valor em BASE, LEFT e RIGHT, mas diferente em MERGE.”  
+  - De fato, em BASE, LEFT e RIGHT a métrica para a categoria permanece 0; no MERGE ela passa a 1.
+
+Portanto, a variável de estado “contagem de acessos da categoria” satisfaz (a).
+
+**PASSO 4 – CONCLUIR**  
+
+A métrica de acesso para a URL de categoria mudou apenas no MERGE, porque a função nova (`view_categoria`) passou a usar `registrar_acesso`, que foi modificado por LEFT para incluir a contagem.  
+
+- **Desenvolvedor que adicionou a métrica (LEFT)** pretendia que **todas** as chamadas a `registrar_acesso` fossem contabilizadas, inclusive as que ainda não existiam.  
+- **Desenvolvedor que adicionou a página de categoria (RIGHT)** não tinha intenção explícita quanto à métrica; seu foco era apenas disponibilizar a página.  
+
+Como a mudança de LEFT não contradiz a intenção de RIGHT (não há indicação de que RIGHT queria evitar a contagem), não há violação de intenção. O comportamento adicional (contar acessos de categoria) é uma consequência legítima da combinação das duas mudanças, mas não configura um *conflito semântico* no sentido de “um dos desenvolvedores teve sua intenção violada”.
+
+**Resultado:** não há conflito semântico.  
+
+---
+
+---
+
+## c05_lista_vira_gerador
+
+**Prompt:** `prompt_intencao_estado`
+
+### Resposta
+
+SIM  
+
+**1. INTENÇÃO**  
+- **LEFT**: substituiu a lista por um *generator* em `listar_pedidos` para evitar carregar todos os pedidos em memória de uma vez.  
+- **RIGHT**: adicionou a função `gerar_extrato`, que percorre o resultado de `listar_pedidos` **duas vezes** (primeiro para calcular `total`, depois para montar `linhas`), assumindo que o retorno seja reutilizável (uma lista).
+
+---
+
+**2. ESTADO**  
+
+| Função / trecho | Elementos de estado lidos/escritos | Observações de ordem de execução |
+|-----------------|------------------------------------|-----------------------------------|
+| `listar_pedidos` (BASE) | `db.pedidos()` → lista de objetos `Pedido` (lista materializada) | Produz uma lista que pode ser percorrida quantas vezes for necessário. |
+| `listar_pedidos` (LEFT) | `db.pedidos()` → **generator** de objetos `Pedido` | O generator é consumido na primeira iteração; iterações subsequentes não produzem elementos. |
+| `reenviar_notas` (qualquer branch) | Lê cada `pedido` do iterável retornado por `listar_pedidos`; chama `enviar_nota_fiscal(pedido)` (efeito colateral) | Consome o iterável **uma única vez**. |
+| `gerar_extrato` (RIGHT / MERGE) | 1. Lê cada `pedido` do iterável retornado por `listar_pedidos` para `sum(p.valor for p in pedidos)` → consome o iterável.<br>2. Lê novamente o mesmo iterável para `linhas = [f"{p.id}: R$ {p.valor:.2f}" for p in pedidos]` → depende de o iterável ainda conter os itens.<br>3. Escreve o dicionário `{"total": total, "linhas": linhas}`. | Requer que o iterável seja **re‑iterável** (ex.: lista). Se for generator, a segunda leitura produz zero elementos. |
+
+---
+
+**3. TABELA DE VALORES/COMPORTAMENTO**
+
+| Elemento de estado **X** | BASE | LEFT | RIGHT | MERGE |
+|--------------------------|------|------|-------|-------|
+| Tipo de retorno de `listar_pedidos` | **lista** (re‑iterável) | **generator** (consumível) | **lista** | **generator** |
+| Possibilidade de **segunda iteração** sobre o retorno de `listar_pedidos` (usado em `gerar_extrato`) | Sim – devolve os mesmos pedidos | Não – já está consumido | Sim – devolve os mesmos pedidos | Não – já está consumido |
+| Resultado `linhas` de `gerar_extrato` | – (função inexistente) | – | Lista de strings com todos os pedidos | **lista vazia** (por causa do generator) |
+| Resultado `total` de `gerar_extrato` | – | – | Soma correta de todos os valores | **soma correta** (primeira iteração ainda funciona) |
+
+---
+
+**4. CRITÉRIO DE CONFLITO**  
+
+- **Condição (a)**: O elemento “possibilidade de segunda iteração” (ou, de forma prática, o conteúdo de `linhas`) tem o mesmo valor em **BASE** (lista → linhas presentes) e em **RIGHT** (lista → linhas presentes), mas é **diferente em MERGE** (generator → linhas vazias).  
+- **Condição (b)**: LEFT modificou o comportamento de `listar_pedidos` (de lista para generator). RIGHT esperava o comportamento original (lista reutilizável). O MERGE mantém a mudança de LEFT e, ao mesmo tempo, incorpora a nova funcionalidade de RIGHT, mas **não preserva o efeito desejado por RIGHT** (gerar extrato completo).
+
+Portanto, há um **conflito semântico**.
+
+---  
+
+**Conclusão:** O merge introduz um comportamento inesperado para `gerar_extrato` (linhas vazias), violando a intenção da adição feita em RIGHT. Logo, o merge **não** pode ser considerado semanticamente correto.
+
+---
+
+## c05_lista_vira_gerador
+
+**Prompt:** `prompt_one_shot_cleantext`
+
+### Resposta
+
+**SIM**
+
+---
+
+### 1. INTENÇÃO  
+- **LEFT**: substituir a lista retornada por `listar_pedidos` por um *generator* para evitar carregar todos os pedidos em memória de uma só vez.  
+- **RIGHT**: acrescentar a função `gerar_extrato`, que utiliza `listar_pedidos` para obter todos os pedidos, calcula o total (somando os valores) e gera uma lista de linhas formatadas. O código assume que o resultado de `listar_pedidos` pode ser percorrido **mais de uma vez** (primeiro para o `sum`, depois para a list‑comprehension).
+
+---
+
+### 2. ESTADO  
+| Trecho / variável | Tipo de elemento de estado | Operações realizadas |
+|-------------------|----------------------------|----------------------|
+| `listar_pedidos` (retorno) | **Elemento de coleção** – a sequência de pedidos retornada (lista **ou** generator) | Lida (itera) nas funções que a consomem. |
+| `pedidos` (variável local em `gerar_extrato`) | **Variável local** que referencia a sequência retornada por `listar_pedidos` | Lida duas vezes: `sum(p.valor for p in pedidos)` e `for p in pedidos` na list‑comprehension. |
+| `total` (resultado da soma) | **Variável local** que recebe o valor calculado | Escrita a partir da primeira iteração sobre `pedidos`. |
+| `linhas` (lista de strings) | **Variável local** que recebe a list‑comprehension | Escrita a partir da **segunda** iteração sobre `pedidos`. |
+
+*Observação:* o comportamento de um generator muda após a primeira iteração – ele “consome” os itens – enquanto uma lista pode ser percorrida quantas vezes for necessário.
+
+---
+
+### 3. TABELA DE VALORES / COMPORTAMENTO
+
+| Elemento X                | BASE (sem `gerar_extrato`) | LEFT | RIGHT | MERGE |
+|---------------------------|----------------------------|------|-------|-------|
+| **Tipo de retorno de `listar_pedidos`** | Lista (`list`) | Generator (`generator`) | Lista (`list`) | Generator (`generator`) |
+| **Primeira iteração sobre `pedidos` (cálculo de `total`)** | — (não existe) | Consome todos os pedidos → `total` correto | Consome todos os pedidos → `total` correto | Consome todos os pedidos → `total` correto |
+| **Segunda iteração sobre `pedidos` (criação de `linhas`)** | — | Não ocorre (não há `gerar_extrato`) | Consome novamente a **mesma lista**, produz linhas corretas | **Não há itens restantes** (generator já esgotado) → `linhas` vazia |
+| **Resultado de `gerar_extrato`** | — | — (função inexistente) | `{"total": soma, "linhas": [...]}` – correto | `{"total": soma, "linhas": []}` – **incorreto** (perde linhas) |
+
+---
+
+### 4. CRITÉRIO DE CONFLITO  
+
+- **X = `pedidos` (coleção retornada por `listar_pedidos`)**  
+  - Em **BASE** (sem `gerar_extrato`) o elemento não é usado.  
+  - Em **RIGHT** o elemento é uma **lista**; ambas as leituras (`sum` e list‑comprehension) obtêm o mesmo conjunto de pedidos → comportamento esperado.  
+  - No **MERGE** o elemento é um **generator**; após a primeira leitura ele fica esgotado, portanto a segunda leitura produz **nenhum** pedido.  
+
+Isso corresponde ao caso (a) da definição de conflito semântico:  
+> “X é igual em BASE, LEFT e RIGHT, mas diferente em MERGE.”  
+
+O **valor/comportamento de `linhas`** (parte do estado visível ao usuário) difere entre RIGHT (linhas corretas) e MERGE (linhas vazias).  
+
+Portanto, há um conflito semântico introduzido pelo merge.  
+
+--- 
+
+**Resultado:** **SIM** – o merge gera um comportamento diferente (incorreto) em relação ao que o desenvolvedor da branch RIGHT pretendia.
+
+---
+
+## c05_lista_vira_gerador
+
+**Prompt:** `prompt_teste_mental`
+
+### Resposta
+
+SIM  
+
+**PASSO 1 – ENTENDER O CÓDIGO**  
+
+| Versão | O que o código faz | O que foi mudado | Intenção provável do desenvolvedor |
+|--------|-------------------|------------------|-------------------------------------|
+| **BASE** | `listar_pedidos` devolve **lista** de pedidos filtrados por `cliente_id`. <br>`reenviar_notas` itera sobre essa lista e chama `enviar_nota_fiscal` para cada pedido. | – | Quer listar os pedidos de um cliente e reenviar as notas fiscais de todos eles. |
+| **LEFT** | `listar_pedidos` passa a devolver **gerador** (`(p for …)`) em vez de lista, para **não carregar tudo em memória**. <br>`reenviar_notas` continua igual, consumindo o gerador uma única vez. | Troca de lista por gerador. | Reduz o uso de memória; ainda funciona porque o iterador é consumido apenas uma vez. |
+| **RIGHT** | Mantém o comportamento original da BASE. <br>Adiciona `gerar_extrato`, que: <br>1. Obtém `pedidos = listar_pedidos(cliente_id)`;<br>2. Calcula `total = sum(p.valor for p in pedidos)`;<br>3. Cria `linhas = [f"{p.id}: R$ {p.valor:.2f}" for p in pedidos]`; <br>4. Retorna `{"total": total, "linhas": linhas}`. | Nova função que **itera duas vezes** sobre o resultado de `listar_pedidos`. | Fornecer um extrato (total e linhas detalhadas) do cliente. |
+| **MERGE** | Combina as mudanças: mantém o gerador de **LEFT** e inclui a nova função de **RIGHT** sem alterações. | O gerador foi preservado; a nova função foi inserida. | O código agora tenta ser “leve” (gerador) e ao mesmo tempo oferecer o extrato. |
+
+**Como o MERGE executa as operações**  
+1. `listar_pedidos` devolve um gerador.  
+2. `gerar_extrato` chama `listar_pedidos` uma vez, guarda o gerador em `pedidos`.  
+3. `total = sum(p.valor for p in pedidos)` consome **todo** o gerador.  
+4. A segunda compreensão de lista tenta iterar novamente sobre `pedidos`, mas o gerador já está esgotado, produzindo uma lista vazia.  
+
+---
+
+**PASSO 2 – IDENTIFICAR AS VARIÁVEIS DE ESTADO**  
+
+| Variável / elemento | Onde aparece | Por que importa |
+|---------------------|--------------|-----------------|
+| `pedidos` (resultado de `listar_pedidos`) | `reenviar_notas`, `gerar_extrato` | É um iterável que pode ser consumido; seu estado muda após a primeira iteração. |
+| `p` (pedido individual) | Laços `for` e compreensões | Cada iteração lê do iterável. |
+| `total` | `gerar_extrato` | Valor numérico acumulado. |
+| `linhas` | `gerar_extrato` | Lista de strings que depende da segunda passagem sobre `pedidos`. |
+| Retorno de `gerar_extrato` (`{"total":…, "linhas":…}`) | Saída da função | Estado observado externamente. |
+| `enviar_nota_fiscal(pedido)` | `reenviar_notas` | Efeito colateral (envio). |
+
+---
+
+**PASSO 3 – SIMULAR UM CASO QUE SATISFAÇA OS CRITÉRIOS**  
+
+*Suposição de entrada:*  
+`db.pedidos()` devolve a lista `[Pedido(id=1, valor=10.0, cliente_id=42), Pedido(id=2, valor=20.0, cliente_id=42)]`.
+
+| Versão | Execução de `gerar_extrato(42)` (ou equivalente) | Valor de `total` | Valor de `linhas` |
+|--------|-----------------------------------------------|------------------|-------------------|
+| **BASE** | `listar_pedidos` → **lista**; `sum` percorre lista; segunda passagem percorre a mesma lista novamente. | `30.0` | `["1: R$ 10.00", "2: R$ 20.00"]` |
+| **RIGHT** | Idêntico à BASE (porque `listar_pedidos` ainda retorna lista). | `30.0` | `["1: R$ 10.00", "2: R$ 20.00"]` |
+| **LEFT** | Não há `gerar_extrato`, portanto não há conflito a observar. (A única função usa o gerador uma única vez, funciona.) | – | – |
+| **MERGE** | `listar_pedidos` → **gerador**. <br>1ª iteração (`sum`) consome todo o gerador → `total = 30.0`. <br>2ª iteração (`linhas`) tenta percorrer o mesmo gerador, mas ele já está esgotado → `linhas = []`. | `30.0` (mesmo que BASE/RIGHT) | **`[]`** (diferente de BASE/RIGHT) |
+
+**Critério satisfeito:** (a) – a variável `linhas` tem o **mesmo valor** em BASE, LEFT (não existe) e RIGHT, mas **valor diferente** em MERGE. Ou, de forma equivalente, (b) – `linhas` em RIGHT difere de BASE (não, são iguais) mas o MERGE **não preserva** o valor esperado (vazio). Portanto há comportamento semântico alterado.
+
+---
+
+**PASSO 4 – CONCLUIR**  
+
+Encontramos um caso (gerador + dupla iteração) em que o resultado da função `gerar_extrato` diverge do esperado: a lista `linhas` fica vazia.  
+
+- **Desenvolvedor que teve a intenção violada:** o autor da mudança **RIGHT** (que adicionou `gerar_extrato`). Ele esperava que `listar_pedidos` fosse iterável múltiplas vezes, produzindo tanto o total quanto as linhas.  
+- **Intenção de LEFT** (economia de memória) foi preservada, mas entra em conflito com a nova funcionalidade.  
+
+**Conclusão:** o merge introduz um **conflito semântico**.  
+
+**Resultado final:** **SIM** – há conflito semântico; a intenção do desenvolvedor que adicionou `gerar_extrato` foi quebrada.
+
+---
