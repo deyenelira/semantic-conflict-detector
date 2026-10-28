@@ -1,0 +1,798 @@
+id,prompt,response,status
+storm__ad2be678__KafkaSpoutConfig#toString,prompt_intencao_estado,,"error: APIStatusError: Error code: 413 - {'error': {'message': 'Request too large for model `openai/gpt-oss-120b` in organization `org_01m608ak44em0vyp73n4rbctf8` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Requested 18197, please reduce your message size and try again. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}"
+storm__ad2be678__KafkaSpoutConfig#toString,prompt_one_shot_cleantext,,"error: APIStatusError: Error code: 413 - {'error': {'message': 'Request too large for model `openai/gpt-oss-120b` in organization `org_01m608ak44em0vyp73n4rbctf8` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Requested 18290, please reduce your message size and try again. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}"
+storm__ad2be678__KafkaSpoutConfig#toString,prompt_teste_mental,,"error: APIStatusError: Error code: 413 - {'error': {'message': 'Request too large for model `openai/gpt-oss-120b` in organization `org_01m608ak44em0vyp73n4rbctf8` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Requested 18323, please reduce your message size and try again. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}"
+storm__bd1f5c54__KafkaSpout#emitTupleIfNotEmitted,prompt_intencao_estado,,"error: APIStatusError: Error code: 413 - {'error': {'message': 'Request too large for model `openai/gpt-oss-120b` in organization `org_01m608ak44em0vyp73n4rbctf8` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Requested 11364, please reduce your message size and try again. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}"
+storm__bd1f5c54__KafkaSpout#emitTupleIfNotEmitted,prompt_one_shot_cleantext,,"error: APIStatusError: Error code: 413 - {'error': {'message': 'Request too large for model `openai/gpt-oss-120b` in organization `org_01m608ak44em0vyp73n4rbctf8` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Requested 12515, please reduce your message size and try again. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}"
+storm__bd1f5c54__KafkaSpout#emitTupleIfNotEmitted,prompt_teste_mental,,"error: APIStatusError: Error code: 413 - {'error': {'message': 'Request too large for model `openai/gpt-oss-120b` in organization `org_01m608ak44em0vyp73n4rbctf8` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Requested 12019, please reduce your message size and try again. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}"
+antlr4__69ff2669__Python2Target#python2Keywords,prompt_intencao_estado,"**NAO**
+
+---
+
+### 1. INTENÇÃO
+- **LEFT**: acrescentar a palavra‑chave `""return""` à lista de palavras reservadas do Python 2, de modo que o gerador evite usar `return` como nome de símbolo de gramática.
+- **RIGHT**: acrescentar a palavra‑chave `""del""` à mesma lista, de modo que o gerador evite usar `del` como nome de símbolo de gramática.
+
+### 2. ESTADO
+| Elemento de estado | Onde é lido/escrito | Comentário |
+|--------------------|----------------------|------------|
+| `python2Keywords` (array literal) | Lido na inicialização da classe `Python2Target`; escrito apenas na definição da classe (texto). | Não é alterado em tempo de execução. |
+| `badWords` (campo `Set<String>`) | Escrito em `addBadWords()` (popula o set com `python2Keywords` + `""rule""` e `""parserRule""`). | O conteúdo do set depende das palavras presentes em `python2Keywords`. |
+| `addBadWords()` | Escreve em `badWords` (chamadas a `badWords.addAll(...)`). | Cada branch adiciona diferentes palavras ao set. |
+| `visibleGrammarSymbolCausesIssueInGeneratedCode(GrammarAST)` | Lê `badWords` (via `getBadWords().contains(...)`). | Determina se um identificador da gramática causa conflito. |
+
+A ordem de execução relevante:
+1. Construtor `Python2Target` → `getBadWords()` (quando necessário) → `addBadWords()` (preenche `badWords`).
+2. Métodos de geração de código leem `badWords`.
+
+### 3. TABELA DE VALORES / COMPORTAMENTO
+
+| Elemento de estado | **BASE** (sem modificações) | **LEFT** | **RIGHT** | **MERGE** |
+|--------------------|-----------------------------|----------|-----------|-----------|
+| Presença de `""return""` em `badWords` | **false** (não está em `python2Keywords`) | **true** (adicionado via `python2Keywords`) | **false** | **true** (preservado) |
+| Presença de `""del""` em `badWords` | **false** | **false** | **true** | **true** (preservado) |
+| Outros elementos (`""delattr""`, `""reversed""`, etc.) | **true** (todos presentes) | **true** (não alterados) | **true** (não alterados) | **true** (não alterados) |
+
+### 4. CRITÉRIO DE CONFLITO
+- **Condição (a)**: nenhum elemento X tem o mesmo valor em BASE, LEFT e RIGHT e valor diferente em MERGE.  
+- **Condição (b)**: para `""return""` e `""del""` cada um difere de BASE em apenas um dos lados, e o MERGE **preserva** essas diferenças (inclui ambos).  
+
+Portanto, nenhuma das condições de conflito é satisfeita.
+
+### 5. CONCLUSÃO
+O merge resultante mantém ambas as adições desejadas (`""return""` e `""del""`). Não há sobrescrita ou perda de alterações individuais, logo não há conflito semântico introduzido pelo merge.",ok
+antlr4__69ff2669__Python2Target#python2Keywords,prompt_one_shot_cleantext,"NAO  
+
+**1. INTENÇÃO**  
+- **LEFT**: adicionar a palavra‑chave `return` à lista de palavras reservadas do Python 2, para que o gerador evite gerar símbolos que colidam com esse identificador.  
+- **RIGHT**: adicionar a palavra‑chave `del` à mesma lista, evitando colisões com o identificador `del`.
+
+**2. ESTADO**  
+Os trechos modificados leem/escrevem o mesmo elemento de estado:
+
+| Elemento de estado | Onde é acessado / modificado |
+|--------------------|------------------------------|
+| `python2Keywords` (array estático usado por `addBadWords()`) | LEFT insere `""return""`; RIGHT insere `""del""` (antes de `""delattr""`). |
+| `badWords` (instância de `Set<String>` preenchida em `addBadWords()`) | O método `addBadWords()` copia todo o conteúdo de `python2Keywords` para `badWords`. Assim, qualquer alteração em `python2Keywords` altera o conteúdo final de `badWords`. |
+
+Não há outros elementos de estado envolvidos (nenhum campo, variável local, retorno, exceção etc.).
+
+**3. TABELA**  
+
+| Elemento X                     | BASE                               | LEFT                               | RIGHT                              | MERGE                              |
+|--------------------------------|------------------------------------|------------------------------------|------------------------------------|------------------------------------|
+| `""return""` presente em `python2Keywords` | **não** (ausente) | **sim** (adicionado) | **não** (ausente) | **sim** (presente) |
+| `""del""` presente em `python2Keywords`    | **não** (ausente) | **não** (ausente) | **sim** (adicionado) | **sim** (presente) |
+| Conteúdo de `badWords` (após `addBadWords()`) | contém apenas as palavras originais da lista e `""rule""`, `""parserRule""` | contém todas as originais **+** `""return""` | contém todas as originais **+** `""del""` | contém todas as originais **+** `""return""` **+** `""del""` |
+
+**4. CRITÉRIO**  
+
+- **(a)** Não existe nenhum X que seja idêntico em BASE, LEFT e RIGHT e diferente em MERGE.  
+- **(b)** Para os X que mudaram em LEFT (`""return""`) ou RIGHT (`""del""`), o MERGE **preserva** ambas as mudanças (cada uma aparece no MERGE).  
+
+Portanto, nenhum dos critérios de conflito semântico foi satisfeito.
+
+**5. CONCLUSÃO**  
+As duas alterações são **aditivas** e independentes; o merge mantém ambas as intenções dos desenvolvedores. Não há conflito semântico.",ok
+antlr4__69ff2669__Python2Target#python2Keywords,prompt_teste_mental,"SIM  
+**PASSO 1 – ENTENDER O CÓDIGO**  
+
+- **BASE**: `Python2Target` mantém um `Set<String> badWords` que contém palavras que não podem ser usadas como símbolos de gramática porque colidem com palavras‑chave do Python 2. O método `addBadWords()` preenche o conjunto com todos os elementos do array estático `python2Keywords` e depois adiciona `""rule""` e `""parserRule""`. Quando o gerador precisa saber se um símbolo pode causar problema, ele consulta `badWords` via `visibleGrammarSymbolCausesIssueInGeneratedCode`.  
+
+- **LEFT**: altera o array `python2Keywords` inserindo a palavra `""return""` entre `""repr""` e `""reversed""`.  
+  - **Intenção**: impedir que o nome `return` seja usado como símbolo de gramática (evitar gerar código Python inválido).  
+
+- **RIGHT**: altera o mesmo array, inserindo a palavra `""del""` antes de `""delattr""`.  
+  - **Intenção**: impedir que o nome `del` seja usado como símbolo de gramática (também inválido em Python 2).  
+
+- **MERGE**: incorpora **ambas** as modificações – o array contém tanto `""del""` quanto `""return""` (além das demais palavras). Assim, ao chamar `addBadWords()`, o conjunto `badWords` será preenchido com todas as palavras‑chave originais **e** com as duas novas palavras. A ordem de inserção no `HashSet` é irrelevante; o comportamento lógico (pertencer ou não ao conjunto) permanece o mesmo que em cada ramificação individual.
+
+---
+
+**PASSO 2 – IDENTIFICAR AS VARIÁVEIS DE ESTADO**  
+
+1. `python2Keywords` – array estático (estado de classe).  
+2. `badWords` – `Set<String>` de instância (estado mutável que recebe o conteúdo de `python2Keywords`).  
+3. Qualquer valor retornado por `visibleGrammarSymbolCausesIssueInGeneratedCode` (dependente de `badWords`).  
+
+---
+
+**PASSO 3 – SIMULAR UM CASO QUE SATISFAÇA OS CRITÉRIOS**  
+
+| Entrada (nome do símbolo) | `badWords` em BASE | `badWords` em LEFT | `badWords` em RIGHT | `badWords` em MERGE |
+|---------------------------|--------------------|--------------------|---------------------|----------------------|
+| `""return""`                | não contém         | contém (`true`)    | não contém          | contém (`true`)      |
+| `""del""`                   | não contém         | não contém         | contém (`true`)     | contém (`true`)      |
+| `""foo""` (qualquer outro)  | não contém         | não contém         | não contém          | não contém           |
+
+- **Critério (a)** – nenhuma variável tem o mesmo valor em BASE, LEFT e RIGHT e valor diferente em MERGE. Não ocorre.  
+- **Critério (b)** – para `""return""` e `""del""` a versão que introduziu a palavra (`LEFT` ou `RIGHT`) modifica `badWords`. O MERGE **preserva** exatamente essa modificação (não a descarta). Portanto, não há perda de valor esperado.  
+
+Nenhuma outra variável de estado (por exemplo, a ordem do `HashSet`) influencia o comportamento observável do método que usa `badWords`.
+
+---
+
+**PASSO 4 – CONCLUIR**  
+
+Não há entrada e nenhuma variável de estado que satisfaça (a) ou (b) de forma a violar a intenção de um dos desenvolvedores. Cada mudança era aditiva e o merge manteve ambas as adições. Assim, não há conflito semântico introduzido pelo merge.
+
+**Resultado:** **NAO** há conflito semântico.",ok
+antlr4__69ff2669__Python3Target#python3Keywords,prompt_intencao_estado,"**SIM** – Não há conflito semântico introduzido pelo merge.
+
+---
+
+### 1. INTENÇÃO  
+- **LEFT**: adicionou a palavra‑chave `""return""` à lista de palavras reservadas do Python 3, de modo que identificadores com esse nome passem a ser tratados como “bad words”.  
+- **RIGHT**: adicionou a palavra‑chave `""del""` à mesma lista, para que também seja considerada “bad word”.
+
+### 2. ESTADO  
+Elemento de estado relevante (conforme a definição): **`badWords` (instância de `Set<String>`)** – coleção preenchida em `addBadWords()` a partir do array `python3Keywords`.  
+
+- **BASE** → `badWords` contém exatamente as palavras do array original.  
+- **LEFT** → `badWords` contém todas as palavras de **BASE** **mais** `""return""`.  
+- **RIGHT** → `badWords` contém todas as palavras de **BASE** **mais** `""del""`.  
+- **MERGE** → `badWords` contém todas as palavras de **BASE** **mais** `""return""` **e** `""del""`.
+
+Nenhum outro elemento de estado (variáveis, campos, arquivos, etc.) é afetado pelos trechos modificados.
+
+### 3. TABELA
+
+| Elemento de Estado | BASE (valor) | LEFT (valor) | RIGHT (valor) | MERGE (valor) |
+|--------------------|--------------|--------------|---------------|---------------|
+| `badWords` (conteúdo) | palavras originais (ex.: `""range"", ""raw_input"", …`) | originais **+** `""return""` | originais **+** `""del""` | originais **+** `""return""` **+** `""del""` |
+
+### 4. CRITÉRIO DE CONFLITO  
+
+- **(a)** Não existe nenhum X que seja idêntico em BASE, LEFT e RIGHT e diferente em MERGE.  
+- **(b)**  
+  - Para `""return""`: X difere entre BASE e LEFT; MERGE **preserva** a adição (contém `""return""`).  
+  - Para `""del""`: X difere entre BASE e RIGHT; MERGE **preserva** a adição (contém `""del""`).  
+
+Assim, nenhuma das condições de conflito é satisfeita.
+
+### 5. CONCLUSÃO  
+As alterações são *aditivas* e independentes; o merge manteve ambas as adições ao conjunto `badWords`. Portanto, **não há conflito semântico**.",ok
+antlr4__69ff2669__Python3Target#python3Keywords,prompt_one_shot_cleantext,,"error: RateLimitError: Error code: 429 - {'error': {'message': 'Rate limit reached for model `openai/gpt-oss-120b` in organization `org_01m608ak44em0vyp73n4rbctf8` service tier `on_demand` on tokens per minute (TPM): Limit 8000, Used 4012, Requested 4195. Please try again in 1.5525s. Need more tokens? Upgrade to Dev Tier today at https://console.groq.com/settings/billing', 'type': 'tokens', 'code': 'rate_limit_exceeded'}}"
+antlr4__69ff2669__Python3Target#python3Keywords,prompt_teste_mental,"**NAO**
+
+---
+
+## PASSO 1 – ENTENDER O CÓDIGO  
+
+**BASE**  
+`Python3Target` descreve o *target* de geração de código para Python 3.  
+A parte relevante aqui é o método `addBadWords()`, que preenche o `Set<String> badWords` com:
+
+* todas as palavras‑chave da linguagem Python (array estático `python3Keywords`);
+* os nomes reservados adicionais `""rule""` e `""parserRule""`.
+
+O objetivo é impedir que símbolos da gramática tenham nomes que colidam com palavras reservadas do Python gerado.
+
+**LEFT**  
+Alterou a lista `python3Keywords` substituindo a sequência  
+
+```
+""repr"", ""reversed"", ""round""
+```  
+
+por  
+
+```
+""repr"", ""return"", ""reversed"", ""round""
+```  
+
+ou seja, **adicionou a palavra‑chave `""return""`** ao conjunto de palavras proibidas.  
+Intenção: evitar que o gerador crie identificadores chamados `return`, que já são reservados em Python 3.
+
+**RIGHT**  
+Alterou a mesma lista, inserindo a palavra‑chave `""del""` antes de `""delattr""`:
+
+```
+""del"", ""delattr"", ""dict"", ...
+```  
+
+ou seja, **adicionou a palavra‑chave `""del""`** ao conjunto de palavras proibidas.  
+Intenção: impedir que o gerador use `del` como nome de símbolo.
+
+**MERGE**  
+O merge combinou as duas modificações, resultando em ambas as palavras‑chave adicionadas:
+
+* `""del""` aparece na primeira parte da lista (como em RIGHT);
+* `""return""` aparece na segunda parte da lista (como em LEFT).
+
+A ordem de execução não muda a semântica, porque o método `addBadWords()` simplesmente insere todas as strings num `HashSet`, cuja ordem de iteração é irrelevante.
+
+---
+
+## PASSO 2 – IDENTIFICAR AS VARIÁVEIS DE ESTADO  
+
+1. **`python3Keywords`** – array estático (campo de classe).  
+2. **`badWords`** – campo de instância `Set<String>` (HashSet).  
+3. **Resultado de `badWords.contains(x)`** – valor booleano que pode ser usado por outros métodos para decidir se um símbolo é permitido.  
+
+Esses são os únicos elementos cujo valor pode mudar entre as versões.
+
+---
+
+## PASSO 3 – SIMULAR UM CASO QUE SATISFAÇA OS CRITÉRIOS  
+
+### Caso A – palavra `""return""`  
+
+| Versão | `badWords.contains(""return"")` |
+|--------|------------------------------|
+| BASE   | **false** (não está na lista) |
+| LEFT   | **true**  (LEFT adicionou `""return""`) |
+| RIGHT  | **false** (RIGHT não tocou nessa palavra) |
+| MERGE  | **true**  (MERGE manteve a inserção de LEFT) |
+
+Critério (b) é satisfeito: LEFT difere de BASE e MERGE preserva o valor `true`. Não há violação da intenção de LEFT; a mudança de LEFT foi mantida.
+
+### Caso B – palavra `""del""`  
+
+| Versão | `badWords.contains(""del"")` |
+|--------|---------------------------|
+| BASE   | **false** |
+| LEFT   | **false** |
+| RIGHT  | **true**  (RIGHT inseriu `""del""`) |
+| MERGE  | **true**  (MERGE manteve a inserção de RIGHT) |
+
+Novamente o critério (b) se aplica, mas a intenção de RIGHT também foi preservada.
+
+### Outros possíveis estados  
+
+* Qualquer outra palavra‑chave presente em `python3Keywords` tem o mesmo valor (`true`) em todas as versões.  
+* O próprio `badWords` (o conjunto) contém **todos** os elementos de `python3Keywords` + `""rule""` + `""parserRule""`. Em BASE, LEFT, RIGHT e MERGE o conjunto difere apenas pela presença de `""return""` e/ou `""del""`, exatamente como as modificações individuais pretendiam.
+
+Nenhum cenário encontrado gera um valor **diferente** em MERGE em relação ao que a versão que introduziu a mudança desejava preservar.
+
+---
+
+## PASSO 4 – CONCLUIR  
+
+Não foi encontrado nenhum estado de variável que viole a intenção de um dos desenvolvedores:
+
+* LEFT queria que `""return""` fosse tratado como palavra‑reservada – MERGE **preserva** isso.  
+* RIGHT queria que `""del""` fosse tratado como palavra‑reservada – MERGE **preserva** isso.  
+
+As duas alterações são **aditivas** e independentes; o `HashSet` elimina qualquer preocupação com a ordem de inserção.  
+
+**Conclusão:** não há conflito semântico introduzido pelo merge.",ok
+cloud-slang__20bac30d__SlangImpl#getAllEventTypes,prompt_intencao_estado,"**NAO**
+
+---
+
+### 1. INTENÇÃO  
+- **LEFT:** O desenvolvedor quer que o `SlangImpl` publique o novo evento **`EVENT_TASK_START`** durante a execução.  
+- **RIGHT:** O desenvolvedor quer substituir os quatro eventos de *async‑loop* pelos três eventos de controle de ramificação **`EVENT_SPLIT_BRANCHES`**, **`EVENT_JOIN_BRANCHES_START`** e **`EVENT_JOIN_BRANCHES_END`**.  
+
+### 2. ESTADO  
+Elemento de estado analisado: o **`Set<String> eventTypes`** que contém os nomes dos eventos que o `SlangImpl` subscreve.  
+Cada constante de evento adicionada ou removida representa um elemento de estado (presença/ausência no conjunto).
+
+### 3. TABELA DE VALORES/COMPORTAMENTO  
+
+| Elemento de estado                               | BASE | LEFT | RIGHT | MERGE |
+|--------------------------------------------------|------|------|-------|-------|
+| `EVENT_TASK_START`                               | ausente | presente | ausente | presente |
+| `EVENT_ASYNC_LOOP_EXPRESSION_START`              | presente | presente | ausente | ausente |
+| `EVENT_ASYNC_LOOP_EXPRESSION_END`                | presente | presente | ausente | ausente |
+| `EVENT_ASYNC_LOOP_OUTPUT_START`                  | presente | presente | ausente | ausente |
+| `EVENT_ASYNC_LOOP_OUTPUT_END`                    | presente | presente | ausente | ausente |
+| `EVENT_SPLIT_BRANCHES`                           | ausente | ausente | presente | presente |
+| `EVENT_JOIN_BRANCHES_START`                      | ausente | ausente | presente | presente |
+| `EVENT_JOIN_BRANCHES_END`                        | ausente | ausente | presente | presente |
+
+*(“presente” = a constante foi adicionada ao `Set`; “ausente” = não foi adicionada.)*
+
+### 4. CRITÉRIO DE CONFLITO  
+
+- **(a) Igual em BASE | LEFT | RIGHT e diferente em MERGE?**  
+  Não há nenhum elemento que permaneça igual nas três versões e mude apenas no merge.
+
+- **(b) Diferença em LEFT (ou RIGHT) em relação ao BASE que o MERGE não preserva?**  
+  - `EVENT_TASK_START` – diferença introduzida por LEFT; MERGE **preserva** (presente).  
+  - Eventos *async‑loop* – diferença introduzida por RIGHT (removidos); MERGE **preserva** (removidos).  
+  - Eventos *split/join* – diferença introduzida por RIGHT; MERGE **preserva** (presentes).
+
+Nenhum dos elementos de estado violou o critério (b).
+
+### 5. CONCLUSÃO  
+O merge combina corretamente as duas intenções: adiciona `EVENT_TASK_START` e, ao mesmo tempo, substitui os eventos de *async‑loop* pelos novos eventos de controle de ramificação. Não há perda de alterações nem introdução de comportamento inesperado.  
+
+**Portanto, não há conflito semântico.**",ok
+cloud-slang__20bac30d__SlangImpl#getAllEventTypes,prompt_one_shot_cleantext,"**NAO**
+
+---
+
+### 1. INTENÇÃO  
+- **LEFT:** Quer registrar um novo tipo de evento – `EVENT_TASK_START` – para que consumidores possam ser notificados quando uma tarefa inicia.  
+- **RIGHT:** Quer remover os eventos de *async loop* (`EVENT_ASYNC_LOOP_*`) e, em seu lugar, introduzir eventos de controle de ramificação – `EVENT_SPLIT_BRANCHES`, `EVENT_JOIN_BRANCHES_START` e `EVENT_JOIN_BRANCHES_END`.
+
+### 2. ESTADO  
+| Elemento de estado (conforme definição) | Onde é lido/escrito |
+|------------------------------------------|----------------------|
+| **`eventTypes` (objeto `Set<String>` local ao método `getAllEventTypes`)** – a coleção em que os nomes dos eventos são adicionados e que depois é retornada. | Cada chamada a `eventTypes.add(...)` escrita por LEFT, RIGHT ou MERGE modifica a mesma coleção. |
+| **Valor retornado por `getAllEventTypes()`** – a referência ao conjunto final. | Lido por quem chamar `getAllEventTypes()` (ex.: `subscribeOnEvents`). |
+
+Não há outros elementos de estado envolvidos (nenhuma variável estática, campo de instância, arquivo, etc.).
+
+### 3. TABELA DE VALORES/COMPORTAMENTO  
+
+| Elemento (evento)                                 | BASE | LEFT | RIGHT | MERGE |
+|---------------------------------------------------|------|------|-------|-------|
+| `EVENT_TASK_START`                               | **ausente** | **presente** (adicionado) | ausente | **presente** |
+| `EVENT_ASYNC_LOOP_EXPRESSION_START`              | **presente** | presente | **ausente** (removido) | **ausente** |
+| `EVENT_ASYNC_LOOP_EXPRESSION_END`                | **presente** | presente | **ausente** | **ausente** |
+| `EVENT_ASYNC_LOOP_OUTPUT_START`                  | **presente** | presente | **ausente** | **ausente** |
+| `EVENT_ASYNC_LOOP_OUTPUT_END`                    | **presente** | presente | **ausente** | **ausente** |
+| `EVENT_SPLIT_BRANCHES`                           | **ausente** | ausente | **presente** (adicionado) | **presente** |
+| `EVENT_JOIN_BRANCHES_START`                      | **ausente** | ausente | **presente** | **presente** |
+| `EVENT_JOIN_BRANCHES_END`                        | **ausente** | ausente | **presente** | **presente** |
+
+*Todos os demais eventos listados na implementação original permanecem inalterados em todas as versões.*
+
+### 4. CRITÉRIO DE CONFLITO  
+
+- **Condição (a):** Não existe nenhum elemento cujo valor seja idêntico em BASE, LEFT e RIGHT e diferente em MERGE.  
+- **Condição (b):**  
+  - Para `EVENT_TASK_START`, LEFT difere de BASE (adicionado) e MERGE **preserva** essa adição.  
+  - Para os eventos `EVENT_SPLIT_BRANCHES`, `EVENT_JOIN_BRANCHES_START` e `EVENT_JOIN_BRANCHES_END`, RIGHT difere de BASE (adicionados) e MERGE **preserva** essas adições.  
+  - Para os eventos async‑loop, RIGHT difere de BASE (removidos) e MERGE também os remove, portanto o valor de RIGHT é preservado.  
+
+Nenhum dos valores alterados por LEFT ou RIGHT foi perdido ou sobrescrito de forma incompatível no merge.
+
+### 5. CONCLUSÃO  
+O merge combina corretamente as duas intenções: mantém a adição de `EVENT_TASK_START` introduzida por LEFT e incorpora as substituições de eventos async‑loop por split/join introduzidas por RIGHT. Não há violação dos critérios de conflito semântico.
+
+**Resposta:** **NAO**.",ok
+cloud-slang__20bac30d__SlangImpl#getAllEventTypes,prompt_teste_mental,"SIM  
+
+**PASSO 1 – ENTENDER O CÓDIGO**  
+
+- **BASE**: `getAllEventTypes()` cria um `HashSet<String>` chamado `eventTypes` e insere nele todas as constantes de evento que o motor de execução do CloudSlang pode disparar (por exemplo `EVENT_ACTION_START`, `EVENT_ASYNC_LOOP_EXPRESSION_START`, etc.). O método devolve esse conjunto.  
+- **LEFT**: adiciona a linha `eventTypes.add(ScoreLangConstants.EVENT_TASK_START);` logo após a inserção de `EVENT_ACTION_ERROR`. O desenvolvedor que escreveu *LEFT* queria que, além dos eventos já existentes, o evento **TASK_START** fosse publicado, permitindo que consumidores de eventos saibam quando uma tarefa inicia.  
+- **RIGHT**: remove quatro linhas que adicionavam os eventos de *async loop* (`EVENT_ASYNC_LOOP_EXPRESSION_START/END`, `EVENT_ASYNC_LOOP_OUTPUT_START/END`) e as substitui por três novos eventos (`EVENT_SPLIT_BRANCHES`, `EVENT_JOIN_BRANCHES_START`, `EVENT_JOIN_BRANCHES_END`). O autor de *RIGHT* pretendia substituir o conjunto de eventos relativos a loops assíncronos por um conjunto que representa o início/fim de ramificações “split/join”.  
+- **MERGE**: combina as duas mudanças – mantém a adição de `EVENT_TASK_START` (de *LEFT*) e aplica a substituição dos eventos de async‑loop pelos eventos de split/join (de *RIGHT*). A ordem das chamadas `eventTypes.add(...)` no código resultante é:  
+  1. os eventos originais até `EVENT_ACTION_ERROR` (como em BASE);  
+  2. **EVENT_TASK_START** (LEFT);  
+  3. os eventos de input/output e branch (BASE);  
+  4. **EVENT_SPLIT_BRANCHES**, **EVENT_JOIN_BRANCHES_START**, **EVENT_JOIN_BRANCHES_END** (RIGHT);  
+  5. `EVENT_EXECUTION_FINISHED`.  
+
+Não há conflito textual; o `git merge` resolveu tudo automaticamente.
+
+---
+
+**PASSO 2 – IDENTIFICAR AS VARIÁVEIS DE ESTADO**  
+
+A única variável de estado que pode ser observada dentro do método é o **conjunto `eventTypes`** (instância de `Set<String>`).  
+
+Outros objetos (`logger`, `compiler`, etc.) não são modificados aqui, portanto não influenciam o comportamento do método.
+
+---
+
+**PASSO 3 – SIMULAR UM CASO QUE SATISFAÇA OS CRITÉRIOS**  
+
+| Versão | Operações sobre `eventTypes` (resumidas) | Conteúdo final de `eventTypes` (relevante) |
+|--------|-------------------------------------------|-------------------------------------------|
+| **BASE** | adiciona … `EVENT_ASYNC_LOOP_EXPRESSION_START`, `EVENT_ASYNC_LOOP_EXPRESSION_END`, `EVENT_ASYNC_LOOP_OUTPUT_START`, `EVENT_ASYNC_LOOP_OUTPUT_END` | **contém** os 4 eventos de async‑loop |
+| **LEFT** | tudo de BASE **+** `EVENT_TASK_START` | **contém** os 4 eventos de async‑loop **e** `EVENT_TASK_START` |
+| **RIGHT** | tudo de BASE **menos** os 4 eventos de async‑loop **+** `EVENT_SPLIT_BRANCHES`, `EVENT_JOIN_BRANCHES_START`, `EVENT_JOIN_BRANCHES_END` | **não contém** os eventos de async‑loop; contém os 3 eventos de split/join |
+| **MERGE** | tudo de LEFT **+** substituição feita por RIGHT | **não contém** os eventos de async‑loop; contém `EVENT_TASK_START` **e** os 3 eventos de split/join |
+
+**Critério (b) encontrado:**  
+- `eventTypes` em **RIGHT** difere de **BASE** (os 4 eventos de async‑loop foram removidos).  
+- O **MERGE** não preserva esses 4 eventos; portanto o valor de `eventTypes` em MERGE corresponde ao de RIGHT, não ao de LEFT ou BASE.  
+
+Assim, para a variável de estado `eventTypes` temos:
+
+```
+BASE   | LEFT   | RIGHT  | MERGE
+----------------------------------------------
+... async‑loop ... | ... async‑loop + TASK_START | (async‑loop removido) + SPLIT/JOIN | (async‑loop removido) + TASK_START + SPLIT/JOIN
+```
+
+---
+
+**PASSO 4 – CONCLUIR**  
+
+Existe um **conflito semântico** porque a mudança feita em *RIGHT* (remover os eventos de async‑loop) altera o estado observado por quem, em *LEFT*, poderia estar contando com esses eventos. O merge preservou a remoção, portanto o comportamento esperado pelo desenvolvedor de *LEFT* (manter os eventos de async‑loop) foi violado.
+
+- **Desenvolvedor cujo objetivo foi violado:** o autor de *LEFT* (que adicionou `EVENT_TASK_START` sem intenção de eliminar nenhum evento já existente).  
+
+Portanto, a fusão introduz um conflito semântico.",ok
+fitnesse__4d9ba9d2__SlimTableFactory#SlimTableFactory,prompt_intencao_estado,"**NÃO**
+
+---
+
+### 1. INTENÇÃO  
+- **LEFT**: introduziu suporte a tabelas de decisão dinâmicas, adicionando os tipos `""ddt:""` e `""dynamic decision:""` associados à classe `DynamicDecisionTable`.  
+- **RIGHT**: introduziu suporte a tabelas de script escritas com dois‑pontos, adicionando o tipo `""script:""` associado à classe `ScriptTable`.
+
+### 2. ESTADO  
+Elementos de estado que são lidos ou escritos pelos trechos alterados:
+
+| Elemento de estado | Onde é acessado / modificado |
+|--------------------|------------------------------|
+| `tableTypes` (mapa de `String → Class<? extends SlimTable>`) – entrada **""ddt:""** | `addTableType` chamado em **LEFT** (e preservado no MERGE). |
+| `tableTypes` – entrada **""dynamic decision:""** | `addTableType` chamado em **LEFT** (e preservado no MERGE). |
+| `tableTypes` – entrada **""script:""** | `addTableType` chamado em **RIGHT** (e preservado no MERGE). |
+| Todas as demais entradas já existentes (`""dt:""`, `""decision:""`, `""ordered query:""`, …) | Não modificadas por nenhum dos lados. |
+
+A ordem de execução dos `addTableType` é a mesma da inicialização do construtor; cada chamada grava um par chave/valor no mesmo mapa.
+
+### 3. TABELA DE VALORES/COMPORTAMENTO  
+
+| Chave (X)          | BASE (valor) | LEFT (valor)                              | RIGHT (valor)                         | MERGE (valor)                              |
+|--------------------|--------------|-------------------------------------------|---------------------------------------|--------------------------------------------|
+| `""ddt:""`           | **null** (ausente) | `DynamicDecisionTable.class`               | **null** (não alterado)               | `DynamicDecisionTable.class`                |
+| `""dynamic decision:""` | **null** | `DynamicDecisionTable.class`               | **null**                               | `DynamicDecisionTable.class`                |
+| `""script:""`        | **null**     | **null**                                   | `ScriptTable.class`                    | `ScriptTable.class`                         |
+| `""dt:""`            | `DecisionTable.class` | *inalterado* | *inalterado* | `DecisionTable.class` (inalterado) |
+| `""decision:""`      | `DecisionTable.class` | *inalterado* | *inalterado* | `DecisionTable.class` (inalterado) |
+| … (demais chaves existentes) | permanecem iguais em BASE, LEFT, RIGHT e MERGE | | | |
+
+### 4. CRITÉRIO DE CONFLITO  
+
+- **(a)** Não existe nenhuma chave cujo valor seja idêntico em BASE, LEFT e RIGHT e que mude no MERGE.  
+- **(b)** As chaves modificadas por LEFT (`""ddt:""`, `""dynamic decision:""`) têm seus valores preservados no MERGE; idem para a chave modificada por RIGHT (`""script:""`).  
+
+Portanto, nenhum dos critérios de conflito semântico é satisfeito.
+
+### 5. CONSIDERAÇÕES FINAIS  
+As alterações são adições independentes a chaves diferentes do mapa `tableTypes`. Não há remoções, nem sobrescrita de valores existentes, nem mudança na ordem de execução que possa alterar o comportamento do programa. Assim, o merge resultante mantém exatamente o comportamento pretendido por ambos os desenvolvedores.  
+
+**Conclusão:** não há conflito semântico.",ok
+fitnesse__4d9ba9d2__SlimTableFactory#SlimTableFactory,prompt_one_shot_cleantext,"NAO  
+
+**1. INTENÇÃO**  
+- **LEFT:** Introduzir suporte a tabelas de decisão dinâmicas, adicionando os mapeamentos `""ddt:"" → DynamicDecisionTable` e `""dynamic decision:"" → DynamicDecisionTable`.  
+- **RIGHT:** Introduzir suporte a tabelas de script com dois‑pontos, adicionando o mapeamento `""script:"" → ScriptTable`.  
+
+**2. ESTADO**  
+- **Elemento de estado:** `tableTypes` – o `Map<String, Class<? extends SlimTable>>` que armazena os nomes/prefixos de tipos de tabela e a classe correspondente.  
+  - Cada chamada a `addTableType` **escreve** no mesmo mapa, inserindo um novo par chave/valor.  
+  - Não há leitura de valores já existentes que influencie a lógica de inserção (apenas verificação de duplicidade, que falha apenas se a mesma chave já existir).  
+
+**3. TABELA DE VALORES/COMPORTAMENTO**
+
+| Elemento | BASE (valor) | LEFT (valor) | RIGHT (valor) | MERGE (valor) |
+|----------|--------------|--------------|---------------|----------------|
+| `tableTypes` (chave `""ddt:""`) | *não existe* | `DynamicDecisionTable.class` (inserido) | *não existe* | `DynamicDecisionTable.class` (preservado) |
+| `tableTypes` (chave `""dynamic decision:""`) | *não existe* | `DynamicDecisionTable.class` (inserido) | *não existe* | `DynamicDecisionTable.class` (preservado) |
+| `tableTypes` (chave `""script:""`) | *não existe* | *não existe* | `ScriptTable.class` (inserido) | `ScriptTable.class` (preservado) |
+| demais chaves existentes | inalteradas em todos | inalteradas | inalteradas | inalteradas |
+
+**4. CRITÉRIO DE CONFLITO**  
+- Não há nenhum elemento X cujo valor seja **igual em BASE, LEFT e RIGHT** e **diferente em MERGE**.  
+- Não há nenhum elemento X que tenha sido modificado em LEFT (ou RIGHT) e cujo valor não tenha sido preservado no MERGE.  
+- As mudanças de LEFT e RIGHT afetam chaves distintas do mesmo mapa; o MERGE inclui todas as inserções, preservando ambos os conjuntos de alterações.  
+
+**5. CONSIDERAÇÕES ADICIONAIS**  
+- A ordem de inserção em um `HashMap` não influencia o comportamento de busca (`get`), portanto não há efeito colateral semântico devido a diferenças de ordem.  
+- Não há sobrescrita de chaves existentes nem remoção de entradas; logo, as alterações são independentes.  
+
+**Conclusão:** Não há conflito semântico introduzido pelo merge.",ok
+fitnesse__4d9ba9d2__SlimTableFactory#SlimTableFactory,prompt_teste_mental,"NAO  
+
+**PASSO 1 – ENTENDER O CÓDIGO**  
+- **BASE:** `SlimTableFactory` mantém dois mapas (`tableTypes` e `tableTypeArrays`). No construtor padrão ele registra, em `tableTypes`, os prefixos conhecidos (ex.: `""dt:"" → DecisionTable.class`, `""script"" → ScriptTable.class`, etc.). Quando `makeSlimTable` recebe uma tabela, ele obtém o nome da primeira célula, resolve possíveis definições de tipo e procura o prefixo (até `:`) no mapa `tableTypes`. Se encontrar, cria a instância da classe correspondente; caso contrário, devolve um `SlimErrorTable` ou, se não houver `:`, cria uma `DecisionTable` padrão.  
+
+- **LEFT:** acrescenta duas entradas ao mapa:  
+  ```java
+  addTableType(""ddt:"", DynamicDecisionTable.class);
+  addTableType(""dynamic decision:"", DynamicDecisionTable.class);
+  ```  
+  **Intenção:** permitir que tabelas cujo cabeçalho comece com `ddt:` ou `dynamic decision:` sejam tratadas como `DynamicDecisionTable`.  
+
+- **RIGHT:** acrescenta uma entrada ao mapa:  
+  ```java
+  addTableType(""script:"", ScriptTable.class);
+  ```  
+  **Intenção:** fazer com que cabeçalhos como `script:` (com dois‑pontos) também sejam reconhecidos como `ScriptTable`.  
+
+- **MERGE:** combina ambas as adições, preservando a ordem original do construtor e inserindo, na sequência, as quatro linhas novas: as duas de *LEFT* (`ddt:` e `dynamic decision:`) e a de *RIGHT* (`script:`). Não há sobrescrita de nenhuma chave já existente; apenas novos pares chave‑classe são inseridos.
+
+**PASSO 2 – IDENTIFICAR AS VARIÁVEIS DE ESTADO**  
+1. `tableTypes` – `Map<String, Class<? extends SlimTable>>` que armazena as associações prefixo → classe.  
+2. `tableTypeArrays` – `Map<String, String>` (não é alterado pelos diffs).  
+3. O **resultado** de `makeSlimTable` (objeto retornado ou `null` nos casos de definição/comentário).  
+
+**PASSO 3 – SIMULAR UM CASO QUE SATISFAÇA OS CRITÉRIOS**  
+
+| Cenário | Entrada (cabeçalho da tabela) | Valor/Comportamento de `tableTypes` (chave procurada) | Resultado de `makeSlimTable` |
+|---------|-------------------------------|------------------------------------------------------|------------------------------|
+| **A** (cabeçalho `script:`) | `""script:""` | **BASE:** chave `""script:""` não existe → `null` → retorna `SlimErrorTable`.<br>**RIGHT:** chave encontrada → cria `ScriptTable`.<br>**MERGE:** chave encontrada (porque o merge trouxe a adição de RIGHT) → cria `ScriptTable`. |
+| **B** (cabeçalho `ddt:`) | `""ddt:""` | **BASE:** chave `""ddt:""` inexistente → `SlimErrorTable`.<br>**LEFT:** chave encontrada → cria `DynamicDecisionTable`.<br>**MERGE:** chave encontrada (porque o merge trouxe a adição de LEFT) → cria `DynamicDecisionTable`. |
+| **C** (cabeçalho `decision:`) | `""decision:""` | **BASE / LEFT / RIGHT / MERGE:** chave já existente (`DecisionTable.class`) → cria `DecisionTable`. |
+
+Em nenhum dos casos a variável de estado `tableTypes` apresenta um valor diferente em **MERGE** comparado ao que seria esperado em **LEFT** ou **RIGHT** isoladamente. O comportamento de `makeSlimTable` em MERGE replica exatamente o comportamento de cada branch que introduziu a respectiva nova associação. Não há situação em que MERGE perca ou altere um valor que um dos lados pretendia manter.
+
+**PASSO 4 – CONCLUIR**  
+Nenhuma variável de estado satisfaz os critérios (a) ou (b). As mudanças de LEFT e RIGHT são independentes (chaves distintas) e a fusão simplesmente agrega ambas sem sobrescrever ou remover nenhuma associação. Portanto, não há conflito semântico introduzido pelo merge.  
+
+**Resultado:** **NAO** – o merge não gerou conflito semântico.",ok
+fitnesse__4d9ba9d2__SlimTableFactoryTest#setUp,prompt_intencao_estado,"**NAO**
+
+---
+
+### 1. INTENÇÃO  
+- **LEFT:** introduzir novos tipos de tabela “dynamic decision” (`ddt:` e `dynamic decision:`) registrando‑os no `map`.  
+- **RIGHT:** reconhecer o tipo “script:” (com dois‑pontos) no `map` e acrescentar um teste que verifica que a fábrica cria corretamente `ScriptTable` para esse alias.
+
+### 2. ESTADO  
+| Elemento de estado (conforme definição) | Onde é lido/escrito | Ordem de execução relevante |
+|------------------------------------------|---------------------|-----------------------------|
+| `map` – entrada **""ddt:"" → DynamicDecisionTable** | `setUp()` (inicialização) | Inserida antes da iteração em `shouldCreateCorrectSlimTableForTablesType`. |
+| `map` – entrada **""dynamic decision:"" → DynamicDecisionTable** | idem | idem |
+| `map` – entrada **""script:"" → ScriptTable** | `setUp()` (inicialização) | Inserida antes da iteração em `shouldCreateCorrectSlimTableForTablesType`. |
+| **Teste** `assertThatTableTypeImportWorks(""My script table"", ""Script"", ""My script Table"", ScriptTable.class)` | método de teste `checkTableTypeDefineUsedForTable` | Executado após todas as outras verificações de tipos. |
+| **Iteração** sobre `map.entrySet()` no teste `shouldCreateCorrectSlimTableForTablesType` (leitura de cada entrada) | método `assertThatTableTypeCreateSlimTableType` | Cada entrada lida sequencialmente; a ordem de inserção pode influenciar a ordem de iteração, mas não o resultado lógico. |
+
+*Obs.:* Não há outros elementos de estado (variáveis locais, campos, arquivos etc.) que sejam compartilhados entre as alterações.
+
+### 3. TABELA DE VALORES/COMPORTAMENTO
+
+| Elemento de Estado | BASE (valor/comportamento) | LEFT | RIGHT | MERGE |
+|--------------------|----------------------------|------|-------|-------|
+| `map[""ddt:""]` | **não existe** | `DynamicDecisionTable.class` (novo) | **não existe** | `DynamicDecisionTable.class` (preservado) |
+| `map[""dynamic decision:""]` | **não existe** | `DynamicDecisionTable.class` (novo) | **não existe** | `DynamicDecisionTable.class` (preservado) |
+| `map[""script:""]` | **não existe** | **não existe** | `ScriptTable.class` (novo) | `ScriptTable.class` (preservado) |
+| Teste “My script table” | **não existe** | **não existe** | presente e executa `assertThatTableTypeImportWorks` para `ScriptTable` | presente e executa o mesmo teste |
+| Iteração sobre `map` no teste `shouldCreateCorrectSlimTableForTablesType` | percorre as 12 entradas originais | percorre 14 entradas (as duas novas de LEFT) | percorre 13 entradas (a nova de RIGHT) | percorre 15 entradas (todas as novas de LEFT + RIGHT) |
+
+### 4. CRITÉRIO DE CONFLITO  
+
+- **Caso (a):** Não há elemento que permaneça igual em BASE, LEFT e RIGHT e mude em MERGE.  
+- **Caso (b):** Cada mudança feita por LEFT ou RIGHT (adição de entradas no `map` e adição de teste) foi **preservada** no MERGE. Nenhum valor alterado em LEFT ou RIGHT foi sobrescrito ou perdido.
+
+Portanto, o MERGE não introduz nenhum comportamento que difira do desejado por LEFT ou RIGHT.
+
+### 5. CONCLUSÃO  
+Não há conflito semântico entre as alterações de LEFT e RIGHT; o merge combina corretamente ambas as intenções.",ok
+fitnesse__4d9ba9d2__SlimTableFactoryTest#setUp,prompt_one_shot_cleantext,"SIM? Não.  
+**Resposta:** **NÃO** há conflito semântico introduzido pelo merge.
+
+---
+
+## 1. INTENÇÃO  
+
+- **LEFT:** Expande o registro de tipos de tabela adicionando suporte a “dynamic decision tables” – duas novas chaves (`""ddt:""` e `""dynamic decision:""`) apontando para `DynamicDecisionTable.class`.  
+- **RIGHT:** Estende o registro de tipos de tabela para reconhecer a forma `""script:""` (com dois‑pontos) e adiciona um teste que verifica a criação correta de `ScriptTable` quando esse tipo é usado.
+
+## 2. ESTADO  
+
+| Trecho alterado | Elementos de estado lidos/escritos |
+|-----------------|--------------------------------------|
+| `map.put(...)` (adições) | **Elemento de coleção:** o objeto `map` (instância de `HashMap<String, Class<? extends SlimTable>>`). Cada `put` escreve um novo par **chave → classe** no mesmo mapa. |
+| `assertThatTableTypeImportWorks(..., ScriptTable.class)` (novo teste) | **Elemento de estado:** o próprio mapa (lido pelo método `makeSlimTable`), e o método de teste que lê o resultado de `makeSlimTable`. Não há escrita adicional além da leitura da coleção já modificada. |
+| Código de `shouldCreateCorrectSlimTableForTablesType` (itera sobre `map.entrySet()`) | **Elemento de estado:** o mapa (lido). A iteração lê todas as entradas existentes. |
+
+Não há outras variáveis locais, parâmetros ou arquivos envolvidos.
+
+## 3. TABELA DE VALORES/COMPORTAMENTO
+
+| Elemento de estado | BASE (antes) | LEFT (após) | RIGHT (após) | MERGE (após) |
+|--------------------|--------------|-------------|--------------|--------------|
+| Entrada `""ddt:""` no `map` | **não‑existe** | `DynamicDecisionTable.class` | **não‑existe** | `DynamicDecisionTable.class` |
+| Entrada `""dynamic decision:""` no `map` | **não‑existe** | `DynamicDecisionTable.class` | **não‑existe** | `DynamicDecisionTable.class` |
+| Entrada `""script:""` no `map` | **não‑existe** | **não‑existe** | `ScriptTable.class` | `ScriptTable.class` |
+| Teste `assertThatTableTypeImportWorks(..., ScriptTable.class)` | **não‑existe** (não há teste) | **não‑existe** | **presente** → verifica que `""script:""` cria `ScriptTable` | **presente** (mesmo teste que RIGHT) |
+| Demais entradas já presentes (`""dt:""`, `""dT:""`, …) | `Class` corretas (como no BASE) | **mantidas** (sem alteração) | **mantidas** (sem alteração) | **mantidas** |
+
+## 4. CRITÉRIO DE CONFLITO  
+
+- **Condição (a):** Não há nenhum elemento que seja igual em BASE, LEFT e RIGHT e diferente em MERGE.  
+- **Condição (b):** As novas entradas introduzidas por LEFT (`""ddt:""`, `""dynamic decision:""`) são preservadas no MERGE; a nova entrada introduzida por RIGHT (`""script:""`) também é preservada. Nenhum valor/modificação de BASE foi perdido.  
+
+Portanto, **nenhum** dos critérios de conflito semântico foi satisfeito.
+
+## 5. OBSERVAÇÕES  
+
+- As adições alteram o mesmo objeto (`map`), mas **não sobrescrevem** chaves já existentes nem interferem entre si (chaves diferentes).  
+- A ordem de inserção em um `HashMap` não afeta o comportamento dos testes, pois eles iteram sobre **todas** as entradas e verificam individualmente cada par chave‑classe.  
+- Não há refatorações que apenas reorganizem código sem mudar comportamento.  
+
+---
+
+**Conclusão:** O merge introduz apenas funcionalidades adicionais (suporte a tipos de tabela) que são **compatíveis** entre si; não há perda de alterações nem alterações inesperadas no comportamento. Portanto, **não há conflito semântico**.",ok
+fitnesse__4d9ba9d2__SlimTableFactoryTest#setUp,prompt_teste_mental,"**NAO**
+
+---
+
+### PASSO 1 – ENTENDER O CÓDIGO  
+
+**BASE**  
+- A classe `SlimTableFactoryTest` prepara um `Map<String, Class<? extends SlimTable>>` (`map`) que associa *prefixos* de linhas de definição de tabelas a classes concretas de `SlimTable`.  
+- Os testes verificam que, ao chamar `slimTableFactory.makeSlimTable(...)` com o conteúdo da primeira célula da tabela (ex.: `""dt:""`, `""query:""` etc.), a fábrica devolve uma instância da classe correta.  
+- Há também testes que criam “table‑type imports” (linha “Define Table Type”) e depois verificam que a fábrica usa o tipo importado ao criar a tabela.
+
+**LEFT** (adições)  
+```java
+map.put(""ddt:"", DynamicDecisionTable.class);
+map.put(""dynamic decision:"", DynamicDecisionTable.class);
+```
+- O desenvolvedor que escreveu **LEFT** queria que a fábrica reconhecesse dois novos prefixos (`""ddt:""` e `""dynamic decision:""`) e criasse instâncias de `DynamicDecisionTable`.  
+
+**RIGHT** (adições)  
+```java
+map.put(""script:"", ScriptTable.class);
+...
+assertThatTableTypeImportWorks(""My script table"", ""Script"", ""My script Table"", ScriptTable.class);
+```
+- O desenvolvedor que escreveu **RIGHT** queria que a fábrica reconhecesse o prefixo `""script:""` (com dois‑pontos) e que, além disso, fosse possível importar um tipo de tabela “Script” usando a mesma mecânica de *table‑type import*.  
+
+**MERGE**  
+- O merge simplesmente **concatena** as duas listas de `put`. Primeiro as linhas de **LEFT** (`ddt:` …) são aplicadas, depois as linhas de **RIGHT** (`script:` …) e, por fim, o novo teste de script é adicionado.  
+- A ordem de inserção no `HashMap` não é garantida, mas como o código só itera sobre o `entrySet` para testar cada par (e não depende de ordem), a mudança de ordem não altera o comportamento observado pelos testes.
+
+---
+
+### PASSO 2 – IDENTIFICAR AS VARIÁVEIS DE ESTADO  
+
+| Variável / elemento | Onde aparece | Tipo |
+|----------------------|--------------|------|
+| `map`                | Campo da classe (`Map<String, Class<? extends SlimTable>>`) | Estado global da fábrica usado pelos testes |
+| `slimTableFactory`   | Instância criada no `setUp()` | Objeto que contém `map` interno (não alterado nos diffs) |
+| `table` (mock)       | Mock de `Table` usado para devolver o conteúdo da célula | Entrada simulada nos testes |
+| Retorno de `makeSlimTable` (`SlimTable` ou `null`) | Valor que os `assertThat` comparam | Saída observável |
+| Exceções lançadas (`nullPointer`, etc.) | Não aparecem nos diffs | Não relevante aqui |
+
+O foco principal é **`map`**, pois todas as alterações adicionam ou não chaves a esse mapa; os demais elementos são controlados pelos próprios testes.
+
+---
+
+### PASSO 3 – SIMULAR UM CASO QUE SATISFAÇA OS CRITÉRIOS  
+
+#### 1. Verificar critério (a) – mesmo valor em BASE, LEFT, RIGHT e diferente em MERGE  
+
+- Não há nenhuma chave removida ou sobrescrita nos diffs; apenas **novas** chaves são inseridas.  
+- Portanto, nenhum elemento já presente em BASE desaparece ou muda de valor no MERGE.  
+- Não existe situação em que `map` contenha o mesmo conjunto de pares em BASE, LEFT e RIGHT e, ao mesmo tempo, contenha um par adicional que altere o comportamento de alguma chave já existente.  
+
+#### 2. Verificar critério (b) – mudança presente em LEFT ou RIGHT que o MERGE não preserva  
+
+| Chave adicionada | Onde foi inserida | Valor esperado (classe) | Presença no MERGE |
+|------------------|-------------------|-------------------------|-------------------|
+| `""ddt:""`         | LEFT              | `DynamicDecisionTable`  | **Sim** (presente) |
+| `""dynamic decision:""` | LEFT      | `DynamicDecisionTable`  | **Sim** |
+| `""script:""`      | RIGHT             | `ScriptTable`           | **Sim** |
+
+Em nenhum caso o MERGE elimina a chave introduzida por LEFT ou RIGHT.  
+
+#### Execução mental com um exemplo concreto  
+
+- **Entrada:** `table.getCellContents(0,0)` devolve `""ddt:""`.  
+  - **BASE:** chave inexistente → a fábrica provavelmente usa o *default* (`DecisionTable`).  
+  - **LEFT:** chave encontrada → devolve `DynamicDecisionTable`.  
+  - **RIGHT:** chave inexistente → devolve `DecisionTable`.  
+  - **MERGE:** chave presente (herdada de LEFT) → devolve `DynamicDecisionTable`.  
+
+  O critério (b) não se aplica porque MERGE **preserva** o comportamento de LEFT.  
+
+- **Entrada:** `table.getCellContents(0,0)` devolve `""script:""`.  
+  - BASE → `DecisionTable` (default).  
+  - LEFT → `DecisionTable` (não tem a chave).  
+  - RIGHT → `ScriptTable`.  
+  - MERGE → `ScriptTable` (preservado).  
+
+Nenhum estado que **deveria** ter sido mantido foi perdido.
+
+---
+
+### PASSO 4 – CONCLUSÃO  
+
+Nenhum estado (variável `map` ou retorno de `makeSlimTable`) que sofreu alteração em LEFT ou RIGHT foi revertido ou alterado de forma inesperada no MERGE. As duas mudanças são **independentes** e o merge simplesmente as combina.  
+
+Portanto, não há conflito semântico: nenhum dos desenvolvedores viu sua intenção violada.  
+
+**Resultado:** **NAO** – não há conflito semântico.",ok
+okhttp__35166168__OkHttpClient#copyWithDefaults,prompt_intencao_estado,"**NAO**
+
+---
+
+### 1. INTENÇÃO  
+| Versão | O que o desenvolvedor pretende mudar |
+|--------|--------------------------------------|
+| **LEFT** | Introduzir a configuração de *transports* (lista de protocolos, ex.: “spdy/3”, “http/1.1”) e reorganizar a inicialização de `failedRoutes` usando construtor padrão e construtor de cópia. |
+| **RIGHT** | Alterar o verificador de hostname padrão usado quando `hostnameVerifier` não foi configurado: passar de `HttpsURLConnection.getDefaultHostnameVerifier()` para uma instância de `OkHostnameVerifier`. |
+
+---
+
+### 2. ESTADO  
+Elementos de estado (variáveis/recursos que podem ser lidos ou escritos) que os trechos alterados tocam:
+
+| Elemento de estado | Onde é lido/escrito |
+|--------------------|----------------------|
+| `transports` (List<String>) | - escrito em `setTransports` (LEFT) <br> - lido em `copyWithDefaults` (MERGE) para decidir valor padrão |
+| `failedRoutes` (Set<Route>) | - inicializado no construtor (LEFT) <br> - copiado por construtor de cópia (LEFT) <br> - atribuído em `copyWithDefaults` (LEFT & RIGHT) |
+| `hostnameVerifier` (HostnameVerifier) | - lido em `copyWithDefaults` (RIGHT & MERGE) para escolher valor default <br> - escrito em `setHostnameVerifier` (BASE) |
+| Outros campos (proxy, proxySelector, cookieHandler, responseCache, sslSocketFactory, authenticator, connectionPool, followProtocolRedirects) | Não modificados por LEFT nem RIGHT; permanecem como em BASE. |
+
+A ordem de execução relevante é:
+
+1. Construtor de `OkHttpClient` (inicializa `failedRoutes`).  
+2. Chamadas a `setTransports` ou `setHostnameVerifier` (se houver).  
+3. `copyWithDefaults` (cria cópia para uso interno, define valores padrão para os campos não configurados).
+
+---
+
+### 3. TABELA DE VALORES/COMPORTAMENTO
+
+| Elemento | BASE | LEFT | RIGHT | MERGE |
+|----------|------|------|-------|-------|
+| `transports` | **não existe** (campo ausente) | **existe**; valor padrão `DEFAULT_TRANSPORTS = [""spdy/3"",""http/1.1""]` | **não existe** | **existe**; mesmo valor padrão que LEFT |
+| `hostnameVerifier` (valor usado por `copyWithDefaults`) | `HttpsURLConnection.getDefaultHostnameVerifier()` | idem (não alterado) | `new OkHostnameVerifier()` | `new OkHostnameVerifier()` |
+| `failedRoutes` (referência) | Nova instância por campo inicializado | Nova instância criada no construtor padrão; cópia de referência mantida via construtor de cópia | mesma lógica de BASE (campo inicializado direto) | mesma lógica de LEFT (construtor padrão + cópia de referência) |
+| Demais campos | valores padrão do sistema ou `null` | inalterados | inalterados | inalterados |
+
+---
+
+### 4. CRITÉRIO DE CONFLITO  
+
+- **(a) X igual em BASE, LEFT e RIGHT, diferente em MERGE?**  
+  - Não há nenhum elemento que satisfaça essa condição.  
+- **(b) X difere de BASE em LEFT (ou RIGHT) e MERGE não preserva esse valor?**  
+  - `transports`: difere de BASE (adicionado) e MERGE **preserva** o valor de LEFT.  
+  - `hostnameVerifier`: difere de BASE em RIGHT e MERGE **preserva** o valor de RIGHT.  
+
+Nenhum elemento viola os critérios acima.
+
+---
+
+### 5. CONCLUSÃO  
+As alterações de LEFT e RIGHT afetam **elementos de estado diferentes** (`transports` vs. `hostnameVerifier`). O merge combina ambas as mudanças sem sobrescrever ou eliminar a intenção de nenhum dos lados. Portanto, **não há conflito semântico** introduzido pelo merge.",ok
+okhttp__35166168__OkHttpClient#copyWithDefaults,prompt_one_shot_cleantext,"**SIM** ou **NÃO**: **NÃO**
+
+---
+
+### 1. INTENÇÃO
+| Versão | Intenção do desenvolvedor |
+|--------|---------------------------|
+| **LEFT**  | Introduzir suporte a múltiplos *transports* (ex.: “spdy/3”, “http/1.1”). Para isso, adiciona‑se um campo `List<String> transports`, um valor padrão `DEFAULT_TRANSPORTS`, construtores que preservam o conjunto `failedRoutes` e um método `setTransports`/`getTransports`. |
+| **RIGHT** | Alterar o *hostname verifier* padrão usado quando o usuário não o configurou: ao invés de `HttpsURLConnection.getDefaultHostnameVerifier()` passa‑se a usar a implementação interna `OkHostnameVerifier`. |
+
+---
+
+### 2. ESTADO
+Elementos de estado que os trechos modificados leem ou escrevem (conforme a definição):
+
+| Elemento de estado | Onde é lido/escrito | Comentário |
+|---------------------|----------------------|------------|
+| `transports` (campo de instância) | **LEFT**: declarado, escrito em `setTransports`; **MERGE**: escrito em `copyWithDefaults` (`result.transports = ...`). | Não existe em BASE nem em RIGHT. |
+| `DEFAULT_TRANSPORTS` (campo estático final) | **LEFT** e **MERGE**: declarados. | Não afeta comportamento em tempo de execução além do valor usado como padrão. |
+| `failedRoutes` (campo de instância) | **LEFT**: a inicialização foi movida para o construtor sem‑arg e para o construtor de cópia; **MERGE**: mesma lógica. | Não há mudança de valor entre BASE, LEFT e RIGHT; apenas a forma de inicialização. |
+| `hostnameVerifier` (campo de instância) | **RIGHT**: leitura de `hostnameVerifier` em `copyWithDefaults`; escrita com `new OkHostnameVerifier()` quando nulo. **MERGE**: mesma escrita. | Não alterado por LEFT. |
+| `result` (objeto criado em `copyWithDefaults`) | **BASE**: cria `new OkHttpClient()` e atribui `failedRoutes` explicitamente; **LEFT**/**RIGHT**/**MERGE**: criam `new OkHttpClient(this)` (construtor de cópia) e não atribuem `failedRoutes` novamente. | O objeto resultante tem o mesmo estado lógico (mesmo `failedRoutes`, mesmos valores de campos) nas três versões. |
+| Todos os demais campos (`proxy`, `proxySelector`, `cookieHandler`, `responseCache`, `sslSocketFactory`, `authenticator`, `connectionPool`, `followProtocolRedirects`) | Não modificados por nenhum dos lados; copiados de forma idêntica em todas as versões. | Estado idêntico em BASE, LEFT, RIGHT e MERGE. |
+
+---
+
+### 3. TABELA DE VALORES / COMPORTAMENTO
+
+| Elemento                | BASE                              | LEFT                                          | RIGHT                                         | MERGE                                          |
+|--------------------------|-----------------------------------|----------------------------------------------|-----------------------------------------------|------------------------------------------------|
+| `transports`            | **não existe**                    | `null` (campo declarado, ainda não configurado) | **não existe**                                 | `null` (campo declarado, ainda não configurado) |
+| `DEFAULT_TRANSPORTS`    | **não existe**                    | Lista imutável `[""spdy/3"",""http/1.1""]`       | **não existe**                                 | Lista imutável `[""spdy/3"",""http/1.1""]`          |
+| `hostnameVerifier`      | `null` (não configurado) – usado o padrão do JDK (`HttpsURLConnection.getDefaultHostnameVerifier()`) | **não altera** (mantém comportamento original) | Se `hostnameVerifier` for `null`, usa `new OkHostnameVerifier()` | Mesmo comportamento de **RIGHT** (usa `new OkHostnameVerifier()` quando nulo) |
+| `failedRoutes`          | `Collections.synchronizedSet(new LinkedHashSet<Route>())` (instância própria) | Construtor sem‑arg cria a mesma estrutura; construtor de cópia reutiliza a referência existente | **não altera** | Construtor sem‑arg cria a mesma estrutura; construtor de cópia reutiliza a referência existente |
+| `copyWithDefaults()`    | Cria `new OkHttpClient()` (construtor padrão) → inicializa `failedRoutes` novamente; `hostnameVerifier` recebe o padrão JDK; **não** define `transports`. | Cria `new OkHttpClient(this)` (construtor de cópia) → preserva `failedRoutes`; define `transports` = `transports != null ? transports : DEFAULT_TRANSPORTS`. | Cria `new OkHttpClient(this)` (construtor",ok
+okhttp__35166168__OkHttpClient#copyWithDefaults,prompt_teste_mental,,error: APITimeoutError: Request timed out.
+okhttp__1151c985__GzipSource#consumeHeader,prompt_intencao_estado,,error: APITimeoutError: Request timed out.
+okhttp__1151c985__GzipSource#consumeHeader,prompt_one_shot_cleantext,,error: APITimeoutError: Request timed out.
+okhttp__1151c985__GzipSource#consumeHeader,prompt_teste_mental,,error: APITimeoutError: Request timed out.
+jOOQ__d96120f3__DSL#coalesce,prompt_intencao_estado,,skipped: ~161863 tokens > 129024
+jOOQ__d96120f3__DSL#coalesce,prompt_one_shot_cleantext,,skipped: ~162530 tokens > 129024
+jOOQ__d96120f3__DSL#coalesce,prompt_teste_mental,,skipped: ~162005 tokens > 129024
+swagger-maven-plugin__e825a7fd__AbstractReader#hasValidAnnotations,prompt_intencao_estado,,error: APITimeoutError: Request timed out.
+swagger-maven-plugin__e825a7fd__AbstractReader#hasValidAnnotations,prompt_one_shot_cleantext,,error: APITimeoutError: Request timed out.
+swagger-maven-plugin__e825a7fd__AbstractReader#hasValidAnnotations,prompt_teste_mental,,error: APITimeoutError: Request timed out.
+retrofit__71f622ce__RequestBuilder#build,prompt_intencao_estado,,error: APITimeoutError: Request timed out.
+retrofit__71f622ce__RequestBuilder#build,prompt_one_shot_cleantext,,error: APITimeoutError: Request timed out.
+retrofit__71f622ce__RequestBuilder#build,prompt_teste_mental,,error: APITimeoutError: Request timed out.
+retrofit__2b6c719c__RestAdapter#logAndReplaceResponse,prompt_intencao_estado,,error: APITimeoutError: Request timed out.
+retrofit__2b6c719c__RestAdapter#logAndReplaceResponse,prompt_one_shot_cleantext,,error: APITimeoutError: Request timed out.
+retrofit__2b6c719c__RestAdapter#logAndReplaceResponse,prompt_teste_mental,,error: APITimeoutError: Request timed out.
+retrofit__2b6c719c__RestAdapter#logAndReplaceRequest,prompt_intencao_estado,,error: APITimeoutError: Request timed out.
+retrofit__2b6c719c__RestAdapter#logAndReplaceRequest,prompt_one_shot_cleantext,,error: APITimeoutError: Request timed out.
+retrofit__2b6c719c__RestAdapter#logAndReplaceRequest,prompt_teste_mental,,error: APITimeoutError: Request timed out.

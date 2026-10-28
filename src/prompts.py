@@ -25,6 +25,9 @@ Siga estas etapas:
 
 Responda SIM ou NAO na primeira linha, depois mostre as etapas.
 
+BASE contém o código completo. LEFT, RIGHT e MERGE são diffs unificados em relação a BASE
+(linhas iniciadas com - foram removidas e linhas iniciadas com + foram adicionadas).
+
 BASE:
 {base}
 
@@ -83,18 +86,42 @@ Siga estas etapas:
 
 Responda SIM ou NAO na primeira linha, depois mostre as etapas.
 
+BASE contém o código completo. LEFT, RIGHT e MERGE são diffs unificados em relação a BASE
+(linhas iniciadas com - foram removidas e linhas iniciadas com + foram adicionadas).
+
 EXEMPLO
 BASE:
-cleanText() {{ removeComments(); }}
+cleanText() {{
+    removeComments();
+}}
 
 LEFT:
-cleanText() {{ normalizeWhiteSpace(); removeComments(); }}
+--- base.java
++++ left.java
+@@ -1,3 +1,4 @@
+ cleanText() {{
++    normalizeWhiteSpace();
+     removeComments();
+ }}
 
 RIGHT:
-cleanText() {{ removeComments(); removeDuplicateWords(); }}
+--- base.java
++++ right.java
+@@ -1,3 +1,4 @@
+ cleanText() {{
+     removeComments();
++    removeDuplicateWords();
+ }}
 
 MERGE:
-cleanText() {{ normalizeWhiteSpace(); removeComments(); removeDuplicateWords(); }}
+--- base.java
++++ merge.java
+@@ -1,3 +1,5 @@
+ cleanText() {{
++    normalizeWhiteSpace();
+     removeComments();
++    removeDuplicateWords();
+ }}
 
 Análise:
 - Intenção LEFT: colapsar espaços múltiplos. Intenção RIGHT: remover palavras duplicadas consecutivas.
@@ -154,6 +181,9 @@ satisfaz os critérios, não há conflito. Refatorações sem efeito no comporta
 mudanças em variáveis independentes não são conflito.
 
 Na primeira linha responda SIM ou NAO. Depois mostre o raciocínio de cada passo.
+
+BASE contém o código completo. LEFT, RIGHT e MERGE são diffs unificados em relação a BASE
+(linhas iniciadas com - foram removidas e linhas iniciadas com + foram adicionadas).
 
 BASE:
 {base}

@@ -13,6 +13,9 @@ client = genai.Client(
 
 MODEL = "gemini-3.8-flash"
 
+# janela de contexto do modelo (confirmar no model card) menos o espaço reservado para a resposta
+MAX_PROMPT_TOKENS = 1_048_576 - 1500
+
 MAX_RETRIES = 5
 BASE_DELAY = 1.0
 MAX_DELAY = 30.0

@@ -10,6 +10,9 @@ client = Groq(
 
 MODEL = "openai/gpt-oss-120b"
 
+# janela de contexto do modelo (131.072 tokens) menos o espaço reservado para a resposta
+MAX_PROMPT_TOKENS = 131_072 - 2048
+
 def ask(prompt):
     response = client.chat.completions.create(
         model=MODEL,
