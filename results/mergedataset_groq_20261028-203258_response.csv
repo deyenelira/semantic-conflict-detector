@@ -1,0 +1,43 @@
+﻿id,prompt,resposta esperada,resposta do modelo,condição violada,variável de estado,status
+storm__ad2be678__KafkaSpoutConfig#toString,zero_shot,YES,,,,skipped: ~22845 tokens > 5952
+storm__ad2be678__KafkaSpoutConfig#toString,one_shot,YES,,,,skipped: ~23599 tokens > 5952
+storm__bd1f5c54__KafkaSpout#emitTupleIfNotEmitted,zero_shot,NO,,,,skipped: ~14527 tokens > 5952
+storm__bd1f5c54__KafkaSpout#emitTupleIfNotEmitted,one_shot,NO,,,,skipped: ~15281 tokens > 5952
+antlr4__69ff2669__Python2Target#python2Keywords,zero_shot,YES,NAO,,,ok
+antlr4__69ff2669__Python2Target#python2Keywords,one_shot,YES,NAO,,,ok
+antlr4__69ff2669__Python3Target#python3Keywords,zero_shot,YES,NAO,,,ok
+antlr4__69ff2669__Python3Target#python3Keywords,one_shot,YES,NAO,,,ok
+cloud-slang__20bac30d__SlangImpl#getAllEventTypes,zero_shot,YES,NAO,,,ok
+cloud-slang__20bac30d__SlangImpl#getAllEventTypes,one_shot,YES,NAO,,,ok
+fitnesse__4d9ba9d2__SlimTableFactory#SlimTableFactory,zero_shot,YES,NAO,,,ok
+fitnesse__4d9ba9d2__SlimTableFactory#SlimTableFactory,one_shot,YES,NAO,,,ok
+fitnesse__4d9ba9d2__SlimTableFactoryTest#setUp,zero_shot,YES,NAO,,,ok
+fitnesse__4d9ba9d2__SlimTableFactoryTest#setUp,one_shot,YES,NAO,,,ok
+okhttp__35166168__OkHttpClient#copyWithDefaults,zero_shot,NO,,,,skipped: ~6240 tokens > 5952
+okhttp__35166168__OkHttpClient#copyWithDefaults,one_shot,NO,,,,skipped: ~6994 tokens > 5952
+okhttp__1151c985__GzipSource#consumeHeader,zero_shot,NO,NAO,,,ok
+okhttp__1151c985__GzipSource#consumeHeader,one_shot,NO,NAO,,,ok
+jOOQ__d96120f3__DSL#coalesce,zero_shot,NO,,,,skipped: ~161960 tokens > 5952
+jOOQ__d96120f3__DSL#coalesce,one_shot,NO,,,,skipped: ~162715 tokens > 5952
+swagger-maven-plugin__e825a7fd__AbstractReader#hasValidAnnotations,zero_shot,YES,,,,skipped: ~6838 tokens > 5952
+swagger-maven-plugin__e825a7fd__AbstractReader#hasValidAnnotations,one_shot,YES,,,,skipped: ~7592 tokens > 5952
+retrofit__71f622ce__RequestBuilder#build,zero_shot,YES,NAO,,,ok
+retrofit__71f622ce__RequestBuilder#build,one_shot,YES,NAO,,,ok
+retrofit__2b6c719c__RestAdapter#logAndReplaceResponse,zero_shot,NO,,,,skipped: ~8757 tokens > 5952
+retrofit__2b6c719c__RestAdapter#logAndReplaceResponse,one_shot,NO,,,,skipped: ~9512 tokens > 5952
+retrofit__2b6c719c__RestAdapter#logAndReplaceRequest,zero_shot,NO,,,,skipped: ~8797 tokens > 5952
+retrofit__2b6c719c__RestAdapter#logAndReplaceRequest,one_shot,NO,,,,skipped: ~9552 tokens > 5952
+jsoup__a8b6982d__HttpConnection#execute,zero_shot,YES,,,,skipped: ~13877 tokens > 5952
+jsoup__a8b6982d__HttpConnection#execute,one_shot,YES,,,,skipped: ~14631 tokens > 5952
+jsoup__3f7d2c71__HttpConnection#execute,zero_shot,YES,,,,skipped: ~10549 tokens > 5952
+jsoup__3f7d2c71__HttpConnection#execute,one_shot,YES,,,,skipped: ~11304 tokens > 5952
+jsoup__a44e18aa__TextNode#outerHtmlHead,zero_shot,YES,NAO,,,ok
+jsoup__a44e18aa__TextNode#outerHtmlHead,one_shot,YES,NAO,,,ok
+jsoup__fee47623__HttpConnection#createConnection,zero_shot,NO,,,,skipped: ~16093 tokens > 5952
+jsoup__fee47623__HttpConnection#createConnection,one_shot,NO,,,,skipped: ~16848 tokens > 5952
+SimianArmy__345ad951__BasicJanitorMonkeyContext#getInstanceJanitor,zero_shot,NO,,,,skipped: ~11809 tokens > 5952
+SimianArmy__345ad951__BasicJanitorMonkeyContext#getInstanceJanitor,one_shot,NO,,,,skipped: ~12563 tokens > 5952
+titan__387c16ea__SerializerInitialization#initialize,zero_shot,NO,NAO,,,ok
+titan__387c16ea__SerializerInitialization#initialize,one_shot,NO,NAO,,,ok
+activiti__50d8e43e__DeploymentEntityManager#deleteDeployment,zero_shot,YES,NAO,,,ok
+activiti__50d8e43e__DeploymentEntityManager#deleteDeployment,one_shot,YES,NAO,,,ok

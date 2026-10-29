@@ -1,0 +1,106 @@
+﻿id,prompt,resposta esperada,resposta do modelo,condição violada,variável de estado,status
+storm__ad2be678__KafkaSpoutConfig#toString,zero_shot_autonomo,YES,SIM,B,maxRetries,ok
+storm__ad2be678__KafkaSpoutConfig#toString,one_shot_autonomo,YES,NAO,,,ok
+storm__ad2be678__KafkaSpoutConfig#toString,zero_shot_guiado,YES,NAO,,,ok
+storm__ad2be678__KafkaSpoutConfig#toString,one_shot_guiado,YES,NAO,,,ok
+storm__ad2be678__KafkaSpoutConfig#toString,zero_shot_conciso,YES,SIM,,,ok
+storm__bd1f5c54__KafkaSpout#emitTupleIfNotEmitted,zero_shot_autonomo,NO,NAO,,,ok
+storm__bd1f5c54__KafkaSpout#emitTupleIfNotEmitted,one_shot_autonomo,NO,NAO,,,ok
+storm__bd1f5c54__KafkaSpout#emitTupleIfNotEmitted,zero_shot_guiado,NO,NAO,,,ok
+storm__bd1f5c54__KafkaSpout#emitTupleIfNotEmitted,one_shot_guiado,NO,NAO,,,ok
+storm__bd1f5c54__KafkaSpout#emitTupleIfNotEmitted,zero_shot_conciso,NO,NAO,,,ok
+antlr4__69ff2669__Python2Target#python2Keywords,zero_shot_autonomo,YES,NAO,,,ok
+antlr4__69ff2669__Python2Target#python2Keywords,one_shot_autonomo,YES,NAO,,,ok
+antlr4__69ff2669__Python2Target#python2Keywords,zero_shot_guiado,YES,NAO,,,ok
+antlr4__69ff2669__Python2Target#python2Keywords,one_shot_guiado,YES,NAO,,,ok
+antlr4__69ff2669__Python2Target#python2Keywords,zero_shot_conciso,YES,NAO,,,ok
+antlr4__69ff2669__Python3Target#python3Keywords,zero_shot_autonomo,YES,NAO,,,ok
+antlr4__69ff2669__Python3Target#python3Keywords,one_shot_autonomo,YES,NAO,,,ok
+antlr4__69ff2669__Python3Target#python3Keywords,zero_shot_guiado,YES,NAO,,,ok
+antlr4__69ff2669__Python3Target#python3Keywords,one_shot_guiado,YES,NAO,,,ok
+antlr4__69ff2669__Python3Target#python3Keywords,zero_shot_conciso,YES,NAO,,,ok
+cloud-slang__20bac30d__SlangImpl#getAllEventTypes,zero_shot_autonomo,YES,NAO,,,ok
+cloud-slang__20bac30d__SlangImpl#getAllEventTypes,one_shot_autonomo,YES,NAO,,,ok
+cloud-slang__20bac30d__SlangImpl#getAllEventTypes,zero_shot_guiado,YES,NAO,,,ok
+cloud-slang__20bac30d__SlangImpl#getAllEventTypes,one_shot_guiado,YES,NAO,,,ok
+cloud-slang__20bac30d__SlangImpl#getAllEventTypes,zero_shot_conciso,YES,NAO,,,ok
+fitnesse__4d9ba9d2__SlimTableFactory#SlimTableFactory,zero_shot_autonomo,YES,NAO,,,ok
+fitnesse__4d9ba9d2__SlimTableFactory#SlimTableFactory,one_shot_autonomo,YES,NAO,,,ok
+fitnesse__4d9ba9d2__SlimTableFactory#SlimTableFactory,zero_shot_guiado,YES,NAO,,,ok
+fitnesse__4d9ba9d2__SlimTableFactory#SlimTableFactory,one_shot_guiado,YES,NAO,,,ok
+fitnesse__4d9ba9d2__SlimTableFactory#SlimTableFactory,zero_shot_conciso,YES,NAO,,,ok
+fitnesse__4d9ba9d2__SlimTableFactoryTest#setUp,zero_shot_autonomo,YES,NAO,,,ok
+fitnesse__4d9ba9d2__SlimTableFactoryTest#setUp,one_shot_autonomo,YES,NAO,,,ok
+fitnesse__4d9ba9d2__SlimTableFactoryTest#setUp,zero_shot_guiado,YES,NAO,,,ok
+fitnesse__4d9ba9d2__SlimTableFactoryTest#setUp,one_shot_guiado,YES,NAO,,,ok
+fitnesse__4d9ba9d2__SlimTableFactoryTest#setUp,zero_shot_conciso,YES,NAO,,,ok
+okhttp__35166168__OkHttpClient#copyWithDefaults,zero_shot_autonomo,NO,NAO,,,ok
+okhttp__35166168__OkHttpClient#copyWithDefaults,one_shot_autonomo,NO,NAO,,,ok
+okhttp__35166168__OkHttpClient#copyWithDefaults,zero_shot_guiado,NO,NAO,,,ok
+okhttp__35166168__OkHttpClient#copyWithDefaults,one_shot_guiado,NO,NAO,,,ok
+okhttp__35166168__OkHttpClient#copyWithDefaults,zero_shot_conciso,NO,NAO,,,ok
+okhttp__1151c985__GzipSource#consumeHeader,zero_shot_autonomo,NO,NAO,,,ok
+okhttp__1151c985__GzipSource#consumeHeader,one_shot_autonomo,NO,NAO,,,ok
+okhttp__1151c985__GzipSource#consumeHeader,zero_shot_guiado,NO,NAO,,,ok
+okhttp__1151c985__GzipSource#consumeHeader,one_shot_guiado,NO,NAO,,,ok
+okhttp__1151c985__GzipSource#consumeHeader,zero_shot_conciso,NO,NAO,,,ok
+jOOQ__d96120f3__DSL#coalesce,zero_shot_autonomo,NO,SIM,B,"o campo retornado pelo overload `coalesce(Field<T> field, T value)`, que em RIGHT é `coalesce(field, Utils.field(value))` e no MERGE virou `coalesce(field, Utils.field(value, field))`.",ok
+jOOQ__d96120f3__DSL#coalesce,one_shot_autonomo,NO,SIM,B,"valor de retorno (expressão do return) de `DSL.coalesce(Field<T> field, T value)`, que em RIGHT é `coalesce(field, Utils.field(value))` e no MERGE virou `coalesce(field, Utils.field(value, field))`, sem preservar a versão de RIGHT",ok
+jOOQ__d96120f3__DSL#coalesce,zero_shot_guiado,NO,SIM,B,"tipo de dado do bind value `value` retornado por `coalesce(Field<T> field, T value)` (RIGHT usa `Utils.field(value)`, inferindo o tipo do valor; MERGE usa `Utils.field(value, field)`, herdando o tipo do campo)",ok
+jOOQ__d96120f3__DSL#coalesce,one_shot_guiado,NO,SIM,B,"valor retornado por `coalesce(Field<T> field, T value)` (o MERGE mantém `Utils.field(value, field)` de LEFT e descarta `Utils.field(value)` de RIGHT)",ok
+jOOQ__d96120f3__DSL#coalesce,zero_shot_conciso,NO,SIM,,,ok
+swagger-maven-plugin__e825a7fd__AbstractReader#hasValidAnnotations,zero_shot_autonomo,YES,SIM,B,"validParameterAnnotations (entrada RequestBody.class, adicionada por RIGHT e ausente no MERGE)",ok
+swagger-maven-plugin__e825a7fd__AbstractReader#hasValidAnnotations,one_shot_autonomo,YES,SIM,B,"validParameterAnnotations (a entrada RequestBody.class, que afeta o retorno de hasValidAnnotations, não foi preservada no MERGE)",ok
+swagger-maven-plugin__e825a7fd__AbstractReader#hasValidAnnotations,zero_shot_guiado,YES,SIM,B,"validParameterAnnotations (presença de RequestBody.class na lista, que define o retorno de hasValidAnnotations)",ok
+swagger-maven-plugin__e825a7fd__AbstractReader#hasValidAnnotations,one_shot_guiado,YES,SIM,B,"validParameterAnnotations (conteúdo da lista; RequestBody.class foi adicionado por LEFT e RIGHT, mas não está no MERGE)",ok
+swagger-maven-plugin__e825a7fd__AbstractReader#hasValidAnnotations,zero_shot_conciso,YES,SIM,,,ok
+retrofit__71f622ce__RequestBuilder#build,zero_shot_autonomo,YES,NAO,,,ok
+retrofit__71f622ce__RequestBuilder#build,one_shot_autonomo,YES,NAO,,,ok
+retrofit__71f622ce__RequestBuilder#build,zero_shot_guiado,YES,NAO,,,ok
+retrofit__71f622ce__RequestBuilder#build,one_shot_guiado,YES,NAO,,,ok
+retrofit__71f622ce__RequestBuilder#build,zero_shot_conciso,YES,NAO,,,ok
+retrofit__2b6c719c__RestAdapter#logAndReplaceResponse,zero_shot_autonomo,NO,NAO,,,ok
+retrofit__2b6c719c__RestAdapter#logAndReplaceResponse,one_shot_autonomo,NO,NAO,,,ok
+retrofit__2b6c719c__RestAdapter#logAndReplaceResponse,zero_shot_guiado,NO,NAO,,,ok
+retrofit__2b6c719c__RestAdapter#logAndReplaceResponse,one_shot_guiado,NO,NAO,,,ok
+retrofit__2b6c719c__RestAdapter#logAndReplaceResponse,zero_shot_conciso,NO,NAO,,,ok
+retrofit__2b6c719c__RestAdapter#logAndReplaceRequest,zero_shot_autonomo,NO,NAO,,,ok
+retrofit__2b6c719c__RestAdapter#logAndReplaceRequest,one_shot_autonomo,NO,NAO,,,ok
+retrofit__2b6c719c__RestAdapter#logAndReplaceRequest,zero_shot_guiado,NO,NAO,,,ok
+retrofit__2b6c719c__RestAdapter#logAndReplaceRequest,one_shot_guiado,NO,NAO,,,ok
+retrofit__2b6c719c__RestAdapter#logAndReplaceRequest,zero_shot_conciso,NO,NAO,,,ok
+jsoup__a8b6982d__HttpConnection#execute,zero_shot_autonomo,YES,NAO,,,ok
+jsoup__a8b6982d__HttpConnection#execute,one_shot_autonomo,YES,NAO,,,ok
+jsoup__a8b6982d__HttpConnection#execute,zero_shot_guiado,YES,NAO,,,ok
+jsoup__a8b6982d__HttpConnection#execute,one_shot_guiado,YES,NAO,,,ok
+jsoup__a8b6982d__HttpConnection#execute,zero_shot_conciso,YES,NAO,,,ok
+jsoup__3f7d2c71__HttpConnection#execute,zero_shot_autonomo,YES,NAO,,,ok
+jsoup__3f7d2c71__HttpConnection#execute,one_shot_autonomo,YES,NAO,,,ok
+jsoup__3f7d2c71__HttpConnection#execute,zero_shot_guiado,YES,NAO,,,ok
+jsoup__3f7d2c71__HttpConnection#execute,one_shot_guiado,YES,NAO,,,ok
+jsoup__3f7d2c71__HttpConnection#execute,zero_shot_conciso,YES,NAO,,,ok
+jsoup__a44e18aa__TextNode#outerHtmlHead,zero_shot_autonomo,YES,NAO,,,ok
+jsoup__a44e18aa__TextNode#outerHtmlHead,one_shot_autonomo,YES,NAO,,,ok
+jsoup__a44e18aa__TextNode#outerHtmlHead,zero_shot_guiado,YES,NAO,,,ok
+jsoup__a44e18aa__TextNode#outerHtmlHead,one_shot_guiado,YES,NAO,,,ok
+jsoup__a44e18aa__TextNode#outerHtmlHead,zero_shot_conciso,YES,NAO,,,ok
+jsoup__fee47623__HttpConnection#createConnection,zero_shot_autonomo,NO,NAO,,,ok
+jsoup__fee47623__HttpConnection#createConnection,one_shot_autonomo,NO,NAO,,,ok
+jsoup__fee47623__HttpConnection#createConnection,zero_shot_guiado,NO,NAO,,,ok
+jsoup__fee47623__HttpConnection#createConnection,one_shot_guiado,NO,NAO,,,ok
+jsoup__fee47623__HttpConnection#createConnection,zero_shot_conciso,NO,NAO,,,ok
+SimianArmy__345ad951__BasicJanitorMonkeyContext#getInstanceJanitor,zero_shot_autonomo,NO,NAO,,,ok
+SimianArmy__345ad951__BasicJanitorMonkeyContext#getInstanceJanitor,one_shot_autonomo,NO,NAO,,,ok
+SimianArmy__345ad951__BasicJanitorMonkeyContext#getInstanceJanitor,zero_shot_guiado,NO,NAO,,,ok
+SimianArmy__345ad951__BasicJanitorMonkeyContext#getInstanceJanitor,one_shot_guiado,NO,NAO,,,ok
+SimianArmy__345ad951__BasicJanitorMonkeyContext#getInstanceJanitor,zero_shot_conciso,NO,NAO,,,ok
+titan__387c16ea__SerializerInitialization#initialize,zero_shot_autonomo,NO,NAO,,,ok
+titan__387c16ea__SerializerInitialization#initialize,one_shot_autonomo,NO,NAO,,,ok
+titan__387c16ea__SerializerInitialization#initialize,zero_shot_guiado,NO,NAO,,,ok
+titan__387c16ea__SerializerInitialization#initialize,one_shot_guiado,NO,NAO,,,ok
+titan__387c16ea__SerializerInitialization#initialize,zero_shot_conciso,NO,NAO,,,ok
+activiti__50d8e43e__DeploymentEntityManager#deleteDeployment,zero_shot_autonomo,YES,NAO,,,ok
+activiti__50d8e43e__DeploymentEntityManager#deleteDeployment,one_shot_autonomo,YES,NAO,,,ok
+activiti__50d8e43e__DeploymentEntityManager#deleteDeployment,zero_shot_guiado,YES,NAO,,,ok
+activiti__50d8e43e__DeploymentEntityManager#deleteDeployment,one_shot_guiado,YES,NAO,,,ok
+activiti__50d8e43e__DeploymentEntityManager#deleteDeployment,zero_shot_conciso,YES,NAO,,,ok

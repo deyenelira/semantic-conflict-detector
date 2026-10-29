@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-PROVIDERS = ("gemini", "groq", "ollama")
+PROVIDERS = ("anthropic", "gemini", "groq", "ollama")
 
 
 def get_provider(name):

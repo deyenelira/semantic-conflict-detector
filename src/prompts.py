@@ -1,32 +1,27 @@
 PROMPTS = {
-    "prompt_intencao_estado": """Você é um desenvolvedor sênior investigando se um merge introduziu um conflito semântico.
+    "zero_shot_autonomous": """Você é um desenvolvedor sênior investigando se um merge introduziu um conflito semântico.
 
 DEFINIÇÃO CONFLITO SEMÂNTICO
-Conflito semântico é quando dois commits se juntam sem conflito textual, mas o programa
-resultante se comporta de forma diferente do que algum dos desenvolvedores queria.
+Conflito semântico ocorre quando dois commits se juntam sem conflito textual, mas o programa resultante se comporta de forma diferente do que algum dos desenvolvedores queria. Isso geralmente ocorre devido à interferência no fluxo de dados ou controle entre as modificações.
 
 DEFINIÇÃO ELEMENTO DE ESTADO (VARIÁVEL DE ESTADO)
-É qualquer posição de memória ou canal de saída que a execução do código pode escrever e
-depois ler. Inclui: variável local, parâmetro, campo estático ou de instância, posição de
-array, elemento de coleção, arquivo, fluxo, expressão de um return, exceção lançada e
-estado temporário.
+É qualquer posição de memória ou canal de saída que a execução do código pode escrever e depois ler. Inclui: variável local, parâmetro, campo estático ou de instância, posição de array, elemento de coleção, arquivo, fluxo, expressão de um return, exceção lançada e estado temporário.
 
-Siga estas etapas:
-1. INTENÇÃO: resuma em uma frase o que LEFT mudou em relação a BASE e o que RIGHT mudou,
-   ou seja, o comportamento que cada desenvolvedor quis introduzir.
-2. ESTADO: liste os elementos de estado (conforme a definição acima) lidos ou escritos pelos
-   trechos alterados. Considere também métodos diferentes que acessam o mesmo elemento e a
-   ordem em que são executados.
-3. TABELA: para cada elemento de estado X, descreva o valor/comportamento em BASE | LEFT | RIGHT | MERGE.
-4. CRITÉRIO: há conflito se existir um X tal que
-   (a) X é igual em BASE, LEFT e RIGHT, mas diferente em MERGE; ou
-   (b) X em LEFT (ou RIGHT) difere de BASE, e o MERGE não preserva o valor desse pai.
-5. Ignore refatorações sem efeito no comportamento e mudanças em elementos de estado independentes.
+Você deve estruturar sua resposta OBRIGATORIAMENTE em dois blocos: <analise> e <resultado>.
 
-Responda SIM ou NAO na primeira linha, depois mostre as etapas.
+Dentro da tag <analise>, execute os seguintes passos:
+1. INTENÇÃO: Resuma o que LEFT mudou em relação a BASE e o que RIGHT mudou.
+2. ESTADO: Liste os elementos de estado lidos ou escritos pelos trechos alterados de LEFT e RIGHT.
+3. TABELA DE ESTADOS: Descreva o comportamento/valor final esperado para os elementos afetados em BASE | LEFT | RIGHT | MERGE.
+4. CRITÉRIO DE CONFLITO: Avalie se existe algum elemento X onde:
+   - (A) LEFT e RIGHT escrevem/modificam elementos de estado dependentes e o MERGE não reconcilia essa dependência.
+   - (B) O valor ou comportamento introduzido por LEFT (ou RIGHT) é sobrescrito, ignorado ou quebrado pelas alterações do outro no MERGE.
 
-BASE contém o código completo. LEFT, RIGHT e MERGE são diffs unificados em relação a BASE
-(linhas iniciadas com - foram removidas e linhas iniciadas com + foram adicionadas).
+Dentro da tag <resultado>, retorne APENAS uma das seguintes linhas, sem texto adicional:
+- SIM - Condição <A ou B>: <variável de estado que sofreu o conflito>
+- NAO
+
+BASE contém o código completo. LEFT, RIGHT e MERGE são diffs unificados em relação a BASE.
 
 BASE:
 {base}
@@ -40,99 +35,63 @@ RIGHT:
 MERGE:
 {merge}""",
 
-    "prompt_one_shot_cleantext": """Você é um desenvolvedor sênior investigando se um merge introduziu um conflito semântico.
+    "one_shot_autonomous": """Você é um desenvolvedor sênior investigando se um merge introduziu um conflito semântico.
 
 DEFINIÇÃO CONFLITO SEMÂNTICO
-Conflito semântico é quando dois commits se juntam sem conflito textual, mas o programa
-resultante se comporta de forma diferente do que algum dos desenvolvedores queria.
+Conflito semântico ocorre quando dois commits se juntam sem conflito textual, mas o programa resultante se comporta de forma diferente do que algum dos desenvolvedores queria. Isso geralmente ocorre devido à interferência no fluxo de dados ou controle entre as modificações.
 
 DEFINIÇÃO ELEMENTO DE ESTADO (VARIÁVEL DE ESTADO)
-É qualquer posição de memória ou canal de saída que a execução do código pode escrever e
-depois ler. Inclui: variável local, parâmetro, campo estático ou de instância, posição de
-array, elemento de coleção, arquivo, fluxo, expressão de um return, exceção lançada e
-estado temporário.
-
+É qualquer posição de memória ou canal de saída que a execução do código pode escrever e depois ler. Inclui: variável local, parâmetro, campo estático ou de instância, posição de array, elemento de coleção, arquivo, fluxo, expressão de um return, exceção lançada e estado temporário.
 
 EXEMPLOS DE ELEMENTOS DE ESTADO
-Considere uma classe Text com os campos "String text", "int fixes" e "int comments".
-- Campo de instância: this.fixes (contador de correções) e this.comments (contador de comentários).
-  São elementos diferentes: um método que só escreve em comments não interfere em fixes.
-- Campo de instância reescrito por vários métodos: this.text, que normalizeWhiteSpace(),
-  removeComments() e removeDuplicateWords() leem e reescrevem. Se LEFT e RIGHT adicionam
-  chamadas que reescrevem this.text, ambos escrevem no mesmo elemento.
-- Variável local: em "Settings settings = builder.build();", a variável settings.
-  Se LEFT e RIGHT atribuem a settings, há escrita no mesmo elemento.
-- Elemento de coleção / estado de uma lista: a lista retornada por getAllEventTypes().
-  Se LEFT adiciona 5 itens e RIGHT adiciona outros 3 a ela, o tamanho final depende de ambos.
-- Valor retornado: a expressão em "return x + y;". Se LEFT e RIGHT alteram essa expressão,
-  alteram o mesmo elemento.
-- Exceção lançada: se LEFT faz o método lançar uma exceção em certo caso e RIGHT
-  muda esse caso, ambos afetam o mesmo elemento.
+- Campo de instância reescrito por vários métodos: this.text, que normalizeWhiteSpace() e removeDuplicateWords() leem e reescrevem.
+- Variável local: em "Settings settings = builder.build();". Se LEFT e RIGHT atribuem a settings, há escrita no mesmo elemento.
+- Elemento de coleção / estado de uma lista: se LEFT adiciona 5 itens e RIGHT adiciona outros 3, o tamanho final depende de ambos.
+- Valor retornado: a expressão em "return x + y;".
 - Posição de array: a[0] e a[1] não interferem; já a = new int[3] interfere com a[0] = 1.
-- Atribuição de BASE no meio: se BASE já escreve em fixes entre a escrita de LEFT e a de
-  RIGHT, a de RIGHT sobrescreve a de BASE, e não há interferência.
 
-Siga estas etapas:
-1. INTENÇÃO: resuma em uma frase o que LEFT mudou em relação a BASE e o que RIGHT mudou,
-   ou seja, o comportamento que cada desenvolvedor quis introduzir.
-2. ESTADO: liste os elementos de estado (conforme a definição e os exemplos acima) lidos ou
-   escritos pelos trechos alterados. Considere também métodos diferentes que acessam o mesmo
-   elemento e a ordem em que são executados.
-3. TABELA: para cada elemento X, descreva o valor/comportamento em BASE | LEFT | RIGHT | MERGE.
-4. CRITÉRIO: há conflito se existir um X tal que
-   (a) X é igual em BASE, LEFT e RIGHT, mas diferente em MERGE; ou
-   (b) X em LEFT (ou RIGHT) difere de BASE, e o MERGE não preserva o valor desse pai.
-5. Ignore refatorações sem efeito no comportamento e mudanças em elementos de estado independentes.
+Você deve estruturar sua resposta OBRIGATORIAMENTE em dois blocos: <analise> e <resultado>.
 
-Responda SIM ou NAO na primeira linha, depois mostre as etapas.
+Dentro da tag <analise>, execute os seguintes passos:
+1. INTENÇÃO: Resuma o que LEFT mudou em relação a BASE e o que RIGHT mudou.
+2. ESTADO: Liste os elementos de estado lidos ou escritos pelos trechos alterados de LEFT e RIGHT.
+3. TABELA DE ESTADOS: Descreva o comportamento/valor final esperado para os elementos afetados em BASE | LEFT | RIGHT | MERGE.
+4. CRITÉRIO DE CONFLITO: Avalie se existe algum elemento X onde:
+   - (A) LEFT e RIGHT escrevem/modificam elementos de estado dependentes e o MERGE não reconcilia essa dependência.
+   - (B) O valor ou comportamento introduzido por LEFT (ou RIGHT) é sobrescrito, ignorado ou quebrado pelas alterações do outro no MERGE.
 
-BASE contém o código completo. LEFT, RIGHT e MERGE são diffs unificados em relação a BASE
-(linhas iniciadas com - foram removidas e linhas iniciadas com + foram adicionadas).
+Dentro da tag <resultado>, retorne APENAS uma das seguintes linhas, sem texto adicional:
+- SIM - Condição <A ou B>: <variável de estado que sofreu o conflito>
+- NAO
 
-EXEMPLO
+BASE contém o código completo. LEFT, RIGHT e MERGE são diffs unificados em relação a BASE.
+
+EXEMPLO DE ENTRADA:
 BASE:
 cleanText() {{
     removeComments();
 }}
+LEFT: (adiciona normalizeWhiteSpace antes)
+RIGHT: (adiciona removeDuplicateWords depois)
+MERGE: (adiciona os dois)
 
-LEFT:
---- base.java
-+++ left.java
-@@ -1,3 +1,4 @@
- cleanText() {{
-+    normalizeWhiteSpace();
-     removeComments();
- }}
+EXEMPLO DE SAÍDA ESPERADA:
+<analise>
+1. INTENÇÃO: LEFT colapsa espaços múltiplos. RIGHT remove palavras duplicadas consecutivas.
+2. ESTADO: O campo `text` da instância, que cada método chamado em `cleanText` lê e reescreve (a ordem importa).
+3. TABELA DE ESTADOS: 
+   - Entrada: "HELLO  HELLO  WORLD"
+   - BASE: "HELLO  HELLO  WORLD" (sem comentários)
+   - LEFT: "HELLO HELLO WORLD"
+   - RIGHT: "HELLO    WORLD"
+   - MERGE: "HELLO  WORLD"
+4. CRITÉRIO DE CONFLITO: O resultado do MERGE executa RIGHT depois de LEFT. A intenção de LEFT (colapso total de espaços) é quebrada pelas inserções de espaços de RIGHT ou pela falta de normalização final.
+</analise>
+<resultado>
+SIM - Condição B: this.text
+</resultado>
 
-RIGHT:
---- base.java
-+++ right.java
-@@ -1,3 +1,4 @@
- cleanText() {{
-     removeComments();
-+    removeDuplicateWords();
- }}
-
-MERGE:
---- base.java
-+++ merge.java
-@@ -1,3 +1,5 @@
- cleanText() {{
-+    normalizeWhiteSpace();
-     removeComments();
-+    removeDuplicateWords();
- }}
-
-Análise:
-- Intenção LEFT: colapsar espaços múltiplos. Intenção RIGHT: remover palavras duplicadas consecutivas.
-- Estado: o campo text da instância, que cada método chamado em cleanText lê e reescreve
-  (a ordem das operações importa).
-- Entrada "HELLO  HELLO  WORLD" (dois espaços entre as palavras):
-  LEFT -> "HELLO HELLO WORLD"; RIGHT -> "HELLO    WORLD"; MERGE -> "HELLO  WORLD".
-- O resultado do MERGE mantém espaços duplicados que LEFT queria colapsar em um só.
-Resposta: SIM
-
-AGORA ANALISE:
+AGORA ANALISE O SEGUINTE CASO:
 
 BASE:
 {base}
@@ -146,44 +105,36 @@ RIGHT:
 MERGE:
 {merge}""",
 
-"prompt_teste_mental": """Você é um desenvolvedor sênior investigando se um merge introduziu um conflito semântico.
+    "zero_shot_guided": """Você é um desenvolvedor sênior investigando se um merge introduziu um conflito semântico.
 
 DEFINIÇÃO CONFLITO SEMÂNTICO
-Conflito semântico é quando dois commits se juntam sem conflito textual, mas o programa
-resultante se comporta de forma diferente do que algum dos desenvolvedores queria.
+Conflito semântico ocorre quando dois commits se juntam sem conflito textual, mas o programa resultante se comporta de forma diferente do que algum dos desenvolvedores queria. 
 
-Investigue como um desenvolvedor faria, nesta ordem:
+DEFINIÇÃO ELEMENTO DE ESTADO (VARIÁVEL DE ESTADO)
+É qualquer posição de memória ou canal de saída que a execução do código pode escrever e depois ler. Inclui: variável local, parâmetro, campo estático ou de instância, posição de array, elemento de coleção, arquivo, fluxo, expressão de um return, exceção lançada e estado temporário.
 
-PASSO 1 - ENTENDER O CÓDIGO
-Explique em poucas frases o que o código faz em BASE. Depois diga o que LEFT mudou e o que
-RIGHT mudou em relação a BASE, e qual comportamento cada desenvolvedor provavelmente queria
-obter. Por fim, descreva como o MERGE combinou as duas mudanças (inclusive a ordem em que
-as operações passaram a executar).
+TARGET é o método que sofreu alteração no merge; centre a análise nele.
 
-PASSO 2 - IDENTIFICAR AS VARIÁVEIS DE ESTADO
-Variável de estado (ou elemento de estado) é qualquer posição de memória ou canal de saída
-que a execução do código pode escrever e depois ler. Inclui: variável local, parâmetro,
-campo estático ou de instância, posição de array, elemento de coleção, arquivo, fluxo,
-expressão de um return, exceção lançada e estado temporário.
+Você deve estruturar sua resposta OBRIGATORIAMENTE em dois blocos: <analise> e <resultado>.
 
-PASSO 3 - SIMULAR UM CASO QUE SATISFAÇA OS CRITÉRIOS
-Para cada variável X do passo 2, tente imaginar uma entrada ou um estado inicial concreto
-em que X se comporte de acordo com um dos critérios abaixo:
-  (a) X tem o mesmo valor/comportamento em BASE, LEFT e RIGHT, mas diferente em MERGE; ou
-  (b) X em LEFT (ou RIGHT) difere de BASE, e o MERGE não preserva o valor desse pai.
-Execute mentalmente BASE, LEFT, RIGHT e MERGE com essa entrada, passo a passo, e anote o
-valor de X em cada versão (BASE | LEFT | RIGHT | MERGE).
+Dentro da tag <analise>, execute os seguintes passos:
+1. INTENÇÃO: Use os resumos de LEFT e RIGHT fornecidos abaixo como o comportamento que cada desenvolvedor quis introduzir.
+2. ESTADO: Liste os elementos de estado lidos ou escritos pelo método TARGET e pelos trechos alterados.
+3. TABELA DE ESTADOS: Descreva o comportamento/valor final esperado para os elementos afetados em BASE | LEFT | RIGHT | MERGE.
+4. CRITÉRIO DE CONFLITO: Avalie se existe algum elemento X onde:
+   - (A) LEFT e RIGHT escrevem/modificam elementos de estado dependentes e o MERGE não reconcilia essa dependência.
+   - (B) O valor ou comportamento introduzido por LEFT (ou RIGHT) difere de BASE, e o MERGE não preserva o efeito dessa mudança.
 
-PASSO 4 - CONCLUIR
-Se você encontrou uma entrada e uma variável que satisfazem (a) ou (b), há conflito: diga
-qual desenvolvedor teve a intenção violada. Se, depois de tentar, nenhuma variável
-satisfaz os critérios, não há conflito. Refatorações sem efeito no comportamento e
-mudanças em variáveis independentes não são conflito.
+Dentro da tag <resultado>, retorne APENAS uma das seguintes linhas, sem texto adicional:
+- SIM - Condição <A ou B>: <variável de estado que sofreu o conflito>
+- NAO
 
-Na primeira linha responda SIM ou NAO. Depois mostre o raciocínio de cada passo.
+BASE contém o código completo. LEFT, RIGHT e MERGE são diffs unificados em relação a BASE.
 
-BASE contém o código completo. LEFT, RIGHT e MERGE são diffs unificados em relação a BASE
-(linhas iniciadas com - foram removidas e linhas iniciadas com + foram adicionadas).
+RESUMO DAS MUDANÇAS (fornecido)
+LEFT: {left_summary}
+RIGHT: {right_summary}
+TARGET: {target}
 
 BASE:
 {base}
@@ -196,4 +147,68 @@ RIGHT:
 
 MERGE:
 {merge}""",
+
+    "one_shot_guided": """Você é um desenvolvedor sênior investigando se um merge introduziu um conflito semântico.
+
+DEFINIÇÃO CONFLITO SEMÂNTICO
+Conflito semântico ocorre quando dois commits se juntam sem conflito textual, mas o programa resultante se comporta de forma diferente do que algum dos desenvolvedores queria.
+
+DEFINIÇÃO ELEMENTO DE ESTADO (VARIÁVEL DE ESTADO)
+É qualquer posição de memória ou canal de saída que a execução do código pode escrever e depois ler.
+
+TARGET é o método que sofreu alteração no merge; centre a análise nele.
+
+Você deve estruturar sua resposta OBRIGATORIAMENTE em dois blocos: <analise> e <resultado>.
+
+Dentro da tag <analise>, execute os seguintes passos:
+1. INTENÇÃO: Use os resumos de LEFT e RIGHT fornecidos abaixo.
+2. ESTADO: Liste os elementos de estado lidos ou escritos pelo método TARGET.
+3. TABELA DE ESTADOS: Descreva o comportamento esperado em BASE | LEFT | RIGHT | MERGE.
+4. CRITÉRIO DE CONFLITO: Avalie se existe algum elemento X onde:
+   - (A) LEFT e RIGHT escrevem/modificam elementos dependentes não reconciliados no MERGE.
+   - (B) O MERGE quebra/sobrescreve o efeito introduzido por um dos lados.
+
+Dentro da tag <resultado>, retorne APENAS uma das seguintes linhas, sem texto adicional:
+- SIM - Condição <A ou B>: <variável de estado que sofreu o conflito>
+- NAO
+
+EXEMPLO DE ENTRADA:
+RESUMO DAS MUDANÇAS
+LEFT: Left adds a call to normalizeWhiteSpace() in cleanText()
+RIGHT: Right adds a call to removeDuplicateWords() in cleanText()
+TARGET: cleanText()
+
+EXEMPLO DE SAÍDA ESPERADA:
+<analise>
+1. INTENÇÃO: LEFT colapsa espaços. RIGHT remove duplicatas.
+2. ESTADO: this.text, lido e modificado pelas chamadas na ordem em que aparecem.
+3. TABELA DE ESTADOS: 
+   - Entrada: "HELLO  HELLO  WORLD"
+   - LEFT: "HELLO HELLO WORLD"
+   - RIGHT: "HELLO    WORLD"
+   - MERGE: "HELLO  WORLD"
+4. CRITÉRIO DE CONFLITO: O MERGE não preserva o colapso de espaços de LEFT.
+</analise>
+<resultado>
+SIM - Condição B: this.text
+</resultado>
+
+AGORA ANALISE O SEGUINTE CASO:
+
+RESUMO DAS MUDANÇAS (fornecido)
+LEFT: {left_summary}
+RIGHT: {right_summary}
+TARGET: {target}
+
+BASE:
+{base}
+
+LEFT:
+{left}
+
+RIGHT:
+{right}
+
+MERGE:
+{merge}"""
 }

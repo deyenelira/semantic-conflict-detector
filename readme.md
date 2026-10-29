@@ -44,7 +44,7 @@ pip install -r requirements.txt
 ## Execucao
 
 ```
-python3 -m src.conflict_detector --provider groq   # ou gemini / ollama
+python3 -m src.conflict_detector --provider groq   # ou anthropic / gemini / ollama
 python3 -m src.conflict_detector --provider groq --dataset mergedataset
 ```
 
@@ -66,6 +66,11 @@ Todo dataset segue a mesma estrutura:
 - `data/<dataset>/<pasta>/{base,left,right,merge}.<extensão>`: o código de cada versão.
 
 Ao carregar um caso, `{base}` recebe o código completo de BASE e `{left}`, `{right}` e `{merge}` recebem diffs unificados em relação a BASE, o que os prompts informam explicitamente. As demais colunas ficam disponíveis para prompts que as usem (`{target}`, `{left_summary}`, `{right_summary}`).
+
+Os prompts, em `src/prompts.py`, são quatro (zero-shot e one-shot, cada um em duas variantes), e a resposta final vem no bloco `<resultado>`:
+
+- `zero_shot_autonomous` e `one_shot_autonomous`: o próprio modelo descreve o que LEFT e RIGHT mudaram.
+- `zero_shot_guided` e `one_shot_guided`: usam os resumos do dataset (`left_summary`, `right_summary`) e o `target`, o método que sofreu alteração no merge, como foco da análise.
 
 ### toy
 
@@ -89,7 +94,7 @@ O Ollama usa um contexto pequeno por padrão e corta o início de prompts longos
 
 Os resultados serão armazenados em `results/<dataset>_<provider>_<data-hora>_response.csv` (ex.: `toy_groq_20261028-0044_response.csv`), então uma nova execução nunca sobrescreve as anteriores.
 
-Colunas: `id`, `prompt`, `response` e `status`:
+Colunas (em inglês): `id`, `prompt`, `expected answer` (o `label` do dataset, `YES`/`NO`), `model answer` (`YES`/`NO`, convertido do `SIM`/`NAO` que os prompts pedem), `violated condition` (`A`/`B`), `state variable` e `status`. As três colunas extraídas da resposta ficam vazias quando o modelo não segue o formato `SIM - Condição A: <variável>` / `NAO`. O `status` pode ser:
 
 - `ok`: o modelo respondeu;
 - `skipped: ~<tokens estimados> tokens > <limite>`: o prompt passa do limite do provedor e não foi enviado;
