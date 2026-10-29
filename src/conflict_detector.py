@@ -22,7 +22,7 @@ def estimate_tokens(text):
 
 # "SIM - Condição A: variável" / "NAO" (tolera markdown e variações de acento/pontuação)
 RESPONSE_RE = re.compile(
-    r"(SIM|N[AÃ]O)\b(?:\s*[-–—:]\s*(?:Condi[cç][aã]o\s*)?\(?([AB])\)?\b\s*[:\-–—]?\s*(.*))?",
+    r"(SIM|N[AÃ]O)\b(?:\s*[-–—:]\s*(?:Condi[cç][aã]o\s*)?\(?([ABC])\)?\b\s*[:\-–—]?\s*(.*))?",
     re.IGNORECASE)
 
 # os prompts pedem a análise em <analise> e a resposta final em <resultado>

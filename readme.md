@@ -67,10 +67,9 @@ Todo dataset segue a mesma estrutura:
 
 Ao carregar um caso, `{base}` recebe o código completo de BASE e `{left}`, `{right}` e `{merge}` recebem diffs unificados em relação a BASE, o que os prompts informam explicitamente. As demais colunas ficam disponíveis para prompts que as usem (`{target}`, `{left_summary}`, `{right_summary}`).
 
-Os prompts, em `src/prompts.py`, são quatro (zero-shot e one-shot, cada um em duas variantes), e a resposta final vem no bloco `<resultado>`:
+Os prompts, em `src/prompts.py`, são dois (zero-shot e one-shot), e a resposta final vem no bloco `<resultado>`:
 
-- `zero_shot_autonomous` e `one_shot_autonomous`: o próprio modelo descreve o que LEFT e RIGHT mudaram.
-- `zero_shot_guided` e `one_shot_guided`: usam os resumos do dataset (`left_summary`, `right_summary`) e o `target`, o método que sofreu alteração no merge, como foco da análise.
+- `zero_shot_guided` e `one_shot_guided`: ambos usam os resumos do dataset (`left_summary`, `right_summary`) e o `target`, o método que sofreu alteração no merge, como foco da análise.
 
 ### toy
 
