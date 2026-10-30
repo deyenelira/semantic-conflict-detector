@@ -1,6 +1,6 @@
 # Relatório comparativo — Detecção de conflitos semânticos em merges (família Claude)
 
-- **Modelos:** `claude-haiku-5-5`, `claude-sonnet-5-5`, `claude-opus-5-5`, `claude-fable-5-1` (o arquivo do quarto modelo chama-se `claude-flabe-5-1.csv`)
+- **Modelos:** `claude-haiku-5-5`, `claude-sonnet-5-5`, `claude-opus-5-5`, `claude-fable-5-1` 
 - **Dataset:** `mergedataset` — 79 merges (29 com conflito semântico = YES, 50 sem = NO)
 - **Fonte:** `results/final/claude-*.csv`
 - **Prompts avaliados:** apenas 2 (`zero_shot_guided` e `one_shot_guided`) — as variantes *autonomous* não constam nesses arquivos
