@@ -1,0 +1,25 @@
+﻿id,prompt,expected answer,model answer,violated condition,state variable,status
+c01_porcentagem_fracao#obter_desconto,zero_shot_guided_none,YES,YES,C,valor de retorno de obter_desconto (E1),ok
+c01_porcentagem_fracao#obter_desconto,zero_shot_guided_summaries,YES,YES,C,retorno de obter_desconto(),ok
+c01_porcentagem_fracao#obter_desconto,zero_shot_guided_target,YES,YES,C,valor de retorno de obter_desconto,ok
+c01_porcentagem_fracao#obter_desconto,zero_shot_guided_both,YES,YES,C,retorno de obter_desconto(cliente),ok
+c01_porcentagem_fracao#obter_desconto,few_shot_guided_none,YES,YES,C,obter_desconto(cliente),ok
+c01_porcentagem_fracao#obter_desconto,few_shot_guided_summaries,YES,YES,C,obter_desconto(cliente),ok
+c01_porcentagem_fracao#obter_desconto,few_shot_guided_target,YES,YES,C,obter_desconto(cliente),ok
+c01_porcentagem_fracao#obter_desconto,few_shot_guided_both,YES,YES,C,obter_desconto(cliente),ok
+n02_nova_view_sem_duplicar#registrar_acesso,zero_shot_guided_none,NO,YES,A,"contador de métricas metricas[""acessos:/categoria/{slug}""]",ok
+n02_nova_view_sem_duplicar#registrar_acesso,zero_shot_guided_summaries,NO,NO,,,ok
+n02_nova_view_sem_duplicar#registrar_acesso,zero_shot_guided_target,NO,NO,,,ok
+n02_nova_view_sem_duplicar#registrar_acesso,zero_shot_guided_both,NO,NO,,,ok
+n02_nova_view_sem_duplicar#registrar_acesso,few_shot_guided_none,NO,YES,C,"metricas (contador acessos:<pagina>, escrito por registrar_acesso)",ok
+n02_nova_view_sem_duplicar#registrar_acesso,few_shot_guided_summaries,NO,NO,,,ok
+n02_nova_view_sem_duplicar#registrar_acesso,few_shot_guided_target,NO,YES,A,"metricas[""acessos:/categoria/...""] (contador de métricas de acesso por categoria)",ok
+n02_nova_view_sem_duplicar#registrar_acesso,few_shot_guided_both,NO,NO,,,ok
+c05_lista_vira_gerador#listar_pedidos,zero_shot_guided_none,YES,YES,C,valor de retorno de `listar_pedidos` (lido pela variável local `pedidos` em `gerar_extrato`),ok
+c05_lista_vira_gerador#listar_pedidos,zero_shot_guided_summaries,YES,YES,C,"retorno de listar_pedidos (variável pedidos em gerar_extrato, consumida pelo sum e esgotada antes de linhas)",ok
+c05_lista_vira_gerador#listar_pedidos,zero_shot_guided_target,YES,YES,C,"pedidos (variável local em gerar_extrato, recebe o valor retornado por listar_pedidos)",ok
+c05_lista_vira_gerador#listar_pedidos,zero_shot_guided_both,YES,YES,C,retorno de listar_pedidos (gerador consumido por sum em gerar_extrato),ok
+c05_lista_vira_gerador#listar_pedidos,few_shot_guided_none,YES,YES,C,"pedidos (retorno de listar_pedidos, lido por gerar_extrato)",ok
+c05_lista_vira_gerador#listar_pedidos,few_shot_guided_summaries,YES,YES,C,"pedidos (retorno de listar_pedidos, consumido por gerar_extrato)",ok
+c05_lista_vira_gerador#listar_pedidos,few_shot_guided_target,YES,YES,C,"retorno de listar_pedidos(cliente_id) (lido por gerar_extrato via `pedidos`, que resulta em `""linhas""` vazio)",ok
+c05_lista_vira_gerador#listar_pedidos,few_shot_guided_both,YES,YES,C,"pedidos (retorno de listar_pedidos, usado por gerar_extrato)",ok

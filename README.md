@@ -39,20 +39,42 @@ pip install -r requirements.txt
 
 ## Variaveis de ambiente
 
-É necessário criar um arquivo .env com as variáveis de ambiente relacionadas às API KEYS dos modelos utilizados
+Copie `.env.example` para `.env` e preencha as chaves dos provedores que for usar:
+
+- `GROQ_API_KEY`, `GEMINI_API_KEY`, `ANTHROPIC_API_KEY`;
+- `ANTHROPIC_WORKSPACE_ID`: só é necessária se a chave da Anthropic não estiver vinculada a um workspace.
+
+O Ollama roda localmente e não precisa de chave.
 
 ## Execucao
 
 ```
+source venv/bin/activate
 python3 -m src.conflict_detector --provider groq   # ou anthropic / gemini / ollama
 python3 -m src.conflict_detector --provider groq --dataset mergedataset
 ```
 
 Opções:
 
+- `--provider`: `anthropic`, `gemini`, `groq` ou `ollama` (padrão: `groq`).
 - `--dataset`: nome de um diretório em `data/` que tenha um `dataset.csv` (padrão: `toy`).
 
-Prompts maiores que o limite do provedor (`MAX_PROMPT_TOKENS` em `src/providers/<provider>.py`, comparado com uma estimativa do tamanho do prompt) não são enviados ao modelo.
+Cada caso do dataset é enviado uma vez para cada prompt de `src/prompts.py` (8 prompts: 24 chamadas no `toy`, 632 no `mergedataset`). Os prompts combinam zero-shot ou few-shot (6 exemplos) com quatro variantes de contexto: sem target nem resumos (`none`), só resumos (`summaries`), só target (`target`) e ambos (`both`).
+
+## Provedores
+
+O modelo e os limites de cada provedor ficam em `src/providers/<provider>.py` (`MODEL`, `MAX_PROMPT_TOKENS`).
+
+| Provedor | Modelo | Prompts ignorados acima de |
+|---|---|---|
+| `anthropic` | `claude-fable-5-1` | ~984k tokens (contexto de 1M menos 16k para a resposta) |
+| `gemini` | `gemini-3.8-flash` | ~1M tokens (confirmar no model card) |
+| `groq` | `openai/gpt-oss-120b` | ~5.950 tokens: o plano gratuito limita a 8.000 tokens por minuto, contando prompt e resposta (2.048) |
+| `ollama` | `codellama:7b-instruct` | ~24k tokens (veja abaixo) |
+
+Prompts maiores que o limite do provedor (`MAX_PROMPT_TOKENS`, comparado com uma estimativa do tamanho do prompt) não são enviados ao modelo. Com o plano gratuito do Groq, a maior parte do `mergedataset` é ignorada.
+
+Groq, Gemini e Anthropic repetem a chamada com espera crescente quando a falha é temporária (ex.: limite de requisições, erro do servidor). Na Anthropic, uma recusa do modelo é registrada como erro.
 
 ## Datasets
 
@@ -91,12 +113,33 @@ O Ollama usa um contexto pequeno por padrão e corta o início de prompts longos
 
 ## Saída
 
-Os resultados serão armazenados em `results/<dataset>_<provider>_<data-hora>_response.csv` (ex.: `toy_groq_20261028-0044_response.csv`), então uma nova execução nunca sobrescreve as anteriores.
+Os resultados serão armazenados em `results/<dataset>_<provider>_<data-hora>_response.csv` (ex.: `toy_groq_20261028-004741_response.csv`), então uma nova execução nunca sobrescreve as anteriores.
 
-Colunas (em inglês): `id`, `prompt`, `expected answer` (o `label` do dataset, `YES`/`NO`), `model answer` (`YES`/`NO`, convertido do `SIM`/`NAO` que os prompts pedem), `violated condition` (`A`/`B`), `state variable` e `status`. As três colunas extraídas da resposta ficam vazias quando o modelo não segue o formato `SIM - Condição A: <variável>` / `NAO`. O `status` pode ser:
+Colunas (em inglês): `id`, `prompt`, `expected answer` (o `label` do dataset, `YES`/`NO`), `model answer` (`YES`/`NO`, convertido do `SIM`/`NAO` que os prompts pedem), `violated condition` (`A`/`B`/`C`), `state variable` e `status`. As três colunas extraídas da resposta ficam vazias quando o modelo não segue o formato `SIM - Condição A: <variável>` / `NAO`. O `status` pode ser:
 
 - `ok`: o modelo respondeu;
 - `skipped: ~<tokens estimados> tokens > <limite>`: o prompt passa do limite do provedor e não foi enviado;
 - `error: <erro>`: a chamada falhou (ex.: limite de requisições do provedor). A execução continua com as próximas chamadas.
 
 
+
+## Métricas
+
+`src/metrics.py` lê um CSV de resultados e imprime um relatório em Markdown com as métricas por prompt:
+
+```
+python3 -m src.metrics results/toy_anthropic_20261102-212945_response.csv
+python3 -m src.metrics results/<arquivo>.csv > relatorio.md   # para salvar
+```
+
+O relatório traz:
+
+1. resultado geral e a baseline "sempre NO";
+2. acurácia, precisão, recall, F1, especificidade, TP/TN/FP/FN e chamadas sem resposta de cada prompt, além da distribuição de respostas YES/NO;
+3. efeito de cada fator: zero-shot vs. few-shot e o contexto fornecido (`none`, `summaries`, `target`, `both`), somando os prompts que compartilham o fator;
+4. concordância entre os prompts: votos YES por caso, ensemble por voto (YES se ≥k prompts) e concordância par a par;
+5. condição violada (A/B/C) nas respostas YES;
+6. acertos por projeto (no `toy`, cada caso é um projeto);
+7. chamadas sem resposta YES/NO: ignoradas (prompt grande demais), erros, recusas e respostas fora do formato.
+
+As métricas (classe YES = conflito) consideram só as chamadas com resposta YES/NO; as demais são contadas à parte em "Sem resposta", para que prompts ignorados por limite de tamanho não sejam contados como erros do modelo. A exceção é o resultado por projeto, que conta as chamadas sem resposta como incorretas.

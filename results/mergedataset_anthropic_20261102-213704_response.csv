@@ -1,0 +1,633 @@
+﻿id,prompt,expected answer,model answer,violated condition,state variable,status
+storm__ad2be678__KafkaSpoutConfig#toString,zero_shot_guided_none,YES,YES,C,maxRetries,ok
+storm__ad2be678__KafkaSpoutConfig#toString,zero_shot_guided_summaries,YES,YES,C,maxRetries,ok
+storm__ad2be678__KafkaSpoutConfig#toString,zero_shot_guided_target,YES,YES,C,maxRetries,ok
+storm__ad2be678__KafkaSpoutConfig#toString,zero_shot_guided_both,YES,YES,C,maxRetries,ok
+storm__ad2be678__KafkaSpoutConfig#toString,few_shot_guided_none,YES,YES,C,maxRetries,ok
+storm__ad2be678__KafkaSpoutConfig#toString,few_shot_guided_summaries,YES,YES,C,maxRetries,ok
+storm__ad2be678__KafkaSpoutConfig#toString,few_shot_guided_target,YES,YES,B,this.maxRetries (exibido em toString()),ok
+storm__ad2be678__KafkaSpoutConfig#toString,few_shot_guided_both,YES,YES,B,retorno de toString() (campo maxRetries),ok
+storm__bd1f5c54__KafkaSpout#emitTupleIfNotEmitted,zero_shot_guided_none,NO,,,,ok
+storm__bd1f5c54__KafkaSpout#emitTupleIfNotEmitted,zero_shot_guided_summaries,NO,YES,C,emitted,ok
+storm__bd1f5c54__KafkaSpout#emitTupleIfNotEmitted,zero_shot_guided_target,NO,YES,C,emitted,ok
+storm__bd1f5c54__KafkaSpout#emitTupleIfNotEmitted,zero_shot_guided_both,NO,NO,,,ok
+storm__bd1f5c54__KafkaSpout#emitTupleIfNotEmitted,few_shot_guided_none,NO,YES,C,emitted,ok
+storm__bd1f5c54__KafkaSpout#emitTupleIfNotEmitted,few_shot_guided_summaries,NO,NO,,,ok
+storm__bd1f5c54__KafkaSpout#emitTupleIfNotEmitted,few_shot_guided_target,NO,NO,,,ok
+storm__bd1f5c54__KafkaSpout#emitTupleIfNotEmitted,few_shot_guided_both,NO,NO,,,ok
+antlr4__69ff2669__Python2Target#python2Keywords,zero_shot_guided_none,YES,YES,B,"python2Keywords (conteúdo do array, usado para preencher badWords)",ok
+antlr4__69ff2669__Python2Target#python2Keywords,zero_shot_guided_summaries,YES,YES,B,array python2Keywords (conjunto badWords),ok
+antlr4__69ff2669__Python2Target#python2Keywords,zero_shot_guided_target,YES,NO,,,ok
+antlr4__69ff2669__Python2Target#python2Keywords,zero_shot_guided_both,YES,YES,B,python2Keywords,ok
+antlr4__69ff2669__Python2Target#python2Keywords,few_shot_guided_none,YES,YES,B,python2Keywords (conjunto badWords),ok
+antlr4__69ff2669__Python2Target#python2Keywords,few_shot_guided_summaries,YES,YES,B,python2Keywords,ok
+antlr4__69ff2669__Python2Target#python2Keywords,few_shot_guided_target,YES,YES,B,python2Keywords,ok
+antlr4__69ff2669__Python2Target#python2Keywords,few_shot_guided_both,YES,YES,B,python2Keywords,ok
+antlr4__69ff2669__Python3Target#python3Keywords,zero_shot_guided_none,YES,YES,B,"python3Keywords (array de palavras reservadas, populado em badWords)",ok
+antlr4__69ff2669__Python3Target#python3Keywords,zero_shot_guided_summaries,YES,YES,B,array de Strings `python3Keywords` (conjunto de palavras evitadas em `badWords`),ok
+antlr4__69ff2669__Python3Target#python3Keywords,zero_shot_guided_target,YES,YES,B,python3Keywords,ok
+antlr4__69ff2669__Python3Target#python3Keywords,zero_shot_guided_both,YES,YES,B,python3Keywords,ok
+antlr4__69ff2669__Python3Target#python3Keywords,few_shot_guided_none,YES,YES,B,python3Keywords,ok
+antlr4__69ff2669__Python3Target#python3Keywords,few_shot_guided_summaries,YES,YES,B,"python3Keywords (array de palavras reservadas, refletido em badWords)",ok
+antlr4__69ff2669__Python3Target#python3Keywords,few_shot_guided_target,YES,YES,B,python3Keywords,ok
+antlr4__69ff2669__Python3Target#python3Keywords,few_shot_guided_both,YES,YES,B,python3Keywords,ok
+cloud-slang__20bac30d__SlangImpl#getAllEventTypes,zero_shot_guided_none,YES,YES,B,eventTypes,ok
+cloud-slang__20bac30d__SlangImpl#getAllEventTypes,zero_shot_guided_summaries,YES,YES,B,eventTypes (conjunto de tipos de evento retornado por getAllEventTypes),ok
+cloud-slang__20bac30d__SlangImpl#getAllEventTypes,zero_shot_guided_target,YES,YES,B,eventTypes (conjunto retornado por getAllEventTypes()),ok
+cloud-slang__20bac30d__SlangImpl#getAllEventTypes,zero_shot_guided_both,YES,YES,B,eventTypes (conjunto de eventos retornado por getAllEventTypes),ok
+cloud-slang__20bac30d__SlangImpl#getAllEventTypes,few_shot_guided_none,YES,YES,B,eventTypes,ok
+cloud-slang__20bac30d__SlangImpl#getAllEventTypes,few_shot_guided_summaries,YES,NO,,,ok
+cloud-slang__20bac30d__SlangImpl#getAllEventTypes,few_shot_guided_target,YES,NO,,,ok
+cloud-slang__20bac30d__SlangImpl#getAllEventTypes,few_shot_guided_both,YES,YES,B,eventTypes,ok
+fitnesse__4d9ba9d2__SlimTableFactory#SlimTableFactory,zero_shot_guided_none,YES,YES,B,tableTypes,ok
+fitnesse__4d9ba9d2__SlimTableFactory#SlimTableFactory,zero_shot_guided_summaries,YES,NO,,,ok
+fitnesse__4d9ba9d2__SlimTableFactory#SlimTableFactory,zero_shot_guided_target,YES,YES,B,tableTypes,ok
+fitnesse__4d9ba9d2__SlimTableFactory#SlimTableFactory,zero_shot_guided_both,YES,YES,B,tableTypes,ok
+fitnesse__4d9ba9d2__SlimTableFactory#SlimTableFactory,few_shot_guided_none,YES,NO,,,ok
+fitnesse__4d9ba9d2__SlimTableFactory#SlimTableFactory,few_shot_guided_summaries,YES,NO,,,ok
+fitnesse__4d9ba9d2__SlimTableFactory#SlimTableFactory,few_shot_guided_target,YES,NO,,,ok
+fitnesse__4d9ba9d2__SlimTableFactory#SlimTableFactory,few_shot_guided_both,YES,NO,,,ok
+fitnesse__4d9ba9d2__SlimTableFactoryTest#setUp,zero_shot_guided_none,YES,YES,B,map,ok
+fitnesse__4d9ba9d2__SlimTableFactoryTest#setUp,zero_shot_guided_summaries,YES,NO,,,ok
+fitnesse__4d9ba9d2__SlimTableFactoryTest#setUp,zero_shot_guided_target,YES,YES,B,map,ok
+fitnesse__4d9ba9d2__SlimTableFactoryTest#setUp,zero_shot_guided_both,YES,YES,B,map,ok
+fitnesse__4d9ba9d2__SlimTableFactoryTest#setUp,few_shot_guided_none,YES,NO,,,ok
+fitnesse__4d9ba9d2__SlimTableFactoryTest#setUp,few_shot_guided_summaries,YES,NO,,,ok
+fitnesse__4d9ba9d2__SlimTableFactoryTest#setUp,few_shot_guided_target,YES,YES,B,map,ok
+fitnesse__4d9ba9d2__SlimTableFactoryTest#setUp,few_shot_guided_both,YES,NO,,,ok
+okhttp__35166168__OkHttpClient#copyWithDefaults,zero_shot_guided_none,NO,NO,,,ok
+okhttp__35166168__OkHttpClient#copyWithDefaults,zero_shot_guided_summaries,NO,NO,,,ok
+okhttp__35166168__OkHttpClient#copyWithDefaults,zero_shot_guided_target,NO,NO,,,ok
+okhttp__35166168__OkHttpClient#copyWithDefaults,zero_shot_guided_both,NO,NO,,,ok
+okhttp__35166168__OkHttpClient#copyWithDefaults,few_shot_guided_none,NO,NO,,,ok
+okhttp__35166168__OkHttpClient#copyWithDefaults,few_shot_guided_summaries,NO,NO,,,ok
+okhttp__35166168__OkHttpClient#copyWithDefaults,few_shot_guided_target,NO,NO,,,ok
+okhttp__35166168__OkHttpClient#copyWithDefaults,few_shot_guided_both,NO,NO,,,ok
+okhttp__1151c985__GzipSource#consumeHeader,zero_shot_guided_none,NO,NO,,,ok
+okhttp__1151c985__GzipSource#consumeHeader,zero_shot_guided_summaries,NO,NO,,,ok
+okhttp__1151c985__GzipSource#consumeHeader,zero_shot_guided_target,NO,NO,,,ok
+okhttp__1151c985__GzipSource#consumeHeader,zero_shot_guided_both,NO,NO,,,ok
+okhttp__1151c985__GzipSource#consumeHeader,few_shot_guided_none,NO,NO,,,ok
+okhttp__1151c985__GzipSource#consumeHeader,few_shot_guided_summaries,NO,NO,,,ok
+okhttp__1151c985__GzipSource#consumeHeader,few_shot_guided_target,NO,NO,,,ok
+okhttp__1151c985__GzipSource#consumeHeader,few_shot_guided_both,NO,NO,,,ok
+jOOQ__d96120f3__DSL#coalesce,zero_shot_guided_none,NO,YES,B,"sobrecarga coalesce(Field<T> field, T value) (corpo da expressão de retorno: Utils.field(value) em RIGHT vs Utils.field(value, field) em LEFT/MERGE)",ok
+jOOQ__d96120f3__DSL#coalesce,zero_shot_guided_summaries,NO,YES,B,"valor de retorno da sobrecarga coalesce(Field<T> field, T value) (RIGHT: Utils.field(value) sem o tipo do campo; MERGE mantém o corpo de LEFT)",ok
+jOOQ__d96120f3__DSL#coalesce,zero_shot_guided_target,NO,NO,,,ok
+jOOQ__d96120f3__DSL#coalesce,zero_shot_guided_both,NO,YES,B,"valor de retorno (expressão Field<T>) do método coalesce(Field<T>, T)",ok
+jOOQ__d96120f3__DSL#coalesce,few_shot_guided_none,NO,YES,A,"imports java.util.Arrays, org.jooq.conf.RenderNameStyle e org.jooq.conf.Settings",ok
+jOOQ__d96120f3__DSL#coalesce,few_shot_guided_summaries,NO,YES,B,"DSL.coalesce(Field<T> field, T value) (corpo/valor de retorno do método, onde o MERGE mantém a versão de LEFT e descarta a de RIGHT)",ok
+jOOQ__d96120f3__DSL#coalesce,few_shot_guided_target,NO,NO,,,ok
+jOOQ__d96120f3__DSL#coalesce,few_shot_guided_both,NO,YES,B,"coalesce(Field<T>, T)",ok
+swagger-maven-plugin__e825a7fd__AbstractReader#hasValidAnnotations,zero_shot_guided_none,YES,YES,B,validParameterAnnotations,ok
+swagger-maven-plugin__e825a7fd__AbstractReader#hasValidAnnotations,zero_shot_guided_summaries,YES,YES,B,validParameterAnnotations,ok
+swagger-maven-plugin__e825a7fd__AbstractReader#hasValidAnnotations,zero_shot_guided_target,YES,YES,B,validParameterAnnotations,ok
+swagger-maven-plugin__e825a7fd__AbstractReader#hasValidAnnotations,zero_shot_guided_both,YES,YES,B,validParameterAnnotations,ok
+swagger-maven-plugin__e825a7fd__AbstractReader#hasValidAnnotations,few_shot_guided_none,YES,YES,B,validParameterAnnotations,ok
+swagger-maven-plugin__e825a7fd__AbstractReader#hasValidAnnotations,few_shot_guided_summaries,YES,YES,B,validParameterAnnotations,ok
+swagger-maven-plugin__e825a7fd__AbstractReader#hasValidAnnotations,few_shot_guided_target,YES,YES,B,validParameterAnnotations (presença de RequestBody; retorno de hasValidAnnotations para @RequestBody),ok
+swagger-maven-plugin__e825a7fd__AbstractReader#hasValidAnnotations,few_shot_guided_both,YES,YES,B,validParameterAnnotations,ok
+retrofit__71f622ce__RequestBuilder#build,zero_shot_guided_none,YES,NO,,,ok
+retrofit__71f622ce__RequestBuilder#build,zero_shot_guided_summaries,YES,NO,,,ok
+retrofit__71f622ce__RequestBuilder#build,zero_shot_guided_target,YES,YES,B,url,ok
+retrofit__71f622ce__RequestBuilder#build,zero_shot_guided_both,YES,YES,B,url,ok
+retrofit__71f622ce__RequestBuilder#build,few_shot_guided_none,YES,NO,,,ok
+retrofit__71f622ce__RequestBuilder#build,few_shot_guided_summaries,YES,YES,B,url,ok
+retrofit__71f622ce__RequestBuilder#build,few_shot_guided_target,YES,NO,,,ok
+retrofit__71f622ce__RequestBuilder#build,few_shot_guided_both,YES,YES,B,url (conteúdo final da URL montada em build()),ok
+retrofit__2b6c719c__RestAdapter#logAndReplaceResponse,zero_shot_guided_none,NO,NO,,,ok
+retrofit__2b6c719c__RestAdapter#logAndReplaceResponse,zero_shot_guided_summaries,NO,NO,,,ok
+retrofit__2b6c719c__RestAdapter#logAndReplaceResponse,zero_shot_guided_target,NO,NO,,,ok
+retrofit__2b6c719c__RestAdapter#logAndReplaceResponse,zero_shot_guided_both,NO,NO,,,ok
+retrofit__2b6c719c__RestAdapter#logAndReplaceResponse,few_shot_guided_none,NO,YES,B,saída de log (fluxo de log.log) de request/response,ok
+retrofit__2b6c719c__RestAdapter#logAndReplaceResponse,few_shot_guided_summaries,NO,NO,,,ok
+retrofit__2b6c719c__RestAdapter#logAndReplaceResponse,few_shot_guided_target,NO,NO,,,ok
+retrofit__2b6c719c__RestAdapter#logAndReplaceResponse,few_shot_guided_both,NO,NO,,,ok
+retrofit__2b6c719c__RestAdapter#logAndReplaceRequest,zero_shot_guided_none,NO,NO,,,ok
+retrofit__2b6c719c__RestAdapter#logAndReplaceRequest,zero_shot_guided_summaries,NO,NO,,,ok
+retrofit__2b6c719c__RestAdapter#logAndReplaceRequest,zero_shot_guided_target,NO,NO,,,ok
+retrofit__2b6c719c__RestAdapter#logAndReplaceRequest,zero_shot_guided_both,NO,NO,,,ok
+retrofit__2b6c719c__RestAdapter#logAndReplaceRequest,few_shot_guided_none,NO,NO,,,ok
+retrofit__2b6c719c__RestAdapter#logAndReplaceRequest,few_shot_guided_summaries,NO,NO,,,ok
+retrofit__2b6c719c__RestAdapter#logAndReplaceRequest,few_shot_guided_target,NO,NO,,,ok
+retrofit__2b6c719c__RestAdapter#logAndReplaceRequest,few_shot_guided_both,NO,NO,,,ok
+jsoup__a8b6982d__HttpConnection#execute,zero_shot_guided_none,YES,NO,,,ok
+jsoup__a8b6982d__HttpConnection#execute,zero_shot_guided_summaries,YES,NO,,,ok
+jsoup__a8b6982d__HttpConnection#execute,zero_shot_guided_target,YES,NO,,,ok
+jsoup__a8b6982d__HttpConnection#execute,zero_shot_guided_both,YES,NO,,,ok
+jsoup__a8b6982d__HttpConnection#execute,few_shot_guided_none,YES,NO,,,ok
+jsoup__a8b6982d__HttpConnection#execute,few_shot_guided_summaries,YES,NO,,,ok
+jsoup__a8b6982d__HttpConnection#execute,few_shot_guided_target,YES,NO,,,ok
+jsoup__a8b6982d__HttpConnection#execute,few_shot_guided_both,YES,NO,,,ok
+jsoup__3f7d2c71__HttpConnection#execute,zero_shot_guided_none,YES,NO,,,ok
+jsoup__3f7d2c71__HttpConnection#execute,zero_shot_guided_summaries,YES,NO,,,ok
+jsoup__3f7d2c71__HttpConnection#execute,zero_shot_guided_target,YES,YES,C,needsRedirect,ok
+jsoup__3f7d2c71__HttpConnection#execute,zero_shot_guided_both,YES,YES,C,needsRedirect,ok
+jsoup__3f7d2c71__HttpConnection#execute,few_shot_guided_none,YES,NO,,,ok
+jsoup__3f7d2c71__HttpConnection#execute,few_shot_guided_summaries,YES,YES,C,needsRedirect,ok
+jsoup__3f7d2c71__HttpConnection#execute,few_shot_guided_target,YES,YES,C,needsRedirect,ok
+jsoup__3f7d2c71__HttpConnection#execute,few_shot_guided_both,YES,YES,C,needsRedirect,ok
+jsoup__a44e18aa__TextNode#outerHtmlHead,zero_shot_guided_none,YES,NO,,,ok
+jsoup__a44e18aa__TextNode#outerHtmlHead,zero_shot_guided_summaries,YES,NO,,,ok
+jsoup__a44e18aa__TextNode#outerHtmlHead,zero_shot_guided_target,YES,NO,,,ok
+jsoup__a44e18aa__TextNode#outerHtmlHead,zero_shot_guided_both,YES,NO,,,ok
+jsoup__a44e18aa__TextNode#outerHtmlHead,few_shot_guided_none,YES,NO,,,ok
+jsoup__a44e18aa__TextNode#outerHtmlHead,few_shot_guided_summaries,YES,NO,,,ok
+jsoup__a44e18aa__TextNode#outerHtmlHead,few_shot_guided_target,YES,NO,,,ok
+jsoup__a44e18aa__TextNode#outerHtmlHead,few_shot_guided_both,YES,NO,,,ok
+jsoup__fee47623__HttpConnection#createConnection,zero_shot_guided_none,NO,NO,,,ok
+jsoup__fee47623__HttpConnection#createConnection,zero_shot_guided_summaries,NO,NO,,,ok
+jsoup__fee47623__HttpConnection#createConnection,zero_shot_guided_target,NO,NO,,,ok
+jsoup__fee47623__HttpConnection#createConnection,zero_shot_guided_both,NO,NO,,,ok
+jsoup__fee47623__HttpConnection#createConnection,few_shot_guided_none,NO,NO,,,ok
+jsoup__fee47623__HttpConnection#createConnection,few_shot_guided_summaries,NO,NO,,,ok
+jsoup__fee47623__HttpConnection#createConnection,few_shot_guided_target,NO,NO,,,ok
+jsoup__fee47623__HttpConnection#createConnection,few_shot_guided_both,NO,NO,,,ok
+SimianArmy__345ad951__BasicJanitorMonkeyContext#getInstanceJanitor,zero_shot_guided_none,NO,YES,B,ruleEngine (local em getInstanceJanitor),ok
+SimianArmy__345ad951__BasicJanitorMonkeyContext#getInstanceJanitor,zero_shot_guided_summaries,NO,NO,,,ok
+SimianArmy__345ad951__BasicJanitorMonkeyContext#getInstanceJanitor,zero_shot_guided_target,NO,NO,,,ok
+SimianArmy__345ad951__BasicJanitorMonkeyContext#getInstanceJanitor,zero_shot_guided_both,NO,YES,B,ruleEngine (lista de regras do JanitorRuleEngine local de getInstanceJanitor),ok
+SimianArmy__345ad951__BasicJanitorMonkeyContext#getInstanceJanitor,few_shot_guided_none,NO,NO,,,ok
+SimianArmy__345ad951__BasicJanitorMonkeyContext#getInstanceJanitor,few_shot_guided_summaries,NO,YES,B,ruleEngine (lista de regras do JanitorRuleEngine em getInstanceJanitor),ok
+SimianArmy__345ad951__BasicJanitorMonkeyContext#getInstanceJanitor,few_shot_guided_target,NO,NO,,,ok
+SimianArmy__345ad951__BasicJanitorMonkeyContext#getInstanceJanitor,few_shot_guided_both,NO,YES,B,ruleEngine,ok
+titan__387c16ea__SerializerInitialization#initialize,zero_shot_guided_none,NO,NO,,,ok
+titan__387c16ea__SerializerInitialization#initialize,zero_shot_guided_summaries,NO,NO,,,ok
+titan__387c16ea__SerializerInitialization#initialize,zero_shot_guided_target,NO,NO,,,ok
+titan__387c16ea__SerializerInitialization#initialize,zero_shot_guided_both,NO,NO,,,ok
+titan__387c16ea__SerializerInitialization#initialize,few_shot_guided_none,NO,NO,,,ok
+titan__387c16ea__SerializerInitialization#initialize,few_shot_guided_summaries,NO,NO,,,ok
+titan__387c16ea__SerializerInitialization#initialize,few_shot_guided_target,NO,NO,,,ok
+titan__387c16ea__SerializerInitialization#initialize,few_shot_guided_both,NO,NO,,,ok
+activiti__50d8e43e__DeploymentEntityManager#deleteDeployment,zero_shot_guided_none,YES,YES,C,nrOfProcessDefinitionsWithSameKey,ok
+activiti__50d8e43e__DeploymentEntityManager#deleteDeployment,zero_shot_guided_summaries,YES,YES,C,nrOfProcessDefinitionsWithSameKey,ok
+activiti__50d8e43e__DeploymentEntityManager#deleteDeployment,zero_shot_guided_target,YES,YES,C,nrOfProcessDefinitionsWithSameKey,ok
+activiti__50d8e43e__DeploymentEntityManager#deleteDeployment,zero_shot_guided_both,YES,YES,C,nrOfProcessDefinitionsWithSameKey,ok
+activiti__50d8e43e__DeploymentEntityManager#deleteDeployment,few_shot_guided_none,YES,YES,C,nrOfProcessDefinitionsWithSameKey,ok
+activiti__50d8e43e__DeploymentEntityManager#deleteDeployment,few_shot_guided_summaries,YES,YES,C,nrOfProcessDefinitionsWithSameKey,ok
+activiti__50d8e43e__DeploymentEntityManager#deleteDeployment,few_shot_guided_target,YES,YES,C,nrOfProcessDefinitionsWithSameKey,ok
+activiti__50d8e43e__DeploymentEntityManager#deleteDeployment,few_shot_guided_both,YES,YES,C,nrOfProcessDefinitionsWithSameKey,ok
+activiti__bf46684b__UserTaskActivityBehavior#execute,zero_shot_guided_none,NO,YES,C,task.formKey,ok
+activiti__bf46684b__UserTaskActivityBehavior#execute,zero_shot_guided_summaries,NO,YES,C,"exceção lançada pelo bloco formKey (ClassCastException), que impede o dispatch do evento TASK_CREATED introduzido por RIGHT",ok
+activiti__bf46684b__UserTaskActivityBehavior#execute,zero_shot_guided_target,NO,YES,B,"evento TASK_CREATED (payload da entidade task, canal de saída)",ok
+activiti__bf46684b__UserTaskActivityBehavior#execute,zero_shot_guided_both,NO,YES,C,"task.formKey (campo formKey da entidade TaskEntity, exposto ao evento TASK_CREATED)",ok
+activiti__bf46684b__UserTaskActivityBehavior#execute,few_shot_guided_none,NO,YES,C,task.formKey (payload do evento TASK_CREATED),ok
+activiti__bf46684b__UserTaskActivityBehavior#execute,few_shot_guided_summaries,NO,YES,C,task.formKey,ok
+activiti__bf46684b__UserTaskActivityBehavior#execute,few_shot_guided_target,NO,YES,C,task.formKey (estado da entidade lido pelo evento TASK_CREATED),ok
+activiti__bf46684b__UserTaskActivityBehavior#execute,few_shot_guided_both,NO,YES,C,task.formKey,ok
+druid__05168808__S3SegmentPusher#push,zero_shot_guided_none,NO,NO,,,ok
+druid__05168808__S3SegmentPusher#push,zero_shot_guided_summaries,NO,NO,,,ok
+druid__05168808__S3SegmentPusher#push,zero_shot_guided_target,NO,NO,,,ok
+druid__05168808__S3SegmentPusher#push,zero_shot_guided_both,NO,NO,,,ok
+druid__05168808__S3SegmentPusher#push,few_shot_guided_none,NO,NO,,,ok
+druid__05168808__S3SegmentPusher#push,few_shot_guided_summaries,NO,NO,,,ok
+druid__05168808__S3SegmentPusher#push,few_shot_guided_target,NO,NO,,,ok
+druid__05168808__S3SegmentPusher#push,few_shot_guided_both,NO,NO,,,ok
+netty__193acdb3__LengthFieldBasedFrameDecoder#decode,zero_shot_guided_none,YES,NO,,,ok
+netty__193acdb3__LengthFieldBasedFrameDecoder#decode,zero_shot_guided_summaries,YES,YES,C,frameLength (tooLongFrameLength),ok
+netty__193acdb3__LengthFieldBasedFrameDecoder#decode,zero_shot_guided_target,YES,NO,,,ok
+netty__193acdb3__LengthFieldBasedFrameDecoder#decode,zero_shot_guided_both,YES,YES,C,"tooLongFrameLength (e bytesToDiscard, derivados de frameLength)",ok
+netty__193acdb3__LengthFieldBasedFrameDecoder#decode,few_shot_guided_none,YES,YES,C,bytesToDiscard,ok
+netty__193acdb3__LengthFieldBasedFrameDecoder#decode,few_shot_guided_summaries,YES,YES,C,frameLength,ok
+netty__193acdb3__LengthFieldBasedFrameDecoder#decode,few_shot_guided_target,YES,NO,,,ok
+netty__193acdb3__LengthFieldBasedFrameDecoder#decode,few_shot_guided_both,YES,YES,C,frameLength,ok
+OpenTripPlanner__4c506dce__MultiShortestPathTree#dominates,zero_shot_guided_none,YES,YES,C,"valor retornado por dominates(thisState, other) (retorno antecipado de RIGHT em isBikeParked, que controla o cálculo de LEFT)",ok
+OpenTripPlanner__4c506dce__MultiShortestPathTree#dominates,zero_shot_guided_summaries,YES,NO,,,ok
+OpenTripPlanner__4c506dce__MultiShortestPathTree#dominates,zero_shot_guided_target,YES,NO,,,ok
+OpenTripPlanner__4c506dce__MultiShortestPathTree#dominates,zero_shot_guided_both,YES,NO,,,ok
+OpenTripPlanner__4c506dce__MultiShortestPathTree#dominates,few_shot_guided_none,YES,YES,C,"retorno de dominates(thisState, other)",ok
+OpenTripPlanner__4c506dce__MultiShortestPathTree#dominates,few_shot_guided_summaries,YES,NO,,,ok
+OpenTripPlanner__4c506dce__MultiShortestPathTree#dominates,few_shot_guided_target,YES,NO,,,ok
+OpenTripPlanner__4c506dce__MultiShortestPathTree#dominates,few_shot_guided_both,YES,NO,,,ok
+webbit__74d2d2b8__WebSocketClient#adjustPipelineToWebSocket,zero_shot_guided_none,NO,NO,,,ok
+webbit__74d2d2b8__WebSocketClient#adjustPipelineToWebSocket,zero_shot_guided_summaries,NO,NO,,,ok
+webbit__74d2d2b8__WebSocketClient#adjustPipelineToWebSocket,zero_shot_guided_target,NO,NO,,,ok
+webbit__74d2d2b8__WebSocketClient#adjustPipelineToWebSocket,zero_shot_guided_both,NO,NO,,,ok
+webbit__74d2d2b8__WebSocketClient#adjustPipelineToWebSocket,few_shot_guided_none,NO,NO,,,ok
+webbit__74d2d2b8__WebSocketClient#adjustPipelineToWebSocket,few_shot_guided_summaries,NO,NO,,,ok
+webbit__74d2d2b8__WebSocketClient#adjustPipelineToWebSocket,few_shot_guided_target,NO,NO,,,ok
+webbit__74d2d2b8__WebSocketClient#adjustPipelineToWebSocket,few_shot_guided_both,NO,NO,,,ok
+spring-boot__2d4e68a9__TomcatEmbeddedServletContainerFactory#customizeConnector,zero_shot_guided_none,NO,NO,,,ok
+spring-boot__2d4e68a9__TomcatEmbeddedServletContainerFactory#customizeConnector,zero_shot_guided_summaries,NO,NO,,,ok
+spring-boot__2d4e68a9__TomcatEmbeddedServletContainerFactory#customizeConnector,zero_shot_guided_target,NO,NO,,,ok
+spring-boot__2d4e68a9__TomcatEmbeddedServletContainerFactory#customizeConnector,zero_shot_guided_both,NO,NO,,,ok
+spring-boot__2d4e68a9__TomcatEmbeddedServletContainerFactory#customizeConnector,few_shot_guided_none,NO,NO,,,ok
+spring-boot__2d4e68a9__TomcatEmbeddedServletContainerFactory#customizeConnector,few_shot_guided_summaries,NO,NO,,,ok
+spring-boot__2d4e68a9__TomcatEmbeddedServletContainerFactory#customizeConnector,few_shot_guided_target,NO,NO,,,ok
+spring-boot__2d4e68a9__TomcatEmbeddedServletContainerFactory#customizeConnector,few_shot_guided_both,NO,NO,,,ok
+spring-boot__958a0a45__MongoProperties#builder,zero_shot_guided_none,NO,NO,,,ok
+spring-boot__958a0a45__MongoProperties#builder,zero_shot_guided_summaries,NO,NO,,,ok
+spring-boot__958a0a45__MongoProperties#builder,zero_shot_guided_target,NO,NO,,,ok
+spring-boot__958a0a45__MongoProperties#builder,zero_shot_guided_both,NO,NO,,,ok
+spring-boot__958a0a45__MongoProperties#builder,few_shot_guided_none,NO,NO,,,ok
+spring-boot__958a0a45__MongoProperties#builder,few_shot_guided_summaries,NO,NO,,,ok
+spring-boot__958a0a45__MongoProperties#builder,few_shot_guided_target,NO,NO,,,ok
+spring-boot__958a0a45__MongoProperties#builder,few_shot_guided_both,NO,NO,,,ok
+spring-boot__3444ebbc__SpringBootServletInitializer#createRootApplicationContext,zero_shot_guided_none,NO,NO,,,ok
+spring-boot__3444ebbc__SpringBootServletInitializer#createRootApplicationContext,zero_shot_guided_summaries,NO,NO,,,ok
+spring-boot__3444ebbc__SpringBootServletInitializer#createRootApplicationContext,zero_shot_guided_target,NO,NO,,,ok
+spring-boot__3444ebbc__SpringBootServletInitializer#createRootApplicationContext,zero_shot_guided_both,NO,NO,,,ok
+spring-boot__3444ebbc__SpringBootServletInitializer#createRootApplicationContext,few_shot_guided_none,NO,NO,,,ok
+spring-boot__3444ebbc__SpringBootServletInitializer#createRootApplicationContext,few_shot_guided_summaries,NO,NO,,,ok
+spring-boot__3444ebbc__SpringBootServletInitializer#createRootApplicationContext,few_shot_guided_target,NO,NO,,,ok
+spring-boot__3444ebbc__SpringBootServletInitializer#createRootApplicationContext,few_shot_guided_both,NO,NO,,,ok
+spring-boot__6664ce19__AtomikosProperties#asProperties,zero_shot_guided_none,YES,NO,,,ok
+spring-boot__6664ce19__AtomikosProperties#asProperties,zero_shot_guided_summaries,YES,NO,,,ok
+spring-boot__6664ce19__AtomikosProperties#asProperties,zero_shot_guided_target,YES,NO,,,ok
+spring-boot__6664ce19__AtomikosProperties#asProperties,zero_shot_guided_both,YES,NO,,,ok
+spring-boot__6664ce19__AtomikosProperties#asProperties,few_shot_guided_none,YES,NO,,,ok
+spring-boot__6664ce19__AtomikosProperties#asProperties,few_shot_guided_summaries,YES,YES,B,asProperties() (objeto Properties retornado),ok
+spring-boot__6664ce19__AtomikosProperties#asProperties,few_shot_guided_target,YES,YES,B,"Properties retornado por asProperties() (chaves console_, allow_subtransactions e chaves de recovery)",ok
+spring-boot__6664ce19__AtomikosProperties#asProperties,few_shot_guided_both,YES,NO,,,ok
+spring-boot__6664ce19__AtomikosPropertiesTests#testProperties,zero_shot_guided_none,YES,YES,B,"Properties retornado por asProperties() (tamanho/conteúdo total, testProperties 22 vs 17 e testDefaultProperties 18 vs 14)",ok
+spring-boot__6664ce19__AtomikosPropertiesTests#testProperties,zero_shot_guided_summaries,YES,YES,B,"tamanho do Properties retornado por asProperties() no teste testDefaultProperties (hasSize, valor esperado 13 → 18 em LEFT e 9 em RIGHT; MERGE 14)",ok
+spring-boot__6664ce19__AtomikosPropertiesTests#testProperties,zero_shot_guided_target,YES,NO,,,ok
+spring-boot__6664ce19__AtomikosPropertiesTests#testProperties,zero_shot_guided_both,YES,YES,B,Properties retornado por asProperties() (tamanho e conteúdo verificados pela primeira asserção),ok
+spring-boot__6664ce19__AtomikosPropertiesTests#testProperties,few_shot_guided_none,YES,YES,B,"asProperties().size() (conjunto de propriedades do AtomikosProperties, medido pelas asserções de tamanho)",ok
+spring-boot__6664ce19__AtomikosPropertiesTests#testProperties,few_shot_guided_summaries,YES,YES,B,contagem de propriedades (asProperties().size() / hasSize esperados nas asserções),ok
+spring-boot__6664ce19__AtomikosPropertiesTests#testProperties,few_shot_guided_target,YES,YES,B,asProperties().size() (contagem de propriedades usada na asserção de testProperties),ok
+spring-boot__6664ce19__AtomikosPropertiesTests#testProperties,few_shot_guided_both,YES,YES,B,tamanho de this.properties.asProperties() (asProperties().size()),ok
+spring-boot__6664ce19__AtomikosPropertiesTests#testDefaultProperties,zero_shot_guided_none,YES,YES,B,"mapa retornado por asProperties() (entradas com.atomikos.icatch., incluindo as console_ e o seu tamanho)",ok
+spring-boot__6664ce19__AtomikosPropertiesTests#testDefaultProperties,zero_shot_guided_summaries,YES,YES,B,conjunto de propriedades retornado por asProperties() (entradas de defaults em testDefaultProperties e de propriedades em testProperties),ok
+spring-boot__6664ce19__AtomikosPropertiesTests#testDefaultProperties,zero_shot_guided_target,YES,YES,B,mapa retornado por asProperties() (conjunto de propriedades e tamanho observado em testDefaultProperties),ok
+spring-boot__6664ce19__AtomikosPropertiesTests#testDefaultProperties,zero_shot_guided_both,YES,YES,B,properties (conteúdo e tamanho do Properties retornado por this.properties.asProperties() em testDefaultProperties),ok
+spring-boot__6664ce19__AtomikosPropertiesTests#testDefaultProperties,few_shot_guided_none,YES,YES,B,contagem esperada de this.properties.asProperties().size() em testProperties (e hasSize em testDefaultProperties),ok
+spring-boot__6664ce19__AtomikosPropertiesTests#testDefaultProperties,few_shot_guided_summaries,YES,NO,,,ok
+spring-boot__6664ce19__AtomikosPropertiesTests#testDefaultProperties,few_shot_guided_target,YES,NO,,,ok
+spring-boot__6664ce19__AtomikosPropertiesTests#testDefaultProperties,few_shot_guided_both,YES,YES,B,hasSize (tamanho esperado do mapa de propriedades padrão em testDefaultProperties),ok
+spring-boot__af20dc6c__ExplodedArchive#getUrl,zero_shot_guided_none,YES,NO,,,ok
+spring-boot__af20dc6c__ExplodedArchive#getUrl,zero_shot_guided_summaries,YES,NO,,,ok
+spring-boot__af20dc6c__ExplodedArchive#getUrl,zero_shot_guided_target,YES,YES,A,"URL retornada por getUrl() (valor de retorno de getUrl, URL file: do diretório raiz)",ok
+spring-boot__af20dc6c__ExplodedArchive#getUrl,zero_shot_guided_both,YES,NO,,,ok
+spring-boot__af20dc6c__ExplodedArchive#getUrl,few_shot_guided_none,YES,YES,C,"filtered (campo lido por getUrl(), removido por LEFT)",ok
+spring-boot__af20dc6c__ExplodedArchive#getUrl,few_shot_guided_summaries,YES,YES,B,retorno de getUrl() (URL da raiz),ok
+spring-boot__af20dc6c__ExplodedArchive#getUrl,few_shot_guided_target,YES,YES,C,this.filtered,ok
+spring-boot__af20dc6c__ExplodedArchive#getUrl,few_shot_guided_both,YES,YES,C,"getUrl() (URL retornada, lida por toString())",ok
+spring-boot__af20dc6c__ExplodedArchiveTests#getUrl,zero_shot_guided_none,NO,NO,,,ok
+spring-boot__af20dc6c__ExplodedArchiveTests#getUrl,zero_shot_guided_summaries,NO,NO,,,ok
+spring-boot__af20dc6c__ExplodedArchiveTests#getUrl,zero_shot_guided_target,NO,NO,,,ok
+spring-boot__af20dc6c__ExplodedArchiveTests#getUrl,zero_shot_guided_both,NO,NO,,,ok
+spring-boot__af20dc6c__ExplodedArchiveTests#getUrl,few_shot_guided_none,NO,NO,,,ok
+spring-boot__af20dc6c__ExplodedArchiveTests#getUrl,few_shot_guided_summaries,NO,NO,,,ok
+spring-boot__af20dc6c__ExplodedArchiveTests#getUrl,few_shot_guided_target,NO,NO,,,ok
+spring-boot__af20dc6c__ExplodedArchiveTests#getUrl,few_shot_guided_both,NO,NO,,,ok
+spring-boot__ea8107b6__UndertowEmbeddedServletContainerFactory#createDeploymentManager,zero_shot_guided_none,NO,NO,,,ok
+spring-boot__ea8107b6__UndertowEmbeddedServletContainerFactory#createDeploymentManager,zero_shot_guided_summaries,NO,NO,,,ok
+spring-boot__ea8107b6__UndertowEmbeddedServletContainerFactory#createDeploymentManager,zero_shot_guided_target,NO,YES,C,"deployment (DeploymentInfo local, com displayName, HandlerChainWrapper de access log e sessionPersistenceManager)",ok
+spring-boot__ea8107b6__UndertowEmbeddedServletContainerFactory#createDeploymentManager,zero_shot_guided_both,NO,NO,,,ok
+spring-boot__ea8107b6__UndertowEmbeddedServletContainerFactory#createDeploymentManager,few_shot_guided_none,NO,NO,,,ok
+spring-boot__ea8107b6__UndertowEmbeddedServletContainerFactory#createDeploymentManager,few_shot_guided_summaries,NO,NO,,,ok
+spring-boot__ea8107b6__UndertowEmbeddedServletContainerFactory#createDeploymentManager,few_shot_guided_target,NO,YES,C,deployment (DeploymentInfo),ok
+spring-boot__ea8107b6__UndertowEmbeddedServletContainerFactory#createDeploymentManager,few_shot_guided_both,NO,NO,,,ok
+spring-boot__fdd3f12e__AutoConfigurationReportLoggingInitializer#logAutoConfigurationReport,zero_shot_guided_none,YES,NO,,,ok
+spring-boot__fdd3f12e__AutoConfigurationReportLoggingInitializer#logAutoConfigurationReport,zero_shot_guided_summaries,YES,NO,,,ok
+spring-boot__fdd3f12e__AutoConfigurationReportLoggingInitializer#logAutoConfigurationReport,zero_shot_guided_target,YES,NO,,,ok
+spring-boot__fdd3f12e__AutoConfigurationReportLoggingInitializer#logAutoConfigurationReport,zero_shot_guided_both,YES,NO,,,ok
+spring-boot__fdd3f12e__AutoConfigurationReportLoggingInitializer#logAutoConfigurationReport,few_shot_guided_none,YES,NO,,,ok
+spring-boot__fdd3f12e__AutoConfigurationReportLoggingInitializer#logAutoConfigurationReport,few_shot_guided_summaries,YES,NO,,,ok
+spring-boot__fdd3f12e__AutoConfigurationReportLoggingInitializer#logAutoConfigurationReport,few_shot_guided_target,YES,NO,,,ok
+spring-boot__fdd3f12e__AutoConfigurationReportLoggingInitializer#logAutoConfigurationReport,few_shot_guided_both,YES,NO,,,ok
+eureka__6b09030e__ApplicationInfoManager#ApplicationInfoManager,zero_shot_guided_none,NO,NO,,,ok
+eureka__6b09030e__ApplicationInfoManager#ApplicationInfoManager,zero_shot_guided_summaries,NO,NO,,,ok
+eureka__6b09030e__ApplicationInfoManager#ApplicationInfoManager,zero_shot_guided_target,NO,NO,,,ok
+eureka__6b09030e__ApplicationInfoManager#ApplicationInfoManager,zero_shot_guided_both,NO,NO,,,ok
+eureka__6b09030e__ApplicationInfoManager#ApplicationInfoManager,few_shot_guided_none,NO,NO,,,ok
+eureka__6b09030e__ApplicationInfoManager#ApplicationInfoManager,few_shot_guided_summaries,NO,NO,,,ok
+eureka__6b09030e__ApplicationInfoManager#ApplicationInfoManager,few_shot_guided_target,NO,NO,,,ok
+eureka__6b09030e__ApplicationInfoManager#ApplicationInfoManager,few_shot_guided_both,NO,NO,,,ok
+atmosphere__ffc0c6e2__AtmosphereConfig#AtmosphereConfig,zero_shot_guided_none,NO,NO,,,ok
+atmosphere__ffc0c6e2__AtmosphereConfig#AtmosphereConfig,zero_shot_guided_summaries,NO,NO,,,ok
+atmosphere__ffc0c6e2__AtmosphereConfig#AtmosphereConfig,zero_shot_guided_target,NO,NO,,,ok
+atmosphere__ffc0c6e2__AtmosphereConfig#AtmosphereConfig,zero_shot_guided_both,NO,NO,,,ok
+atmosphere__ffc0c6e2__AtmosphereConfig#AtmosphereConfig,few_shot_guided_none,NO,NO,,,ok
+atmosphere__ffc0c6e2__AtmosphereConfig#AtmosphereConfig,few_shot_guided_summaries,NO,NO,,,ok
+atmosphere__ffc0c6e2__AtmosphereConfig#AtmosphereConfig,few_shot_guided_target,NO,NO,,,ok
+atmosphere__ffc0c6e2__AtmosphereConfig#AtmosphereConfig,few_shot_guided_both,NO,NO,,,ok
+resty-gwt__867b917c__DirectRestServiceInterfaceClassCreator#getMethodCallback,zero_shot_guided_none,YES,YES,B,"retorno de getMethodCallback(method) (tipo do callback gerado, por exemplo OverlayCallback<int> de RIGHT)",ok
+resty-gwt__867b917c__DirectRestServiceInterfaceClassCreator#getMethodCallback,zero_shot_guided_summaries,YES,NO,,,ok
+resty-gwt__867b917c__DirectRestServiceInterfaceClassCreator#getMethodCallback,zero_shot_guided_target,YES,NO,,,ok
+resty-gwt__867b917c__DirectRestServiceInterfaceClassCreator#getMethodCallback,zero_shot_guided_both,YES,NO,,,ok
+resty-gwt__867b917c__DirectRestServiceInterfaceClassCreator#getMethodCallback,few_shot_guided_none,YES,YES,B,retorno de getMethodCallback(method),ok
+resty-gwt__867b917c__DirectRestServiceInterfaceClassCreator#getMethodCallback,few_shot_guided_summaries,YES,NO,,,ok
+resty-gwt__867b917c__DirectRestServiceInterfaceClassCreator#getMethodCallback,few_shot_guided_target,YES,NO,,,ok
+resty-gwt__867b917c__DirectRestServiceInterfaceClassCreator#getMethodCallback,few_shot_guided_both,YES,NO,,,ok
+HikariCP__1bca94af__HikariConfig#validate,zero_shot_guided_none,YES,NO,,,ok
+HikariCP__1bca94af__HikariConfig#validate,zero_shot_guided_summaries,YES,NO,,,ok
+HikariCP__1bca94af__HikariConfig#validate,zero_shot_guided_target,YES,NO,,,ok
+HikariCP__1bca94af__HikariConfig#validate,zero_shot_guided_both,YES,NO,,,ok
+HikariCP__1bca94af__HikariConfig#validate,few_shot_guided_none,YES,NO,,,ok
+HikariCP__1bca94af__HikariConfig#validate,few_shot_guided_summaries,YES,NO,,,ok
+HikariCP__1bca94af__HikariConfig#validate,few_shot_guided_target,YES,YES,B,exceção lançada por validate() (interação entre a remoção da validação de acquireRetryDelay e o ramo jdbcUrl),ok
+HikariCP__1bca94af__HikariConfig#validate,few_shot_guided_both,YES,YES,B,saída de log do logger em validate() (warn de acquireRetryDelay mantido por LEFT e ausente no MERGE),ok
+HikariCP__1bca94af__HikariPool#addConnection,zero_shot_guided_none,YES,YES,A,totalConnections,ok
+HikariCP__1bca94af__HikariPool#addConnection,zero_shot_guided_summaries,YES,YES,A,totalConnections,ok
+HikariCP__1bca94af__HikariPool#addConnection,zero_shot_guided_target,YES,YES,A,totalConnections,ok
+HikariCP__1bca94af__HikariPool#addConnection,zero_shot_guided_both,YES,YES,A,totalConnections,ok
+HikariCP__1bca94af__HikariPool#addConnection,few_shot_guided_none,YES,YES,C,retries,ok
+HikariCP__1bca94af__HikariPool#addConnection,few_shot_guided_summaries,YES,YES,B,totalConnections,ok
+HikariCP__1bca94af__HikariPool#addConnection,few_shot_guided_target,YES,YES,A,totalConnections,ok
+HikariCP__1bca94af__HikariPool#addConnection,few_shot_guided_both,YES,YES,A,totalConnections,ok
+quickml__bae968d9__OutOfTimeCrossValidatorRunner#getRandomForestBuilder,zero_shot_guided_none,NO,YES,B,treeBuilder (configuração maxDepth),ok
+quickml__bae968d9__OutOfTimeCrossValidatorRunner#getRandomForestBuilder,zero_shot_guided_summaries,NO,YES,B,campo maxDepth do TreeBuilder (configurado por maxDepth(maxDepth) em getRandomForestBuilder),ok
+quickml__bae968d9__OutOfTimeCrossValidatorRunner#getRandomForestBuilder,zero_shot_guided_target,NO,YES,B,campo maxDepth do objeto TreeBuilder (treeBuilder.maxDepth),ok
+quickml__bae968d9__OutOfTimeCrossValidatorRunner#getRandomForestBuilder,zero_shot_guided_both,NO,YES,B,campo maxDepth do TreeBuilder (treeBuilder.maxDepth),ok
+quickml__bae968d9__OutOfTimeCrossValidatorRunner#getRandomForestBuilder,few_shot_guided_none,NO,YES,B,treeBuilder (maxDepth do TreeBuilder em getRandomForestBuilder),ok
+quickml__bae968d9__OutOfTimeCrossValidatorRunner#getRandomForestBuilder,few_shot_guided_summaries,NO,YES,B,treeBuilder.maxDepth (campo maxDepth do TreeBuilder),ok
+quickml__bae968d9__OutOfTimeCrossValidatorRunner#getRandomForestBuilder,few_shot_guided_target,NO,YES,B,treeBuilder.maxDepth (configuração maxDepth do TreeBuilder),ok
+quickml__bae968d9__OutOfTimeCrossValidatorRunner#getRandomForestBuilder,few_shot_guided_both,NO,YES,B,treeBuilder.maxDepth,ok
+pushy__58901c84__PushManager#handleConnectionClosure,zero_shot_guided_none,NO,YES,C,unfinishedConnectionCount,ok
+pushy__58901c84__PushManager#handleConnectionClosure,zero_shot_guided_summaries,NO,YES,C,unfinishedConnectionCount,ok
+pushy__58901c84__PushManager#handleConnectionClosure,zero_shot_guided_target,NO,YES,C,unfinishedConnectionCount,ok
+pushy__58901c84__PushManager#handleConnectionClosure,zero_shot_guided_both,NO,YES,C,unfinishedConnectionCount,ok
+pushy__58901c84__PushManager#handleConnectionClosure,few_shot_guided_none,NO,YES,C,unfinishedConnectionCount,ok
+pushy__58901c84__PushManager#handleConnectionClosure,few_shot_guided_summaries,NO,YES,C,listenerExecutorService,ok
+pushy__58901c84__PushManager#handleConnectionClosure,few_shot_guided_target,NO,NO,,,ok
+pushy__58901c84__PushManager#handleConnectionClosure,few_shot_guided_both,NO,YES,C,listenerExecutorService,ok
+pushy__58901c84__PushManager#handleConnectionFailure,zero_shot_guided_none,NO,YES,C,unfinishedConnectionCount,ok
+pushy__58901c84__PushManager#handleConnectionFailure,zero_shot_guided_summaries,NO,YES,C,unfinishedConnectionCount,ok
+pushy__58901c84__PushManager#handleConnectionFailure,zero_shot_guided_target,NO,NO,,,ok
+pushy__58901c84__PushManager#handleConnectionFailure,zero_shot_guided_both,NO,NO,,,ok
+pushy__58901c84__PushManager#handleConnectionFailure,few_shot_guided_none,NO,YES,C,unfinishedConnectionCount,ok
+pushy__58901c84__PushManager#handleConnectionFailure,few_shot_guided_summaries,NO,YES,C,unfinishedConnectionCount,ok
+pushy__58901c84__PushManager#handleConnectionFailure,few_shot_guided_target,NO,NO,,,ok
+pushy__58901c84__PushManager#handleConnectionFailure,few_shot_guided_both,NO,NO,,,ok
+java-faker__ca42fcfa__Faker#Faker,zero_shot_guided_none,NO,NO,,,ok
+java-faker__ca42fcfa__Faker#Faker,zero_shot_guided_summaries,NO,NO,,,ok
+java-faker__ca42fcfa__Faker#Faker,zero_shot_guided_target,NO,NO,,,ok
+java-faker__ca42fcfa__Faker#Faker,zero_shot_guided_both,NO,NO,,,ok
+java-faker__ca42fcfa__Faker#Faker,few_shot_guided_none,NO,NO,,,ok
+java-faker__ca42fcfa__Faker#Faker,few_shot_guided_summaries,NO,NO,,,ok
+java-faker__ca42fcfa__Faker#Faker,few_shot_guided_target,NO,NO,,,ok
+java-faker__ca42fcfa__Faker#Faker,few_shot_guided_both,NO,NO,,,ok
+swagger-core__e7fea7c4__OperationParser#getSchemaFromAnnotation,zero_shot_guided_none,NO,NO,,,ok
+swagger-core__e7fea7c4__OperationParser#getSchemaFromAnnotation,zero_shot_guided_summaries,NO,NO,,,ok
+swagger-core__e7fea7c4__OperationParser#getSchemaFromAnnotation,zero_shot_guided_target,NO,YES,B,"retorno de getSchemaFromAnnotation (Optional<Schema>), campo maximum",ok
+swagger-core__e7fea7c4__OperationParser#getSchemaFromAnnotation,zero_shot_guided_both,NO,NO,,,ok
+swagger-core__e7fea7c4__OperationParser#getSchemaFromAnnotation,few_shot_guided_none,NO,NO,,,ok
+swagger-core__e7fea7c4__OperationParser#getSchemaFromAnnotation,few_shot_guided_summaries,NO,NO,,,ok
+swagger-core__e7fea7c4__OperationParser#getSchemaFromAnnotation,few_shot_guided_target,NO,NO,,,ok
+swagger-core__e7fea7c4__OperationParser#getSchemaFromAnnotation,few_shot_guided_both,NO,NO,,,ok
+cucumber-jvm__4505c156__JavaLanguage#load,zero_shot_guided_none,NO,NO,,,ok
+cucumber-jvm__4505c156__JavaLanguage#load,zero_shot_guided_summaries,NO,NO,,,ok
+cucumber-jvm__4505c156__JavaLanguage#load,zero_shot_guided_target,NO,NO,,,ok
+cucumber-jvm__4505c156__JavaLanguage#load,zero_shot_guided_both,NO,NO,,,ok
+cucumber-jvm__4505c156__JavaLanguage#load,few_shot_guided_none,NO,NO,,,ok
+cucumber-jvm__4505c156__JavaLanguage#load,few_shot_guided_summaries,NO,NO,,,ok
+cucumber-jvm__4505c156__JavaLanguage#load,few_shot_guided_target,NO,NO,,,ok
+cucumber-jvm__4505c156__JavaLanguage#load,few_shot_guided_both,NO,NO,,,ok
+hector__213f7887__HConnectionManager#operateWithFailover,zero_shot_guided_none,NO,NO,,,ok
+hector__213f7887__HConnectionManager#operateWithFailover,zero_shot_guided_summaries,NO,NO,,,ok
+hector__213f7887__HConnectionManager#operateWithFailover,zero_shot_guided_target,NO,NO,,,ok
+hector__213f7887__HConnectionManager#operateWithFailover,zero_shot_guided_both,NO,NO,,,ok
+hector__213f7887__HConnectionManager#operateWithFailover,few_shot_guided_none,NO,NO,,,ok
+hector__213f7887__HConnectionManager#operateWithFailover,few_shot_guided_summaries,NO,NO,,,ok
+hector__213f7887__HConnectionManager#operateWithFailover,few_shot_guided_target,NO,NO,,,ok
+hector__213f7887__HConnectionManager#operateWithFailover,few_shot_guided_both,NO,NO,,,ok
+hector__0588608e__HSaslThriftClient#open,zero_shot_guided_none,NO,NO,,,ok
+hector__0588608e__HSaslThriftClient#open,zero_shot_guided_summaries,NO,NO,,,ok
+hector__0588608e__HSaslThriftClient#open,zero_shot_guided_target,NO,NO,,,ok
+hector__0588608e__HSaslThriftClient#open,zero_shot_guided_both,NO,YES,C,transport,ok
+hector__0588608e__HSaslThriftClient#open,few_shot_guided_none,NO,NO,,,ok
+hector__0588608e__HSaslThriftClient#open,few_shot_guided_summaries,NO,NO,,,ok
+hector__0588608e__HSaslThriftClient#open,few_shot_guided_target,NO,NO,,,ok
+hector__0588608e__HSaslThriftClient#open,few_shot_guided_both,NO,NO,,,ok
+hector__a33a4650__HKerberosThriftClient#open,zero_shot_guided_none,NO,NO,,,ok
+hector__a33a4650__HKerberosThriftClient#open,zero_shot_guided_summaries,NO,YES,C,socket,ok
+hector__a33a4650__HKerberosThriftClient#open,zero_shot_guided_target,NO,NO,,,ok
+hector__a33a4650__HKerberosThriftClient#open,zero_shot_guided_both,NO,NO,,,ok
+hector__a33a4650__HKerberosThriftClient#open,few_shot_guided_none,NO,YES,C,socket,ok
+hector__a33a4650__HKerberosThriftClient#open,few_shot_guided_summaries,NO,YES,C,socket,ok
+hector__a33a4650__HKerberosThriftClient#open,few_shot_guided_target,NO,NO,,,ok
+hector__a33a4650__HKerberosThriftClient#open,few_shot_guided_both,NO,YES,C,socket,ok
+hector__a33a4650__HThriftClient#open,zero_shot_guided_none,NO,YES,B,transport,ok
+hector__a33a4650__HThriftClient#open,zero_shot_guided_summaries,NO,NO,,,ok
+hector__a33a4650__HThriftClient#open,zero_shot_guided_target,NO,NO,,,ok
+hector__a33a4650__HThriftClient#open,zero_shot_guided_both,NO,NO,,,ok
+hector__a33a4650__HThriftClient#open,few_shot_guided_none,NO,NO,,,ok
+hector__a33a4650__HThriftClient#open,few_shot_guided_summaries,NO,NO,,,ok
+hector__a33a4650__HThriftClient#open,few_shot_guided_target,NO,YES,B,transport,ok
+hector__a33a4650__HThriftClient#open,few_shot_guided_both,NO,NO,,,ok
+elasticsearch-river-mongodb__3d4f9951__Slurper#assignCollections,zero_shot_guided_none,YES,YES,C,oplogDb,ok
+elasticsearch-river-mongodb__3d4f9951__Slurper#assignCollections,zero_shot_guided_summaries,YES,YES,B,oplogRefsCollection,ok
+elasticsearch-river-mongodb__3d4f9951__Slurper#assignCollections,zero_shot_guided_target,YES,YES,B,oplogRefsCollection,ok
+elasticsearch-river-mongodb__3d4f9951__Slurper#assignCollections,zero_shot_guided_both,YES,YES,C,oplogDb,ok
+elasticsearch-river-mongodb__3d4f9951__Slurper#assignCollections,few_shot_guided_none,YES,YES,C,oplogDb,ok
+elasticsearch-river-mongodb__3d4f9951__Slurper#assignCollections,few_shot_guided_summaries,YES,YES,C,oplogDb,ok
+elasticsearch-river-mongodb__3d4f9951__Slurper#assignCollections,few_shot_guided_target,YES,YES,C,oplogDb,ok
+elasticsearch-river-mongodb__3d4f9951__Slurper#assignCollections,few_shot_guided_both,YES,YES,C,oplogDb,ok
+elasticsearch-river-mongodb__6b6ce8e8__MongoDBRiverDefinition#parseSettings,zero_shot_guided_none,NO,NO,,,ok
+elasticsearch-river-mongodb__6b6ce8e8__MongoDBRiverDefinition#parseSettings,zero_shot_guided_summaries,NO,NO,,,ok
+elasticsearch-river-mongodb__6b6ce8e8__MongoDBRiverDefinition#parseSettings,zero_shot_guided_target,NO,NO,,,ok
+elasticsearch-river-mongodb__6b6ce8e8__MongoDBRiverDefinition#parseSettings,zero_shot_guided_both,NO,NO,,,ok
+elasticsearch-river-mongodb__6b6ce8e8__MongoDBRiverDefinition#parseSettings,few_shot_guided_none,NO,NO,,,ok
+elasticsearch-river-mongodb__6b6ce8e8__MongoDBRiverDefinition#parseSettings,few_shot_guided_summaries,NO,NO,,,ok
+elasticsearch-river-mongodb__6b6ce8e8__MongoDBRiverDefinition#parseSettings,few_shot_guided_target,NO,NO,,,ok
+elasticsearch-river-mongodb__6b6ce8e8__MongoDBRiverDefinition#parseSettings,few_shot_guided_both,NO,NO,,,ok
+elasticsearch-river-mongodb__6b6ce8e8__Indexer#applyAdvancedTransformation,zero_shot_guided_none,NO,NO,,,ok
+elasticsearch-river-mongodb__6b6ce8e8__Indexer#applyAdvancedTransformation,zero_shot_guided_summaries,NO,NO,,,ok
+elasticsearch-river-mongodb__6b6ce8e8__Indexer#applyAdvancedTransformation,zero_shot_guided_target,NO,NO,,,ok
+elasticsearch-river-mongodb__6b6ce8e8__Indexer#applyAdvancedTransformation,zero_shot_guided_both,NO,NO,,,ok
+elasticsearch-river-mongodb__6b6ce8e8__Indexer#applyAdvancedTransformation,few_shot_guided_none,NO,NO,,,ok
+elasticsearch-river-mongodb__6b6ce8e8__Indexer#applyAdvancedTransformation,few_shot_guided_summaries,NO,YES,C,ctx,ok
+elasticsearch-river-mongodb__6b6ce8e8__Indexer#applyAdvancedTransformation,few_shot_guided_target,NO,YES,C,exceção lançada por scriptService.executable(...),ok
+elasticsearch-river-mongodb__6b6ce8e8__Indexer#applyAdvancedTransformation,few_shot_guided_both,NO,NO,,,ok
+elasticsearch-river-mongodb__6b6ce8e8__Indexer#processBlockingQueue,zero_shot_guided_none,NO,NO,,,ok
+elasticsearch-river-mongodb__6b6ce8e8__Indexer#processBlockingQueue,zero_shot_guided_summaries,NO,NO,,,ok
+elasticsearch-river-mongodb__6b6ce8e8__Indexer#processBlockingQueue,zero_shot_guided_target,NO,NO,,,ok
+elasticsearch-river-mongodb__6b6ce8e8__Indexer#processBlockingQueue,zero_shot_guided_both,NO,NO,,,ok
+elasticsearch-river-mongodb__6b6ce8e8__Indexer#processBlockingQueue,few_shot_guided_none,NO,NO,,,ok
+elasticsearch-river-mongodb__6b6ce8e8__Indexer#processBlockingQueue,few_shot_guided_summaries,NO,YES,C,ctx,ok
+elasticsearch-river-mongodb__6b6ce8e8__Indexer#processBlockingQueue,few_shot_guided_target,NO,NO,,,ok
+elasticsearch-river-mongodb__6b6ce8e8__Indexer#processBlockingQueue,few_shot_guided_both,NO,YES,C,ctx,ok
+elasticsearch-river-mongodb__6b6ce8e8__Slurper#run,zero_shot_guided_none,NO,YES,C,parâmetro `data` de `addToStream` (item enfileirado no stream),ok
+elasticsearch-river-mongodb__6b6ce8e8__Slurper#run,zero_shot_guided_summaries,NO,YES,C,data (exceção NullPointerException lançada por addToStream/addInsertToStream quando data é nulo),ok
+elasticsearch-river-mongodb__6b6ce8e8__Slurper#run,zero_shot_guided_target,NO,YES,B,"exceção lançada (NullPointerException em addToStream ao executar data.toString() com data nulo no caminho processFullOplog, com trace habilitado)",ok
+elasticsearch-river-mongodb__6b6ce8e8__Slurper#run,zero_shot_guided_both,NO,YES,C,startTimestamp,ok
+elasticsearch-river-mongodb__6b6ce8e8__Slurper#run,few_shot_guided_none,NO,YES,B,"exceção lançada por addInsertToStream(ts, null, collection) (NullPointerException em addToStream com trace habilitado)",ok
+elasticsearch-river-mongodb__6b6ce8e8__Slurper#run,few_shot_guided_summaries,NO,YES,B,retorno de addInsertToStream(…) para data nulo (lastId),ok
+elasticsearch-river-mongodb__6b6ce8e8__Slurper#run,few_shot_guided_target,NO,NO,,,ok
+elasticsearch-river-mongodb__6b6ce8e8__Slurper#run,few_shot_guided_both,NO,NO,,,ok
+elasticsearch-river-mongodb__6b6ce8e8__Slurper#addToStream,zero_shot_guided_none,YES,YES,B,exceção lançada (NullPointerException) em addToStream ao receber data nulo com trace ativo,ok
+elasticsearch-river-mongodb__6b6ce8e8__Slurper#addToStream,zero_shot_guided_summaries,YES,YES,B,"exceção lançada (NullPointerException em addToStream/addInsertToStream ao receber data nulo com trace habilitado, reintroduzida por data.toString() e que a correção de LEFT para data nulo deixa de cobrir)",ok
+elasticsearch-river-mongodb__6b6ce8e8__Slurper#addToStream,zero_shot_guided_target,YES,YES,C,"data (argumento DBObject de addToStream, entrada da fila QueueEntry)",ok
+elasticsearch-river-mongodb__6b6ce8e8__Slurper#addToStream,zero_shot_guided_both,YES,YES,C,parâmetro data (valor null em addToStream),ok
+elasticsearch-river-mongodb__6b6ce8e8__Slurper#addToStream,few_shot_guided_none,YES,YES,C,"data (parâmetro de addToStream/addInsertToStream, exceção NullPointerException lançada por addToStream)",ok
+elasticsearch-river-mongodb__6b6ce8e8__Slurper#addToStream,few_shot_guided_summaries,YES,YES,B,data (retorno de addInsertToStream com data nulo),ok
+elasticsearch-river-mongodb__6b6ce8e8__Slurper#addToStream,few_shot_guided_target,YES,YES,B,exceção lançada e entrada enfileirada em context.getStream() por addInsertToStream/addToStream quando data == null (marcador de timestamp de processFullOplog),ok
+elasticsearch-river-mongodb__6b6ce8e8__Slurper#addToStream,few_shot_guided_both,YES,NO,,,ok
+elasticsearch__59cb67c7__NestedInnerQueryParseSupport#setPathLevel,zero_shot_guided_none,NO,NO,,,ok
+elasticsearch__59cb67c7__NestedInnerQueryParseSupport#setPathLevel,zero_shot_guided_summaries,NO,NO,,,ok
+elasticsearch__59cb67c7__NestedInnerQueryParseSupport#setPathLevel,zero_shot_guided_target,NO,NO,,,ok
+elasticsearch__59cb67c7__NestedInnerQueryParseSupport#setPathLevel,zero_shot_guided_both,NO,NO,,,ok
+elasticsearch__59cb67c7__NestedInnerQueryParseSupport#setPathLevel,few_shot_guided_none,NO,NO,,,ok
+elasticsearch__59cb67c7__NestedInnerQueryParseSupport#setPathLevel,few_shot_guided_summaries,NO,NO,,,ok
+elasticsearch__59cb67c7__NestedInnerQueryParseSupport#setPathLevel,few_shot_guided_target,NO,NO,,,ok
+elasticsearch__59cb67c7__NestedInnerQueryParseSupport#setPathLevel,few_shot_guided_both,NO,NO,,,ok
+elasticsearch__59cb67c7__MultiMatchQueryBuilder#doXContent,zero_shot_guided_none,YES,NO,,,ok
+elasticsearch__59cb67c7__MultiMatchQueryBuilder#doXContent,zero_shot_guided_summaries,YES,NO,,,ok
+elasticsearch__59cb67c7__MultiMatchQueryBuilder#doXContent,zero_shot_guided_target,YES,YES,C,rewrite,ok
+elasticsearch__59cb67c7__MultiMatchQueryBuilder#doXContent,zero_shot_guided_both,YES,NO,,,ok
+elasticsearch__59cb67c7__MultiMatchQueryBuilder#doXContent,few_shot_guided_none,YES,NO,,,ok
+elasticsearch__59cb67c7__MultiMatchQueryBuilder#doXContent,few_shot_guided_summaries,YES,NO,,,ok
+elasticsearch__59cb67c7__MultiMatchQueryBuilder#doXContent,few_shot_guided_target,YES,NO,,,ok
+elasticsearch__59cb67c7__MultiMatchQueryBuilder#doXContent,few_shot_guided_both,YES,NO,,,ok
+elasticsearch__36884807__SimpleIndexQueryParserTests#setup,zero_shot_guided_none,NO,NO,,,ok
+elasticsearch__36884807__SimpleIndexQueryParserTests#setup,zero_shot_guided_summaries,NO,NO,,,ok
+elasticsearch__36884807__SimpleIndexQueryParserTests#setup,zero_shot_guided_target,NO,NO,,,ok
+elasticsearch__36884807__SimpleIndexQueryParserTests#setup,zero_shot_guided_both,NO,NO,,,ok
+elasticsearch__36884807__SimpleIndexQueryParserTests#setup,few_shot_guided_none,NO,NO,,,ok
+elasticsearch__36884807__SimpleIndexQueryParserTests#setup,few_shot_guided_summaries,NO,NO,,,ok
+elasticsearch__36884807__SimpleIndexQueryParserTests#setup,few_shot_guided_target,NO,NO,,,ok
+elasticsearch__36884807__SimpleIndexQueryParserTests#setup,few_shot_guided_both,NO,NO,,,ok
+elasticsearch__d8968869__IndexScopedSettings#BUILT_IN_INDEX_SETTINGS,zero_shot_guided_none,YES,YES,B,BUILT_IN_INDEX_SETTINGS,ok
+elasticsearch__d8968869__IndexScopedSettings#BUILT_IN_INDEX_SETTINGS,zero_shot_guided_summaries,YES,NO,,,ok
+elasticsearch__d8968869__IndexScopedSettings#BUILT_IN_INDEX_SETTINGS,zero_shot_guided_target,YES,NO,,,ok
+elasticsearch__d8968869__IndexScopedSettings#BUILT_IN_INDEX_SETTINGS,zero_shot_guided_both,YES,NO,,,ok
+elasticsearch__d8968869__IndexScopedSettings#BUILT_IN_INDEX_SETTINGS,few_shot_guided_none,YES,NO,,,ok
+elasticsearch__d8968869__IndexScopedSettings#BUILT_IN_INDEX_SETTINGS,few_shot_guided_summaries,YES,YES,B,BUILT_IN_INDEX_SETTINGS,ok
+elasticsearch__d8968869__IndexScopedSettings#BUILT_IN_INDEX_SETTINGS,few_shot_guided_target,YES,YES,B,BUILT_IN_INDEX_SETTINGS,ok
+elasticsearch__d8968869__IndexScopedSettings#BUILT_IN_INDEX_SETTINGS,few_shot_guided_both,YES,YES,B,BUILT_IN_INDEX_SETTINGS,ok
+elasticsearch__d8968869__TransportIndexAction#executeIndexRequestOnPrimary,zero_shot_guided_none,NO,NO,,,ok
+elasticsearch__d8968869__TransportIndexAction#executeIndexRequestOnPrimary,zero_shot_guided_summaries,NO,NO,,,ok
+elasticsearch__d8968869__TransportIndexAction#executeIndexRequestOnPrimary,zero_shot_guided_target,NO,NO,,,ok
+elasticsearch__d8968869__TransportIndexAction#executeIndexRequestOnPrimary,zero_shot_guided_both,NO,YES,C,"request.seqNo (campo do IndexRequest, lido pela construção do IndexResponse alterada por RIGHT)",ok
+elasticsearch__d8968869__TransportIndexAction#executeIndexRequestOnPrimary,few_shot_guided_none,NO,YES,C,request.seqNo,ok
+elasticsearch__d8968869__TransportIndexAction#executeIndexRequestOnPrimary,few_shot_guided_summaries,NO,NO,,,ok
+elasticsearch__d8968869__TransportIndexAction#executeIndexRequestOnPrimary,few_shot_guided_target,NO,YES,C,request.seqNo (lido por executeIndexRequestOnReplica/prepareIndexOnReplica e chamado pelo novo onReplicaShard),ok
+elasticsearch__d8968869__TransportIndexAction#executeIndexRequestOnPrimary,few_shot_guided_both,NO,YES,C,request.seqNo (lido pela construção de IndexResponse / response retornado),ok
+elasticsearch__d8968869__ReplicationOperationTests#testReplication,zero_shot_guided_none,NO,NO,,,ok
+elasticsearch__d8968869__ReplicationOperationTests#testReplication,zero_shot_guided_summaries,NO,NO,,,ok
+elasticsearch__d8968869__ReplicationOperationTests#testReplication,zero_shot_guided_target,NO,NO,,,ok
+elasticsearch__d8968869__ReplicationOperationTests#testReplication,zero_shot_guided_both,NO,NO,,,ok
+elasticsearch__d8968869__ReplicationOperationTests#testReplication,few_shot_guided_none,NO,NO,,,ok
+elasticsearch__d8968869__ReplicationOperationTests#testReplication,few_shot_guided_summaries,NO,NO,,,ok
+elasticsearch__d8968869__ReplicationOperationTests#testReplication,few_shot_guided_target,NO,NO,,,ok
+elasticsearch__d8968869__ReplicationOperationTests#testReplication,few_shot_guided_both,NO,NO,,,ok
+elasticsearch__d8968869__IndexSettings#IndexSettings,zero_shot_guided_none,NO,NO,,,ok
+elasticsearch__d8968869__IndexSettings#IndexSettings,zero_shot_guided_summaries,NO,NO,,,ok
+elasticsearch__d8968869__IndexSettings#IndexSettings,zero_shot_guided_target,NO,NO,,,ok
+elasticsearch__d8968869__IndexSettings#IndexSettings,zero_shot_guided_both,NO,NO,,,ok
+elasticsearch__d8968869__IndexSettings#IndexSettings,few_shot_guided_none,NO,NO,,,ok
+elasticsearch__d8968869__IndexSettings#IndexSettings,few_shot_guided_summaries,NO,NO,,,ok
+elasticsearch__d8968869__IndexSettings#IndexSettings,few_shot_guided_target,NO,NO,,,ok
+elasticsearch__d8968869__IndexSettings#IndexSettings,few_shot_guided_both,NO,NO,,,ok
+elasticsearch__d8968869__TransportShardBulkAction#update,zero_shot_guided_none,NO,NO,,,ok
+elasticsearch__d8968869__TransportShardBulkAction#update,zero_shot_guided_summaries,NO,NO,,,ok
+elasticsearch__d8968869__TransportShardBulkAction#update,zero_shot_guided_target,NO,YES,B,"resposta primária do item (UpdateResponse armazenada em BulkItemRequest.primaryResponse), campo shardInfo",ok
+elasticsearch__d8968869__TransportShardBulkAction#update,zero_shot_guided_both,NO,NO,,,ok
+elasticsearch__d8968869__TransportShardBulkAction#update,few_shot_guided_none,NO,NO,,,ok
+elasticsearch__d8968869__TransportShardBulkAction#update,few_shot_guided_summaries,NO,NO,,,ok
+elasticsearch__d8968869__TransportShardBulkAction#update,few_shot_guided_target,NO,NO,,,ok
+elasticsearch__d8968869__TransportShardBulkAction#update,few_shot_guided_both,NO,NO,,,ok
+elasticsearch__d8968869__TransportReplicationAction#doRun,zero_shot_guided_none,YES,YES,C,acquireReplicaOperationLock,ok
+elasticsearch__d8968869__TransportReplicationAction#doRun,zero_shot_guided_summaries,YES,NO,,,ok
+elasticsearch__d8968869__TransportReplicationAction#doRun,zero_shot_guided_target,YES,NO,,,ok
+elasticsearch__d8968869__TransportReplicationAction#doRun,zero_shot_guided_both,YES,,,,ok
+elasticsearch__d8968869__TransportReplicationAction#doRun,few_shot_guided_none,YES,NO,,,ok
+elasticsearch__d8968869__TransportReplicationAction#doRun,few_shot_guided_summaries,YES,YES,C,resposta enviada ao canal (channel.sendResponse em ResponseListener.onResponse),ok
+elasticsearch__d8968869__TransportReplicationAction#doRun,few_shot_guided_target,YES,YES,C,resposta enviada ao canal (channel.sendResponse) em doRun() da AsyncReplicaAction,ok
+elasticsearch__d8968869__TransportReplicationAction#doRun,few_shot_guided_both,YES,NO,,,ok
+elasticsearch__d8968869__ReplicationOperation#execute,zero_shot_guided_none,NO,NO,,,ok
+elasticsearch__d8968869__ReplicationOperation#execute,zero_shot_guided_summaries,NO,NO,,,ok
+elasticsearch__d8968869__ReplicationOperation#execute,zero_shot_guided_target,NO,NO,,,ok
+elasticsearch__d8968869__ReplicationOperation#execute,zero_shot_guided_both,NO,YES,C,"checkpoint local do primário (primary.localCheckpoint(), lido após primary.perform em execute())",ok
+elasticsearch__d8968869__ReplicationOperation#execute,few_shot_guided_none,NO,NO,,,ok
+elasticsearch__d8968869__ReplicationOperation#execute,few_shot_guided_summaries,NO,NO,,,ok
+elasticsearch__d8968869__ReplicationOperation#execute,few_shot_guided_target,NO,NO,,,ok
+elasticsearch__d8968869__ReplicationOperation#execute,few_shot_guided_both,NO,NO,,,ok
+elasticsearch__d8968869__InternalEngineTests#testRecoverFromForeignTranslog,zero_shot_guided_none,NO,NO,,,ok
+elasticsearch__d8968869__InternalEngineTests#testRecoverFromForeignTranslog,zero_shot_guided_summaries,NO,NO,,,ok
+elasticsearch__d8968869__InternalEngineTests#testRecoverFromForeignTranslog,zero_shot_guided_target,NO,NO,,,ok
+elasticsearch__d8968869__InternalEngineTests#testRecoverFromForeignTranslog,zero_shot_guided_both,NO,NO,,,ok
+elasticsearch__d8968869__InternalEngineTests#testRecoverFromForeignTranslog,few_shot_guided_none,NO,NO,,,ok
+elasticsearch__d8968869__InternalEngineTests#testRecoverFromForeignTranslog,few_shot_guided_summaries,NO,NO,,,ok
+elasticsearch__d8968869__InternalEngineTests#testRecoverFromForeignTranslog,few_shot_guided_target,NO,NO,,,ok
+elasticsearch__d8968869__InternalEngineTests#testRecoverFromForeignTranslog,few_shot_guided_both,NO,NO,,,ok
+elasticsearch__d8968869__InternalEngine#InternalEngine,zero_shot_guided_none,NO,NO,,,ok
+elasticsearch__d8968869__InternalEngine#InternalEngine,zero_shot_guided_summaries,NO,NO,,,ok
+elasticsearch__d8968869__InternalEngine#InternalEngine,zero_shot_guided_target,NO,NO,,,ok
+elasticsearch__d8968869__InternalEngine#InternalEngine,zero_shot_guided_both,NO,NO,,,ok
+elasticsearch__d8968869__InternalEngine#InternalEngine,few_shot_guided_none,NO,NO,,,ok
+elasticsearch__d8968869__InternalEngine#InternalEngine,few_shot_guided_summaries,NO,NO,,,ok
+elasticsearch__d8968869__InternalEngine#InternalEngine,few_shot_guided_target,NO,NO,,,ok
+elasticsearch__d8968869__InternalEngine#InternalEngine,few_shot_guided_both,NO,NO,,,ok
+elasticsearch__d8968869__DocWriteResponse#writeTo,zero_shot_guided_none,YES,NO,,,ok
+elasticsearch__d8968869__DocWriteResponse#writeTo,zero_shot_guided_summaries,YES,NO,,,ok
+elasticsearch__d8968869__DocWriteResponse#writeTo,zero_shot_guided_target,YES,YES,B,"fluxo de saída `out` (StreamOutput, bytes escritos por writeTo)",ok
+elasticsearch__d8968869__DocWriteResponse#writeTo,zero_shot_guided_both,YES,YES,B,out (canal de saída StreamOutput escrito por writeTo),ok
+elasticsearch__d8968869__DocWriteResponse#writeTo,few_shot_guided_none,YES,YES,B,"saída JSON do toXContent (campos _shard_id, _seq_no e forced_refresh)",ok
+elasticsearch__d8968869__DocWriteResponse#writeTo,few_shot_guided_summaries,YES,YES,B,out (fluxo de serialização de writeTo/readFrom) e builder (saída JSON de toXContent),ok
+elasticsearch__d8968869__DocWriteResponse#writeTo,few_shot_guided_target,YES,YES,B,fluxo de saída (out) de writeTo,ok
+elasticsearch__d8968869__DocWriteResponse#writeTo,few_shot_guided_both,YES,YES,B,"out (fluxo de saída do writeTo, StreamOutput)",ok
+elasticsearch__d8968869__DocWriteResponse#readFrom,zero_shot_guided_none,NO,NO,,,ok
+elasticsearch__d8968869__DocWriteResponse#readFrom,zero_shot_guided_summaries,NO,YES,B,saída JSON do toXContent (fluxo de saída do XContentBuilder),ok
+elasticsearch__d8968869__DocWriteResponse#readFrom,zero_shot_guided_target,NO,NO,,,ok
+elasticsearch__d8968869__DocWriteResponse#readFrom,zero_shot_guided_both,NO,NO,,,ok
+elasticsearch__d8968869__DocWriteResponse#readFrom,few_shot_guided_none,NO,NO,,,ok
+elasticsearch__d8968869__DocWriteResponse#readFrom,few_shot_guided_summaries,NO,NO,,,ok
+elasticsearch__d8968869__DocWriteResponse#readFrom,few_shot_guided_target,NO,NO,,,ok
+elasticsearch__d8968869__DocWriteResponse#readFrom,few_shot_guided_both,NO,YES,C,"in (StreamInput, fluxo de entrada consumido por readFrom)",ok
+elasticsearch__d8968869__DocWriteResponse#toXContent,zero_shot_guided_none,YES,NO,,,ok
+elasticsearch__d8968869__DocWriteResponse#toXContent,zero_shot_guided_summaries,YES,YES,B,fluxo de serialização de saída (StreamOutput em writeTo/readFrom),ok
+elasticsearch__d8968869__DocWriteResponse#toXContent,zero_shot_guided_target,YES,YES,B,saída do XContentBuilder (JSON emitido por toXContent),ok
+elasticsearch__d8968869__DocWriteResponse#toXContent,zero_shot_guided_both,YES,NO,,,ok
+elasticsearch__d8968869__DocWriteResponse#toXContent,few_shot_guided_none,YES,YES,B,fluxo de serialização (writeTo/readFrom),ok
+elasticsearch__d8968869__DocWriteResponse#toXContent,few_shot_guided_summaries,YES,NO,,,ok
+elasticsearch__d8968869__DocWriteResponse#toXContent,few_shot_guided_target,YES,YES,B,saída do builder (XContentBuilder) de toXContent,ok
+elasticsearch__d8968869__DocWriteResponse#toXContent,few_shot_guided_both,YES,NO,,,ok
+elasticsearch__d8968869__MetaDataCreateIndexService#createIndex,zero_shot_guided_none,NO,NO,,,ok
+elasticsearch__d8968869__MetaDataCreateIndexService#createIndex,zero_shot_guided_summaries,NO,YES,C,index.number_of_shards,ok
+elasticsearch__d8968869__MetaDataCreateIndexService#createIndex,zero_shot_guided_target,NO,NO,,,ok
+elasticsearch__d8968869__MetaDataCreateIndexService#createIndex,zero_shot_guided_both,NO,NO,,,ok
+elasticsearch__d8968869__MetaDataCreateIndexService#createIndex,few_shot_guided_none,NO,NO,,,ok
+elasticsearch__d8968869__MetaDataCreateIndexService#createIndex,few_shot_guided_summaries,NO,YES,C,tmpImd,ok
+elasticsearch__d8968869__MetaDataCreateIndexService#createIndex,few_shot_guided_target,NO,YES,C,"index.number_of_shards (em actualIndexSettings/tmpImd, lido pela chamada createIndex alterada por LEFT)",ok
+elasticsearch__d8968869__MetaDataCreateIndexService#createIndex,few_shot_guided_both,NO,YES,C,tmpImd,ok
+elasticsearch__d8968869__TransportUpdateAction#shardOperation,zero_shot_guided_none,NO,NO,,,ok
+elasticsearch__d8968869__TransportUpdateAction#shardOperation,zero_shot_guided_summaries,NO,NO,,,ok
+elasticsearch__d8968869__TransportUpdateAction#shardOperation,zero_shot_guided_target,NO,NO,,,ok
+elasticsearch__d8968869__TransportUpdateAction#shardOperation,zero_shot_guided_both,NO,NO,,,ok
+elasticsearch__d8968869__TransportUpdateAction#shardOperation,few_shot_guided_none,NO,NO,,,ok
+elasticsearch__d8968869__TransportUpdateAction#shardOperation,few_shot_guided_summaries,NO,NO,,,ok
+elasticsearch__d8968869__TransportUpdateAction#shardOperation,few_shot_guided_target,NO,NO,,,ok
+elasticsearch__d8968869__TransportUpdateAction#shardOperation,few_shot_guided_both,NO,NO,,,ok
+elasticsearch__d8968869__TransportDeleteAction#executeDeleteRequestOnPrimary,zero_shot_guided_none,NO,YES,C,"request.seqNo (campo seqNo de DeleteRequest, lido por executeDeleteRequestOnReplica)",ok
+elasticsearch__d8968869__TransportDeleteAction#executeDeleteRequestOnPrimary,zero_shot_guided_summaries,NO,YES,C,"campo seqNo do DeleteRequest (request.seqNo), lido pelo caminho de réplica (executeDeleteRequestOnReplica / onReplicaShard)",ok
+elasticsearch__d8968869__TransportDeleteAction#executeDeleteRequestOnPrimary,zero_shot_guided_target,NO,YES,C,request.seqNo,ok
+elasticsearch__d8968869__TransportDeleteAction#executeDeleteRequestOnPrimary,zero_shot_guided_both,NO,YES,C,"request.seqNo (campo seqNo do DeleteRequest, escrito em executeDeleteRequestOnPrimary por LEFT e lido pelo onReplicaShard/executeDeleteRequestOnReplica introduzido por RIGHT)",ok
+elasticsearch__d8968869__TransportDeleteAction#executeDeleteRequestOnPrimary,few_shot_guided_none,NO,YES,C,"request.seqNo (seqNo usado em executeDeleteRequestOnReplica, lido pelo onReplicaShard de RIGHT)",ok
+elasticsearch__d8968869__TransportDeleteAction#executeDeleteRequestOnPrimary,few_shot_guided_summaries,NO,YES,C,"request.seqNo (DeleteRequest.seqNo, lido por executeDeleteRequestOnReplica através de onReplicaShard)",ok
+elasticsearch__d8968869__TransportDeleteAction#executeDeleteRequestOnPrimary,few_shot_guided_target,NO,NO,,,ok
+elasticsearch__d8968869__TransportDeleteAction#executeDeleteRequestOnPrimary,few_shot_guided_both,NO,NO,,,ok
+elasticsearch__f3d63095__SynonymsAnalysisTest#testSynonymsAnalysis,zero_shot_guided_none,NO,NO,,,ok
+elasticsearch__f3d63095__SynonymsAnalysisTest#testSynonymsAnalysis,zero_shot_guided_summaries,NO,NO,,,ok
+elasticsearch__f3d63095__SynonymsAnalysisTest#testSynonymsAnalysis,zero_shot_guided_target,NO,NO,,,ok
+elasticsearch__f3d63095__SynonymsAnalysisTest#testSynonymsAnalysis,zero_shot_guided_both,NO,NO,,,ok
+elasticsearch__f3d63095__SynonymsAnalysisTest#testSynonymsAnalysis,few_shot_guided_none,NO,NO,,,ok
+elasticsearch__f3d63095__SynonymsAnalysisTest#testSynonymsAnalysis,few_shot_guided_summaries,NO,NO,,,ok
+elasticsearch__f3d63095__SynonymsAnalysisTest#testSynonymsAnalysis,few_shot_guided_target,NO,NO,,,ok
+elasticsearch__f3d63095__SynonymsAnalysisTest#testSynonymsAnalysis,few_shot_guided_both,NO,NO,,,ok
+elasticsearch__f3d63095__CommonGramsTokenFilterFactoryTests#testQueryModeCommonGramsAnalysis,zero_shot_guided_none,NO,NO,,,ok
+elasticsearch__f3d63095__CommonGramsTokenFilterFactoryTests#testQueryModeCommonGramsAnalysis,zero_shot_guided_summaries,NO,NO,,,ok
+elasticsearch__f3d63095__CommonGramsTokenFilterFactoryTests#testQueryModeCommonGramsAnalysis,zero_shot_guided_target,NO,NO,,,ok
+elasticsearch__f3d63095__CommonGramsTokenFilterFactoryTests#testQueryModeCommonGramsAnalysis,zero_shot_guided_both,NO,NO,,,ok
+elasticsearch__f3d63095__CommonGramsTokenFilterFactoryTests#testQueryModeCommonGramsAnalysis,few_shot_guided_none,NO,NO,,,ok
+elasticsearch__f3d63095__CommonGramsTokenFilterFactoryTests#testQueryModeCommonGramsAnalysis,few_shot_guided_summaries,NO,NO,,,ok
+elasticsearch__f3d63095__CommonGramsTokenFilterFactoryTests#testQueryModeCommonGramsAnalysis,few_shot_guided_target,NO,NO,,,ok
+elasticsearch__f3d63095__CommonGramsTokenFilterFactoryTests#testQueryModeCommonGramsAnalysis,few_shot_guided_both,NO,NO,,,ok
+elasticsearch__f3d63095__CommonGramsTokenFilterFactoryTests#testCommonGramsAnalysis,zero_shot_guided_none,NO,NO,,,ok
+elasticsearch__f3d63095__CommonGramsTokenFilterFactoryTests#testCommonGramsAnalysis,zero_shot_guided_summaries,NO,NO,,,ok
+elasticsearch__f3d63095__CommonGramsTokenFilterFactoryTests#testCommonGramsAnalysis,zero_shot_guided_target,NO,NO,,,ok
+elasticsearch__f3d63095__CommonGramsTokenFilterFactoryTests#testCommonGramsAnalysis,zero_shot_guided_both,NO,NO,,,ok
+elasticsearch__f3d63095__CommonGramsTokenFilterFactoryTests#testCommonGramsAnalysis,few_shot_guided_none,NO,NO,,,ok
+elasticsearch__f3d63095__CommonGramsTokenFilterFactoryTests#testCommonGramsAnalysis,few_shot_guided_summaries,NO,YES,B,settings,ok
+elasticsearch__f3d63095__CommonGramsTokenFilterFactoryTests#testCommonGramsAnalysis,few_shot_guided_target,NO,NO,,,ok
+elasticsearch__f3d63095__CommonGramsTokenFilterFactoryTests#testCommonGramsAnalysis,few_shot_guided_both,NO,NO,,,ok
+elasticsearch__f3d63095__KuromojiAnalysisTests#createAnalysisService,zero_shot_guided_none,NO,NO,,,ok
+elasticsearch__f3d63095__KuromojiAnalysisTests#createAnalysisService,zero_shot_guided_summaries,NO,NO,,,ok
+elasticsearch__f3d63095__KuromojiAnalysisTests#createAnalysisService,zero_shot_guided_target,NO,NO,,,ok
+elasticsearch__f3d63095__KuromojiAnalysisTests#createAnalysisService,zero_shot_guided_both,NO,NO,,,ok
+elasticsearch__f3d63095__KuromojiAnalysisTests#createAnalysisService,few_shot_guided_none,NO,NO,,,ok
+elasticsearch__f3d63095__KuromojiAnalysisTests#createAnalysisService,few_shot_guided_summaries,NO,NO,,,ok
+elasticsearch__f3d63095__KuromojiAnalysisTests#createAnalysisService,few_shot_guided_target,NO,NO,,,ok
+elasticsearch__f3d63095__KuromojiAnalysisTests#createAnalysisService,few_shot_guided_both,NO,NO,,,ok
