@@ -28,7 +28,16 @@ RESPONSE_RE = re.compile(
 # os prompts pedem a análise em <analise> e a resposta final em <resultado>
 RESULT_RE = re.compile(r"<resultado>(.*?)(?:</resultado>|$)", re.IGNORECASE | re.DOTALL)
 
-COLUMNS = ["id", "prompt", "expected answer", "model answer", "violated condition", "state variable", "status"]
+ANALYSIS_RE = re.compile(r"<analise>(.*?)(?:</analise>|<resultado>|$)", re.IGNORECASE | re.DOTALL)
+
+COLUMNS = ["id", "prompt", "expected answer", "model answer", "violated condition", "state variable", "analysis",
+           "status"]
+
+
+def parse_analysis(response):
+    """Extrai o texto do bloco <analise> (vazio se o modelo não usou a tag)."""
+    m = ANALYSIS_RE.search(response)
+    return m.group(1).strip() if m else ""
 
 
 def parse_response(response):
@@ -80,7 +89,8 @@ def main():
                 output.writerow({"id": row.get("id", i), "prompt": name,
                                  "expected answer": row.get("label", "").upper(),
                                  "model answer": conflict, "violated condition": condition,
-                                 "state variable": variable, "status": status})
+                                 "state variable": variable, "analysis": parse_analysis(response),
+                                 "status": status})
                 f.flush()
 
 
