@@ -15,7 +15,7 @@ client = Anthropic(
     default_headers={"anthropic-workspace-id": workspace_id} if workspace_id else None,
 )
 
-MODEL = "claude-haiku-5-5"
+MODEL = "claude-sonnet-5-5"
 
 # janela de contexto do modelo (1M tokens) menos o espaço reservado para a resposta
 MAX_PROMPT_TOKENS = 1_000_000 - 16_000

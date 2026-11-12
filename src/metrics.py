@@ -6,11 +6,23 @@ import argparse
 import csv
 import re
 from collections import Counter, defaultdict
+from dataclasses import dataclass
 from pathlib import Path
 
 # "<tipo>_shot_guided_<contexto>", ex.: few_shot_guided_target
 PROMPT_RE = re.compile(r"(zero|few)_shot_guided_(none|summaries|target|both)$")
 ARQUIVO_RE = re.compile(r"(?P<dataset>[^_]+)_(?P<provider>[^_]+)_(?P<data>\d{8}-\d{6})_response\.csv$")
+
+MOTIVOS_SEM_RESPOSTA = ["ignorada", "erro", "recusa", "fora do formato"]
+CONDICOES = "ABC"
+
+CAB_METRICAS = ["Acurácia", "Precisão", "Recall", "F1", "Especificidade", "TP", "TN", "FP", "FN", "Sem resposta"]
+
+OBSERVACOES = """
+## Observações
+
+- Precisão, recall, F1 e especificidade são da classe YES (conflito semântico).
+- Cada caso foi avaliado uma única vez por prompt, sem repetições, então não há medida de variância."""
 
 
 def pct(valor):
@@ -31,11 +43,11 @@ def tabela(cabecalho, linhas):
     return "\n".join(saida)
 
 
-def sem_resposta(linha):
+def sem_resposta(chamada):
     """Motivo de a chamada não ter resposta YES/NO, ou None se ela tem."""
-    if linha["model answer"] in ("YES", "NO"):
+    if chamada["model answer"] in ("YES", "NO"):
         return None
-    status = linha["status"]
+    status = chamada["status"]
     if status.startswith("skipped"):
         return "ignorada"
     if "refusal" in status:
@@ -45,24 +57,28 @@ def sem_resposta(linha):
     return "fora do formato"  # status ok, mas a resposta não segue "SIM - Condição X: ..." / "NAO"
 
 
-def metricas(linhas):
-    """Métricas da classe YES, calculadas só sobre as chamadas com resposta YES/NO."""
-    m = Counter()
-    for linha in linhas:
-        if sem_resposta(linha):
-            m["sem"] += 1
-            continue
-        esperado, resposta = linha["expected answer"] == "YES", linha["model answer"] == "YES"
-        m[("T" if esperado == resposta else "F") + ("P" if resposta else "N")] += 1
-    tp, tn, fp, fn = m["TP"], m["TN"], m["FP"], m["FN"]
+def metricas_das_respostas(pares):
+    """Métricas da classe YES a partir de pares (resposta esperada, resposta do modelo), ambas YES/NO."""
+    pares = [(esperado == "YES", resposta == "YES") for esperado, resposta in pares]
+    tp = sum(esperado and resposta for esperado, resposta in pares)
+    tn = sum(not esperado and not resposta for esperado, resposta in pares)
+    fp = sum(not esperado and resposta for esperado, resposta in pares)
+    fn = sum(esperado and not resposta for esperado, resposta in pares)
     precisao, recall = div(tp, tp + fp), div(tp, tp + fn)
-    f1 = div(2 * precisao * recall, precisao + recall) if precisao is not None and recall is not None else None
-    return {"acuracia": div(tp + tn, tp + tn + fp + fn), "precisao": precisao, "recall": recall, "f1": f1,
-            "especificidade": div(tn, tn + fp), "TP": tp, "TN": tn, "FP": fp, "FN": fn, "sem": m["sem"],
-            "total": len(linhas)}
+    if precisao is None or recall is None:
+        f1 = None
+    else:
+        f1 = div(2 * precisao * recall, precisao + recall)
+    return {"acuracia": div(tp + tn, len(pares)), "precisao": precisao, "recall": recall, "f1": f1,
+            "especificidade": div(tn, tn + fp), "TP": tp, "TN": tn, "FP": fp, "FN": fn}
 
 
-CAB_METRICAS = ["Acurácia", "Precisão", "Recall", "F1", "Especificidade", "TP", "TN", "FP", "FN", "Sem resposta"]
+def metricas(chamadas):
+    """Métricas da classe YES, calculadas só sobre as chamadas com resposta YES/NO."""
+    respondidas = [c for c in chamadas if not sem_resposta(c)]
+    m = metricas_das_respostas((c["expected answer"], c["model answer"]) for c in respondidas)
+    m["sem"] = len(chamadas) - len(respondidas)
+    return m
 
 
 def linha_metricas(m):
@@ -71,148 +87,216 @@ def linha_metricas(m):
 
 
 def tabela_metricas(titulo_grupo, grupos):
-    return tabela([titulo_grupo] + CAB_METRICAS, [[nome] + linha_metricas(metricas(ls)) for nome, ls in grupos.items()])
+    return tabela([titulo_grupo] + CAB_METRICAS, [[nome] + linha_metricas(metricas(cs)) for nome, cs in grupos.items()])
 
 
-def relatorio(caminho):
+@dataclass
+class Resultados:
+    arquivo: str
+    chamadas: list
+    prompts: list
+    por_prompt: dict
+    casos: list
+    esperado: dict  # caso -> YES/NO
+    resposta: dict  # (caso, prompt) -> YES/NO, só das chamadas com resposta
+
+    def n_yes(self, casos):
+        return sum(self.esperado[caso] == "YES" for caso in casos)
+
+    def chamadas_dos_prompts(self, prompts):
+        return [chamada for prompt in prompts for chamada in self.por_prompt[prompt]]
+
+
+def carregar(caminho):
     with open(caminho, newline="", encoding="utf-8-sig") as f:
-        linhas = list(csv.DictReader(f))
-    prompts = list(dict.fromkeys(l["prompt"] for l in linhas))
-    por_prompt = {p: [l for l in linhas if l["prompt"] == p] for p in prompts}
-    casos = list(dict.fromkeys(l["id"] for l in linhas))
-    esperado = {l["id"]: l["expected answer"] for l in linhas}
-    resposta = {(l["id"], l["prompt"]): l["model answer"] for l in linhas if not sem_resposta(l)}
-    n_yes = sum(esperado[c] == "YES" for c in casos)
+        chamadas = list(csv.DictReader(f))
+    prompts = list(dict.fromkeys(c["prompt"] for c in chamadas))
+    return Resultados(
+        arquivo=Path(caminho).name,
+        chamadas=chamadas,
+        prompts=prompts,
+        por_prompt={p: [c for c in chamadas if c["prompt"] == p] for p in prompts},
+        casos=list(dict.fromkeys(c["id"] for c in chamadas)),
+        esperado={c["id"]: c["expected answer"] for c in chamadas},
+        resposta={(c["id"], c["prompt"]): c["model answer"] for c in chamadas if not sem_resposta(c)},
+    )
 
-    s = []
-    nome = Path(caminho).name
-    info = ARQUIVO_RE.search(nome)
-    s.append(f"# Relatório por prompt — `{nome}`\n")
-    if info:
-        s.append(f"- **Dataset:** `{info['dataset']}` — {len(casos)} casos ({n_yes} YES, {len(casos) - n_yes} NO)")
-        s.append(f"- **Provedor:** `{info['provider']}`")
-    else:
-        s.append(f"- **Casos:** {len(casos)} ({n_yes} YES, {len(casos) - n_yes} NO)")
-    s.append(f"- **Prompts:** {len(prompts)}; **chamadas:** {len(linhas)}")
-    motivos = Counter(m for m in map(sem_resposta, linhas) if m)
-    s.append("- **Sem resposta YES/NO:** " + (", ".join(f"{k}: {v}" for k, v in motivos.items()) or "nenhuma"))
-    s.append("- As métricas consideram só as chamadas com resposta YES/NO; as demais aparecem em \"Sem resposta\".\n")
 
-    # 1. geral
-    s.append("## 1. Resultado geral\n")
-    s.append(tabela_metricas("Chamadas", {"todas": linhas}))
-    yes_reais = sum(l["expected answer"] == "YES" for l in linhas)
-    s.append(f"\nBaseline: sempre responder \"NO\" daria {pct(div(len(linhas) - yes_reais, len(linhas)))} de acurácia "
-             f"({len(linhas) - yes_reais}/{len(linhas)}). Proporção real de YES nas chamadas: {pct(div(yes_reais, len(linhas)))}.\n")
-
-    # 2. por prompt
-    s.append("## 2. Resultado por prompt\n")
-    s.append(tabela_metricas("Prompt", por_prompt))
-    s.append("")
-    distrib = []
-    for p, ls in por_prompt.items():
-        c = Counter(l["model answer"] for l in ls if not sem_resposta(l))
-        respondidas = c["YES"] + c["NO"]
-        distrib.append([p, c["YES"], c["NO"], len(ls) - respondidas, pct(div(c["YES"], respondidas))])
-    s.append(tabela(["Prompt", "Respostas YES", "Respostas NO", "Sem resposta", "% YES (das respondidas)"], distrib))
-    s.append("")
-
-    # 3. efeito de cada fator, quando os nomes seguem <tipo>_shot_guided_<contexto>
+def prompts_por_fator(prompts):
+    """({tipo: prompts}, {contexto: prompts}), ou None se algum nome não segue <tipo>_shot_guided_<contexto>."""
     fatores = {p: PROMPT_RE.match(p) for p in prompts}
-    if all(fatores.values()):
-        s.append("## 3. Efeito de cada fator\n")
-        s.append("### Zero-shot vs. few-shot (somando as variantes de contexto)\n")
-        por_tipo = defaultdict(list)
-        por_contexto = defaultdict(list)
-        for p, m in fatores.items():
-            por_tipo[m[1] + "-shot"] += por_prompt[p]
-            por_contexto[m[2]] += por_prompt[p]
-        s.append(tabela_metricas("Tipo", por_tipo))
-        s.append("\n### Contexto fornecido (somando zero-shot e few-shot)\n")
-        s.append(tabela_metricas("Contexto", por_contexto))
-        s.append("")
+    if not all(fatores.values()):
+        return None
+    por_tipo, por_contexto = defaultdict(list), defaultdict(list)
+    for prompt, match in fatores.items():
+        tipo, contexto = match.groups()
+        por_tipo[f"{tipo}-shot"].append(prompt)
+        por_contexto[contexto].append(prompt)
+    return por_tipo, por_contexto
 
-    # 4. concordância entre os prompts
-    s.append("## 4. Concordância entre os prompts\n")
-    s.append(f"Votos \"YES\" por caso, somando os {len(prompts)} prompts (chamadas sem resposta não contam como YES):\n")
-    votos = {c: sum(resposta.get((c, p)) == "YES" for p in prompts) for c in casos}
-    s.append(tabela([f"Votos YES (de {len(prompts)})", "Casos YES reais", "Casos NO reais"],
-                    [[k, sum(votos[c] == k and esperado[c] == "YES" for c in casos),
-                      sum(votos[c] == k and esperado[c] == "NO" for c in casos)] for k in range(len(prompts) + 1)]))
-    s.append(f"\n- YES reais que nenhum prompt detectou: {sum(votos[c] == 0 and esperado[c] == 'YES' for c in casos)}/{n_yes}")
-    s.append(f"- NO reais marcados como YES por ≥1 prompt: "
-             f"{sum(votos[c] > 0 and esperado[c] == 'NO' for c in casos)}/{len(casos) - n_yes}\n")
 
-    s.append(f"Ensemble por voto (por caso, {len(casos)} casos):\n")
+def projeto(caso):
+    """No mergedataset o id começa com <projeto>__; no toy, cada caso é seu próprio projeto."""
+    return caso.split("__")[0].split("#")[0]
+
+
+def concordancia(r, prompt_a, prompt_b):
+    """Fração dos casos respondidos pelos dois prompts em que eles deram a mesma resposta."""
+    comuns = [caso for caso in r.casos if (caso, prompt_a) in r.resposta and (caso, prompt_b) in r.resposta]
+    iguais = sum(r.resposta[(caso, prompt_a)] == r.resposta[(caso, prompt_b)] for caso in comuns)
+    return div(iguais, len(comuns))
+
+
+def secao_cabecalho(r, titulo):
+    n_yes = r.n_yes(r.casos)
+    yes_no = f"({n_yes} YES, {len(r.casos) - n_yes} NO)"
+    motivos = Counter(filter(None, map(sem_resposta, r.chamadas)))
+    saida = [f"# Relatório por prompt — `{titulo}`\n"]
+    info = ARQUIVO_RE.search(r.arquivo)
+    if info:
+        saida.append(f"- **Dataset:** `{info['dataset']}` — {len(r.casos)} casos {yes_no}")
+        saida.append(f"- **Provedor:** `{info['provider']}`")
+    else:
+        saida.append(f"- **Casos:** {len(r.casos)} {yes_no}")
+    saida.append(f"- **Prompts:** {len(r.prompts)}; **chamadas:** {len(r.chamadas)}")
+    saida.append("- **Sem resposta YES/NO:** " + (", ".join(f"{k}: {v}" for k, v in motivos.items()) or "nenhuma"))
+    saida.append("- As métricas consideram só as chamadas com resposta YES/NO; as demais aparecem em \"Sem resposta\".\n")
+    return "\n".join(saida)
+
+
+def secao_geral(r):
+    total = len(r.chamadas)
+    yes_reais = sum(c["expected answer"] == "YES" for c in r.chamadas)
+    no_reais = total - yes_reais
+    return "\n".join([
+        "## 1. Resultado geral\n",
+        tabela_metricas("Chamadas", {"todas": r.chamadas}),
+        f"\nBaseline: sempre responder \"NO\" daria {pct(div(no_reais, total))} de acurácia ({no_reais}/{total}). "
+        f"Proporção real de YES nas chamadas: {pct(div(yes_reais, total))}.\n",
+    ])
+
+
+def secao_por_prompt(r):
+    distribuicao = []
+    for prompt, chamadas in r.por_prompt.items():
+        respostas = Counter(c["model answer"] for c in chamadas if not sem_resposta(c))
+        respondidas = respostas["YES"] + respostas["NO"]
+        distribuicao.append([prompt, respostas["YES"], respostas["NO"], len(chamadas) - respondidas,
+                             pct(div(respostas["YES"], respondidas))])
+    return "\n".join([
+        "## 2. Resultado por prompt\n",
+        tabela_metricas("Prompt", r.por_prompt),
+        "",
+        tabela(["Prompt", "Respostas YES", "Respostas NO", "Sem resposta", "% YES (das respondidas)"], distribuicao),
+        "",
+    ])
+
+
+def secao_fatores(r):
+    fatores = prompts_por_fator(r.prompts)
+    if fatores is None:
+        return None
+    por_tipo, por_contexto = fatores
+    return "\n".join([
+        "## 3. Efeito de cada fator\n",
+        "### Zero-shot vs. few-shot (somando as variantes de contexto)\n",
+        tabela_metricas("Tipo", {tipo: r.chamadas_dos_prompts(ps) for tipo, ps in por_tipo.items()}),
+        "\n### Contexto fornecido (somando zero-shot e few-shot)\n",
+        tabela_metricas("Contexto", {contexto: r.chamadas_dos_prompts(ps) for contexto, ps in por_contexto.items()}),
+        "",
+    ])
+
+
+def secao_concordancia(r):
+    n = len(r.prompts)
+    votos = {caso: sum(r.resposta.get((caso, p)) == "YES" for p in r.prompts) for caso in r.casos}
+    yes_reais = [caso for caso in r.casos if r.esperado[caso] == "YES"]
+    no_reais = [caso for caso in r.casos if r.esperado[caso] == "NO"]
+
+    distribuicao_votos = [[k, sum(votos[caso] == k for caso in yes_reais), sum(votos[caso] == k for caso in no_reais)]
+                          for k in range(n + 1)]
+    nao_detectados = sum(votos[caso] == 0 for caso in yes_reais)
+    falsos_alarmes = sum(votos[caso] > 0 for caso in no_reais)
+
     ensemble = []
-    for k in range(1, len(prompts) + 1):
-        votado = [{"expected answer": esperado[c], "model answer": "YES" if votos[c] >= k else "NO", "status": "ok"}
-                  for c in casos]
-        m = metricas(votado)
-        ensemble.append([f"≥{k} de {len(prompts)}", pct(m["acuracia"]), pct(m["precisao"]), pct(m["recall"]),
-                         dec(m["f1"]), m["TP"], m["FP"]])
-    s.append(tabela(["Regra (YES se…)", "Acurácia", "Precisão", "Recall", "F1", "TP", "FP"], ensemble))
+    for k in range(1, n + 1):
+        m = metricas_das_respostas((r.esperado[caso], "YES" if votos[caso] >= k else "NO") for caso in r.casos)
+        ensemble.append([f"≥{k} de {n}", pct(m["acuracia"]), pct(m["precisao"]), pct(m["recall"]), dec(m["f1"]),
+                         m["TP"], m["FP"]])
 
-    s.append("\nConcordância par a par (mesma resposta, sobre os casos respondidos pelos dois prompts):\n")
-    pares = []
-    for a in prompts:
-        linha = [f"**{a}**"]
-        for b in prompts:
-            comuns = [c for c in casos if (c, a) in resposta and (c, b) in resposta]
-            linha.append(pct(div(sum(resposta[(c, a)] == resposta[(c, b)] for c in comuns), len(comuns))))
-        pares.append(linha)
-    s.append(tabela([""] + prompts, pares))
-    s.append("")
+    pares = [[f"**{a}**"] + [pct(concordancia(r, a, b)) for b in r.prompts] for a in r.prompts]
 
-    # 5. condição violada
-    s.append("## 5. Condição violada (A/B/C) nas respostas YES\n")
-    cond = []
-    for p, ls in por_prompt.items():
-        yes = [l for l in ls if l["model answer"] == "YES"]
-        tp = [l for l in yes if l["expected answer"] == "YES"]
-        c, ctp = Counter(l["violated condition"] for l in yes), Counter(l["violated condition"] for l in tp)
-        cond.append([p, c["A"], c["B"], c["C"], len(yes) - c["A"] - c["B"] - c["C"], ctp["A"], ctp["B"], ctp["C"]])
-    s.append(tabela(["Prompt", "A", "B", "C", "outra/vazia", "Entre os TP: A", "B", "C"], cond))
-    s.append("\nO dataset não traz a condição esperada, então não é possível medir a acurácia dessa classificação.\n")
+    return "\n".join([
+        "## 4. Concordância entre os prompts\n",
+        f"Votos \"YES\" por caso, somando os {n} prompts (chamadas sem resposta não contam como YES):\n",
+        tabela([f"Votos YES (de {n})", "Casos YES reais", "Casos NO reais"], distribuicao_votos),
+        f"\n- YES reais que nenhum prompt detectou: {nao_detectados}/{len(yes_reais)}",
+        f"- NO reais marcados como YES por ≥1 prompt: {falsos_alarmes}/{len(no_reais)}\n",
+        f"Ensemble por voto (por caso, {len(r.casos)} casos):\n",
+        tabela(["Regra (YES se…)", "Acurácia", "Precisão", "Recall", "F1", "TP", "FP"], ensemble),
+        "\nConcordância par a par (mesma resposta, sobre os casos respondidos pelos dois prompts):\n",
+        tabela([""] + r.prompts, pares),
+        "",
+    ])
 
-    # 6. por projeto (o id do mergedataset começa com <projeto>__; no toy, cada caso é seu próprio "projeto")
-    s.append("## 6. Resultado por projeto (acertos / chamadas, contando chamadas sem resposta como incorretas)\n")
+
+def secao_condicao(r):
+    linhas = []
+    for prompt, chamadas in r.por_prompt.items():
+        yes = [c for c in chamadas if c["model answer"] == "YES"]
+        condicoes = Counter(c["violated condition"] for c in yes)
+        condicoes_tp = Counter(c["violated condition"] for c in yes if c["expected answer"] == "YES")
+        outras = len(yes) - sum(condicoes[x] for x in CONDICOES)
+        linhas.append([prompt, *[condicoes[x] for x in CONDICOES], outras, *[condicoes_tp[x] for x in CONDICOES]])
+    return "\n".join([
+        "## 5. Condição violada (A/B/C) nas respostas YES\n",
+        tabela(["Prompt", "A", "B", "C", "outra/vazia", "Entre os TP: A", "B", "C"], linhas),
+        "\nO dataset não traz a condição esperada, então não é possível medir a acurácia dessa classificação.\n",
+    ])
+
+
+def secao_por_projeto(r):
     projetos = defaultdict(list)
-    for c in casos:
-        projetos[c.split("__")[0].split("#")[0]].append(c)
-    proj = []
-    for nome_proj, cs in sorted(projetos.items(), key=lambda x: -len(x[1])):
-        y = sum(esperado[c] == "YES" for c in cs)
-        linha = [nome_proj, f"{len(cs)} ({y}/{len(cs) - y})"]
-        for p in prompts:
-            acertos = sum(resposta.get((c, p)) == esperado[c] for c in cs)
-            linha.append(f"{acertos}/{len(cs)}")
-        proj.append(linha)
-    s.append(tabela(["Projeto", "Casos (YES/NO)"] + prompts, proj))
-    s.append("")
+    for caso in r.casos:
+        projetos[projeto(caso)].append(caso)
+    linhas = []
+    for nome, casos in sorted(projetos.items(), key=lambda item: -len(item[1])):
+        n_yes = r.n_yes(casos)
+        acertos = [sum(r.resposta.get((caso, p)) == r.esperado[caso] for caso in casos) for p in r.prompts]
+        linhas.append([nome, f"{len(casos)} ({n_yes}/{len(casos) - n_yes})"] + [f"{a}/{len(casos)}" for a in acertos])
+    return "\n".join([
+        "## 6. Resultado por projeto (acertos / chamadas, contando chamadas sem resposta como incorretas)\n",
+        tabela(["Projeto", "Casos (YES/NO)"] + r.prompts, linhas),
+        "",
+    ])
 
-    # 7. chamadas sem resposta
-    s.append("## 7. Chamadas sem resposta YES/NO\n")
-    tipos = ["ignorada", "erro", "recusa", "fora do formato"]
-    sem = []
-    for p, ls in por_prompt.items():
-        c = Counter(sem_resposta(l) for l in ls)
-        faltas = [l for l in ls if sem_resposta(l)]
-        sem.append([p] + [c[t] for t in tipos] + [sum(l["expected answer"] == "YES" for l in faltas),
-                                                  sum(l["expected answer"] == "NO" for l in faltas)])
-    s.append(tabela(["Prompt", "Ignoradas (prompt grande demais)", "Erros", "Recusas", "Fora do formato",
-                     "Em casos YES", "Em casos NO"], sem))
-    s.append("\n## Observações\n")
-    s.append("- Precisão, recall, F1 e especificidade são da classe YES (conflito semântico).")
-    s.append("- Cada caso foi avaliado uma única vez por prompt, sem repetições, então não há medida de variância.")
-    return "\n".join(s) + "\n"
+
+def secao_sem_resposta(r):
+    linhas = []
+    for prompt, chamadas in r.por_prompt.items():
+        motivos = Counter(map(sem_resposta, chamadas))
+        faltas = [c for c in chamadas if sem_resposta(c)]
+        em_yes = sum(c["expected answer"] == "YES" for c in faltas)
+        em_no = sum(c["expected answer"] == "NO" for c in faltas)
+        linhas.append([prompt, *[motivos[m] for m in MOTIVOS_SEM_RESPOSTA], em_yes, em_no])
+    return "\n".join([
+        "## 7. Chamadas sem resposta YES/NO\n",
+        tabela(["Prompt", "Ignoradas (prompt grande demais)", "Erros", "Recusas", "Fora do formato",
+                "Em casos YES", "Em casos NO"], linhas),
+    ])
+
+
+def relatorio(r, titulo=None):
+    secoes = [secao_cabecalho(r, titulo or r.arquivo), secao_geral(r), secao_por_prompt(r), secao_fatores(r), secao_concordancia(r),
+              secao_condicao(r), secao_por_projeto(r), secao_sem_resposta(r), OBSERVACOES]
+    return "\n".join(s for s in secoes if s is not None) + "\n"
 
 
 def main():
     parser = argparse.ArgumentParser(description="Gera um relatório em Markdown com métricas por prompt.")
     parser.add_argument("csv", help="arquivo de resultados gerado por src.conflict_detector")
     args = parser.parse_args()
-    print(relatorio(args.csv), end="")
+    print(relatorio(carregar(args.csv)), end="")
 
 
 if __name__ == "__main__":

@@ -143,3 +143,23 @@ O relatório traz:
 7. chamadas sem resposta YES/NO: ignoradas (prompt grande demais), erros, recusas e respostas fora do formato.
 
 As métricas (classe YES = conflito) consideram só as chamadas com resposta YES/NO; as demais são contadas à parte em "Sem resposta", para que prompts ignorados por limite de tamanho não sejam contados como erros do modelo. A exceção é o resultado por projeto, que conta as chamadas sem resposta como incorretas.
+
+### Várias execuções e modelos
+
+`src/reports.py` gera todos os relatórios de um diretório com uma pasta por modelo e um CSV por execução (todos com os mesmos casos e prompts):
+
+```
+python3 -m src.reports results/v2
+```
+
+```
+results/v2/
+├── report.md                  ← comparação entre os modelos
+└── claude-sonnet-5-5/
+    ├── 1.csv  1_report.md     ← relatório de src.metrics de cada execução
+    ├── 2.csv  2_report.md
+    ├── 3.csv  3_report.md
+    └── report.md              ← resumo das execuções do modelo
+```
+
+O resumo de cada modelo (`src/comparison.py`) traz as métricas por execução, por prompt e por fator como média e intervalo (mín–máx) entre as execuções, a estabilidade (chamadas com a mesma resposta em todas as execuções) e as métricas da resposta da maioria das execuções. A comparação entre modelos traz o resultado geral de cada modelo, F1, recall e precisão por prompt e por fator, e os casos difíceis: aqueles em que todos os modelos acertam menos da metade das chamadas. Os relatórios existentes são sobrescritos.
