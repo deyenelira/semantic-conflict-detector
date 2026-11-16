@@ -15,7 +15,10 @@ client = Anthropic(
     default_headers={"anthropic-workspace-id": workspace_id} if workspace_id else None,
 )
 
-MODEL = "claude-sonnet-5-5"
+MODEL = "claude-opus-5-5"
+
+# `ask` aceita `cache_prefix` (ver conflict_detector.py --cache)
+SUPPORTS_PREFIX_CACHE = True
 
 # janela de contexto do modelo (1M tokens) menos o espaço reservado para a resposta
 MAX_PROMPT_TOKENS = 1_000_000 - 16_000
@@ -47,7 +50,16 @@ def retry_delay(e, attempt):
     return delay + random.uniform(0, delay / 2)  # jitter
 
 
-def ask(prompt):
+def ask(prompt, cache_prefix=None):
+    """Envia o prompt. Com `cache_prefix` (o começo exato do prompt), esse trecho vai em um bloco próprio
+    marcado para cache de 1h (a escrita custa 2x, mas o cache sobrevive aos intervalos entre usos do mesmo
+    prefixo, que alternam entre 8 prompts). O texto que o modelo recebe é o mesmo, só dividido em dois blocos."""
+    content = prompt
+    if cache_prefix and prompt.startswith(cache_prefix) and len(prompt) > len(cache_prefix):
+        content = [
+            {"type": "text", "text": cache_prefix, "cache_control": {"type": "ephemeral", "ttl": "1h"}},
+            {"type": "text", "text": prompt[len(cache_prefix):]},
+        ]
     for attempt in range(MAX_RETRIES + 1):
         try:
             # sem temperature/top_p (rejeitados por este modelo) e sem thinking (sempre ligado, não pode ser desativado)
@@ -55,7 +67,7 @@ def ask(prompt):
                 model=MODEL,
                 max_tokens=MAX_OUTPUT_TOKENS,
                 output_config={"effort": "medium"},
-                messages=[{"role": "user", "content": prompt}],
+                messages=[{"role": "user", "content": content}],
             )
             break
         except anthropic.AnthropicError as e:
@@ -66,6 +78,10 @@ def ask(prompt):
             print(f"Anthropic error {code}, retrying in {delay:.1f}s "
                   f"({attempt + 1}/{MAX_RETRIES})")
             time.sleep(delay)
+    if isinstance(content, list):  # só quando o cache foi pedido: mostra se ele foi lido, escrito ou ignorado
+        u = response.usage
+        print(f"cache: lido={u.cache_read_input_tokens or 0} escrito={u.cache_creation_input_tokens or 0} "
+              f"sem_cache={u.input_tokens}")
     # a recusa por segurança volta com HTTP 200; vira erro para ser registrada na coluna status
     if response.stop_reason == "refusal":
         category = response.stop_details.category if response.stop_details else None

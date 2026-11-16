@@ -336,12 +336,21 @@ def exemplos(com_target, com_resumos):
     return "<exemplos>\n" + "\n\n".join(partes) + "\n</exemplos>"
 
 
-def montar(few_shot, com_target, com_resumos):
-    partes = [CABECALHO, definicoes(com_target), FORMATO_ENTRADA, instrucoes(com_target, com_resumos)]
+def montar_partes(few_shot, com_target, com_resumos):
+    """Divide o prompt em (prefixo, caso).
+
+    O prefixo é idêntico em todos os casos de uma variante (é o que pode ir para o cache do provedor);
+    só o caso muda. O separador "\\n\\n" fica no fim do prefixo."""
+    prefixo = [CABECALHO, definicoes(com_target), FORMATO_ENTRADA, instrucoes(com_target, com_resumos)]
     if few_shot:
-        partes += [exemplos(com_target, com_resumos), "AGORA ANALISE O SEGUINTE CASO:"]
-    partes += [f"<caso>\n{entrada(com_target, com_resumos)}\n</caso>", FECHO]
-    return "\n\n".join(partes)
+        prefixo += [exemplos(com_target, com_resumos), "AGORA ANALISE O SEGUINTE CASO:"]
+    caso = [f"<caso>\n{entrada(com_target, com_resumos)}\n</caso>", FECHO]
+    return "\n\n".join(prefixo) + "\n\n", "\n\n".join(caso)
+
+
+def montar(few_shot, com_target, com_resumos):
+    prefixo, caso = montar_partes(few_shot, com_target, com_resumos)
+    return prefixo + caso
 
 
 # 2 x 4 variantes: zero-shot ou few-shot, cada uma sem contexto, só com resumos, só com target ou com ambos
@@ -350,3 +359,8 @@ VARIANTES = {"none": (False, False), "summaries": (False, True), "target": (True
 PROMPTS = {f"{tipo}_shot_guided_{nome}": montar(tipo == "few", com_target, com_resumos)
            for tipo in ("zero", "few")
            for nome, (com_target, com_resumos) in VARIANTES.items()}
+
+# parte fixa de cada prompt (mesmas chaves de PROMPTS); como PROMPTS, passa por .format(**linha) antes do uso
+PREFIXOS = {f"{tipo}_shot_guided_{nome}": montar_partes(tipo == "few", com_target, com_resumos)[0]
+            for tipo in ("zero", "few")
+            for nome, (com_target, com_resumos) in VARIANTES.items()}

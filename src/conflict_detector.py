@@ -5,7 +5,7 @@ from datetime import datetime
 from pathlib import Path
 
 from src.datasets import DATASETS, load
-from src.prompts import PROMPTS
+from src.prompts import PREFIXOS, PROMPTS
 from src.providers import PROVIDERS, get_provider
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -59,13 +59,18 @@ def main():
     parser = argparse.ArgumentParser(description="Detecta conflitos semânticos em merges usando LLMs.")
     parser.add_argument("--provider", choices=PROVIDERS, default="groq")
     parser.add_argument("--dataset", choices=DATASETS, default="toy")
+    parser.add_argument("--cache", action="store_true",
+                        help="cache de 1h da parte fixa do prompt (só provedores com SUPPORTS_PREFIX_CACHE)")
     args = parser.parse_args()
 
     provider = get_provider(args.provider)
+    if args.cache and not getattr(provider, "SUPPORTS_PREFIX_CACHE", False):
+        parser.error(f"--cache não é suportado pelo provedor {args.provider!r}")
     max_prompt_tokens = provider.MAX_PROMPT_TOKENS
     # data e hora no nome para que uma execução nunca sobrescreva resultados anteriores
     timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
-    output_path = RESULTS_DIR / f"{args.dataset}_{args.provider}_{timestamp}_response.csv"
+    suffix = "_cache" if args.cache else ""
+    output_path = RESULTS_DIR / f"{args.dataset}_{args.provider}_{timestamp}{suffix}_response.csv"
     RESULTS_DIR.mkdir(exist_ok=True)
 
     rows = load(args.dataset)
@@ -80,7 +85,11 @@ def main():
                     response, status = "", f"skipped: ~{tokens} tokens > {max_prompt_tokens}"
                 else:
                     try:
-                        response, status = provider.ask(text), "ok"
+                        if args.cache:
+                            response = provider.ask(text, cache_prefix=PREFIXOS[name].format(**row))
+                        else:
+                            response = provider.ask(text)
+                        status = "ok"
                     except Exception as e:
                         # registra a falha e segue para a próxima chamada em vez de interromper a execução
                         response, status = "", f"error: {type(e).__name__}: {e}"
