@@ -154,6 +154,7 @@ python3 -m src.reports results/v2
 ```
 results/v2/
 ├── report.md                  ← comparação entre os modelos
+├── divergent_cases.md         ← casos em que os modelos divergem, para análise manual
 └── claude-sonnet-5-5/
     ├── 1.csv  1_report.md     ← relatório de src.metrics de cada execução
     ├── 2.csv  2_report.md
@@ -161,4 +162,8 @@ results/v2/
     └── report.md              ← resumo das execuções do modelo
 ```
 
-O resumo de cada modelo (`src/comparison.py`) traz as métricas por execução, por prompt e por fator como média e intervalo (mín–máx) entre as execuções, a estabilidade (chamadas com a mesma resposta em todas as execuções) e as métricas da resposta da maioria das execuções. A comparação entre modelos traz o resultado geral de cada modelo, F1, recall e precisão por prompt e por fator, e os casos difíceis: aqueles em que todos os modelos acertam menos da metade das chamadas. Os relatórios existentes são sobrescritos.
+O resumo de cada modelo (`src/comparison.py`) traz as métricas por execução, por prompt e por fator como média e intervalo (mín–máx) entre as execuções, a estabilidade (chamadas com a mesma resposta em todas as execuções) e as métricas da resposta da maioria das execuções. A comparação entre modelos traz o resultado geral de cada modelo, F1, recall e precisão por prompt e por fator, e os casos difíceis: aqueles em que todos os modelos acertam menos da metade das chamadas.
+
+O `divergent_cases.md` (`src/divergent_cases.py`) serve para a análise manual dos casos em que os modelos divergem no prompt `few_shot_guided_both`. Entram os casos em que cada modelo deu a mesma resposta em todas as suas execuções, e ao menos um modelo respondeu YES e outro NO, separados em conflitos detectados só por parte dos modelos e falsos positivos de parte dos modelos. Para cada caso, o relatório traz o target, um link para o código, os resumos de LEFT e RIGHT, a justificativa do dataset e, para cada modelo (primeiro os que acertam), a resposta e a análise de cada execução em blocos recolhidos, que se abrem com um clique.
+
+Os relatórios existentes são sobrescritos.

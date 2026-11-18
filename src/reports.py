@@ -5,12 +5,14 @@ Uso: python3 -m src.reports results/v2
 Escreve, dentro do diretório:
 - <modelo>/<execução>_report.md: o relatório de src.metrics para cada execução;
 - <modelo>/report.md: o resumo das execuções do modelo;
-- report.md: a comparação entre os modelos.
+- report.md: a comparação entre os modelos;
+- divergent_cases.md: os casos em que os modelos divergem, para análise manual (src.divergent_cases).
 """
 import argparse
 from pathlib import Path
 
 from src.comparison import relatorio_comparativo, relatorio_modelo
+from src.divergent_cases import relatorio_casos_divergentes
 from src.metrics import carregar, relatorio
 
 
@@ -53,6 +55,8 @@ def main():
             escrever(pasta / f"{Path(r.arquivo).stem}_report.md", relatorio(r, titulo=f"{nome}/{r.arquivo}"))
         escrever(pasta / "report.md", relatorio_modelo(nome, execucoes))
     escrever(args.diretorio / "report.md", relatorio_comparativo(modelos, args.diretorio.name))
+    escrever(args.diretorio / "divergent_cases.md",
+             relatorio_casos_divergentes(modelos, args.diretorio.name, args.diretorio.resolve()))
 
 
 if __name__ == "__main__":
