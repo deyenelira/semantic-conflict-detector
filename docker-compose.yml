@@ -1,0 +1,9 @@
+services:
+  detector:
+    build: .
+    env_file: .env
+    volumes:
+      - ./results:/app/results
+      - ./data:/app/data
+    # sobrescreva com: docker compose run --rm detector --dataset mergedataset
+    command: ["--provider", "anthropic"]

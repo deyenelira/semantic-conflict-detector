@@ -1,28 +1,20 @@
-# Execução
+# Sumário
 
-## Setup local do Code Llama
-
-## Instale usando a linha de comando no Ubuntu
-
-```
-sudo snap install ollama
-```
-
-## Baixe e execute o modelo
-
-```
-ollama run codellama:7b-instruct
-```
-
-## Caso queira validar se está tudo funcionando, execute o código abaixo no seu terminal
-
-```
-curl http://localhost:11434/api/generate -d '{
-  "model": "codellama:7b-instruct",
-  "prompt": "Escreva um Hello World em Python.",
-  "stream": false
-}'
-```
+- [Setup do projeto Python](#setup-do-projeto-python)
+  - [Criação de ambiente virtual](#criacao-de-ambiente-virtual)
+  - [Instalando dependências](#instalando-dependencias)
+  - [Variáveis de ambiente](#variaveis-de-ambiente)
+  - [Execução](#execucao)
+  - [Provedor](#provedor)
+  - [Datasets](#datasets) ([toy](#toy), [mergedataset](#mergedataset))
+  - [Saída](#saída)
+  - [Métricas](#métricas) ([várias execuções e modelos](#várias-execuções-e-modelos))
+- [Docker](#docker)
+  - [Pré-requisitos](#pré-requisitos)
+  - [Passo a passo](#passo-a-passo)
+  - [Gerando métricas e relatórios](#gerando-métricas-e-relatórios)
+  - [Usando um dataset próprio](#usando-um-dataset-próprio)
+  - [Problemas comuns](#problemas-comuns)
 
 # Setup do projeto Python
 
@@ -39,42 +31,35 @@ pip install -r requirements.txt
 
 ## Variaveis de ambiente
 
-Copie `.env.example` para `.env` e preencha as chaves dos provedores que for usar:
+Copie `.env.example` para `.env` e preencha:
 
-- `GROQ_API_KEY`, `GEMINI_API_KEY`, `ANTHROPIC_API_KEY`;
-- `ANTHROPIC_WORKSPACE_ID`: só é necessária se a chave da Anthropic não estiver vinculada a um workspace.
-
-O Ollama roda localmente e não precisa de chave.
+- `ANTHROPIC_API_KEY`: chave da API da Anthropic;
+- `ANTHROPIC_WORKSPACE_ID`: só é necessária se a chave não estiver vinculada a um workspace.
 
 ## Execucao
 
 ```
 source venv/bin/activate
-python3 -m src.conflict_detector --provider groq   # ou anthropic / gemini / ollama
-python3 -m src.conflict_detector --provider groq --dataset mergedataset
+python3 -m src.conflict_detector --provider anthropic
+python3 -m src.conflict_detector --provider anthropic --dataset mergedataset
 ```
 
 Opções:
 
-- `--provider`: `anthropic`, `gemini`, `groq` ou `ollama` (padrão: `groq`).
+- `--provider`: use `anthropic`.
 - `--dataset`: nome de um diretório em `data/` que tenha um `dataset.csv` (padrão: `toy`).
 
 Cada caso do dataset é enviado uma vez para cada prompt de `src/prompts.py` (8 prompts: 24 chamadas no `toy`, 632 no `mergedataset`). Os prompts combinam zero-shot ou few-shot (6 exemplos) com quatro variantes de contexto: sem target nem resumos (`none`), só resumos (`summaries`), só target (`target`) e ambos (`both`).
 
-## Provedores
+## Provedor
 
-O modelo e os limites de cada provedor ficam em `src/providers/<provider>.py` (`MODEL`, `MAX_PROMPT_TOKENS`).
+O modelo e o limite de tamanho do prompt ficam em `src/providers/anthropic.py` (`MODEL`, `MAX_PROMPT_TOKENS`).
 
 | Provedor | Modelo | Prompts ignorados acima de |
 |---|---|---|
 | `anthropic` | `claude-fable-5-1` | ~984k tokens (contexto de 1M menos 16k para a resposta) |
-| `gemini` | `gemini-3.8-flash` | ~1M tokens (confirmar no model card) |
-| `groq` | `openai/gpt-oss-120b` | ~5.950 tokens: o plano gratuito limita a 8.000 tokens por minuto, contando prompt e resposta (2.048) |
-| `ollama` | `codellama:7b-instruct` | ~24k tokens (veja abaixo) |
 
-Prompts maiores que o limite do provedor (`MAX_PROMPT_TOKENS`, comparado com uma estimativa do tamanho do prompt) não são enviados ao modelo. Com o plano gratuito do Groq, a maior parte do `mergedataset` é ignorada.
-
-Groq, Gemini e Anthropic repetem a chamada com espera crescente quando a falha é temporária (ex.: limite de requisições, erro do servidor). Na Anthropic, uma recusa do modelo é registrada como erro.
+Prompts maiores que o limite (`MAX_PROMPT_TOKENS`, comparado com uma estimativa do tamanho do prompt) não são enviados ao modelo. A chamada é repetida com espera crescente quando a falha é temporária (ex.: limite de requisições, erro do servidor). Uma recusa do modelo é registrada como erro.
 
 ## Datasets
 
@@ -106,13 +91,9 @@ As 71 classes que contêm os 79 alvos usados em Barbosa et al. (2026), *Assessin
 - Alvos e resumos das mudanças: arquivo de entrada do artigo (`inputs/input-smat.json` do [material suplementar](https://doi.org/10.5281/zenodo.20938400)).
 - Rótulos: 29 casos com conflito e 50 sem, como no artigo.
 
-## Ollama e prompts longos
-
-O Ollama usa um contexto pequeno por padrão e corta o início de prompts longos sem avisar. Por isso `src/providers/ollama.py` usa a API nativa e define `num_ctx` (32k) e o limite da resposta (8k, para modelos que raciocinam antes de responder, como DeepSeek R1 e Qwen3). Com esses valores, prompts acima de ~24k tokens são ignorados. Se o Ollama informar que um prompt usou mais tokens que o limite, um aviso é exibido.
-
 ## Saída
 
-Os resultados serão armazenados em `results/<dataset>_<provider>_<data-hora>_response.csv` (ex.: `toy_groq_20261028-004741_response.csv`), então uma nova execução nunca sobrescreve as anteriores.
+Os resultados serão armazenados em `results/<dataset>_<provider>_<data-hora>_response.csv` (ex.: `toy_anthropic_20261028-004741_response.csv`), então uma nova execução nunca sobrescreve as anteriores.
 
 Colunas (em inglês): `id`, `prompt`, `expected answer` (o `label` do dataset, `YES`/`NO`), `model answer` (`YES`/`NO`, convertido do `SIM`/`NAO` que os prompts pedem), `violated condition` (`A`/`B`/`C`), `state variable` e `status`. As três colunas extraídas da resposta ficam vazias quando o modelo não segue o formato `SIM - Condição A: <variável>` / `NAO`. O `status` pode ser:
 
@@ -167,3 +148,83 @@ O resumo de cada modelo (`src/comparison.py`) traz as métricas por execução, 
 O `divergent_cases.md` (`src/divergent_cases.py`) serve para a análise manual dos casos em que os modelos divergem no prompt `few_shot_guided_both`. Entram os casos em que cada modelo deu a mesma resposta em todas as suas execuções, e ao menos um modelo respondeu YES e outro NO, separados em conflitos detectados só por parte dos modelos e falsos positivos de parte dos modelos. Para cada caso, o relatório traz o target, um link para o código, os resumos de LEFT e RIGHT, a justificativa do dataset e, para cada modelo (primeiro os que acertam), a resposta e a análise de cada execução em blocos recolhidos, que se abrem com um clique.
 
 Os relatórios existentes são sobrescritos.
+
+# Docker
+
+Forma mais simples de rodar o projeto, sem instalar Python nem dependências. O container usa o provedor **Anthropic**.
+
+## Pré-requisitos
+
+- [Docker](https://docs.docker.com/engine/install/) com o plugin Compose (`docker compose version` deve funcionar). No Windows, use o Docker Desktop com a integração com o WSL ativada.
+- Uma chave da API da Anthropic.
+
+## Passo a passo
+
+1. **Entre na pasta do projeto**:
+
+   ```
+   cd merge_and_code_review
+   ```
+
+2. **Crie o arquivo `.env`** a partir do exemplo e preencha a chave da Anthropic:
+
+   ```
+   cp .env.example .env
+   ```
+
+   ```
+   ANTHROPIC_API_KEY=sua_chave_aqui
+   # só se a chave não estiver vinculada a um workspace:
+   ANTHROPIC_WORKSPACE_ID=seu_workspace_id
+   ```
+
+   O `.env` não é copiado para a imagem; o Compose o injeta só como variáveis de ambiente na execução.
+
+3. **Construa a imagem** (só na primeira vez, ou depois de alterar `src/`, `data/` ou `requirements.txt`):
+
+   ```
+   docker compose build
+   ```
+
+4. **Execute**. Para o dataset `toy` (3 casos, 24 chamadas, bom para testar):
+
+   ```
+   docker compose run --rm detector
+   ```
+
+   Para o `mergedataset` (632 chamadas, gera custo na API):
+
+   ```
+   docker compose run --rm detector --dataset mergedataset
+   ```
+
+   Tudo que vem depois de `detector` é repassado ao programa, então as opções de [Execução](#execucao) funcionam aqui, por exemplo `--cache`:
+
+   ```
+   docker compose run --rm detector --dataset mergedataset --cache
+   ```
+
+5. **Veja o resultado** em `results/<dataset>_anthropic_<data-hora>_response.csv`. A pasta `results/` do container é a mesma do seu computador (volume), então os arquivos continuam lá depois que o container termina.
+
+## Gerando métricas e relatórios
+
+Os módulos de métricas também rodam no container; basta trocar o entrypoint:
+
+```
+docker compose run --rm --entrypoint python detector -m src.metrics results/<arquivo>_response.csv
+docker compose run --rm --entrypoint python detector -m src.reports results/v2
+```
+
+## Usando um dataset próprio
+
+A pasta `data/` é montada no container, então um novo dataset em `data/<nome>/dataset.csv` (veja [Datasets](#datasets)) fica disponível sem reconstruir a imagem. Qualquer pasta de `data/` com um `dataset.csv` é aceita por `--dataset`.
+
+## Problemas comuns
+
+| Sintoma | Causa e solução |
+|---|---|
+| `env file .env not found` | Falta criar o `.env` (passo 2). |
+| Erro de autenticação da Anthropic | Chave ausente ou incorreta no `.env`; confira `ANTHROPIC_API_KEY`. |
+| `permission denied` ao apagar ou editar arquivos de `results/` | O container roda como root e criou os arquivos. Rode com `--user "$(id -u):$(id -g)"` (ex.: `docker compose run --rm --user "$(id -u):$(id -g)" detector`) ou ajuste com `sudo chown -R $USER results`. |
+| Mudei o código e nada mudou | Reconstrua a imagem: `docker compose build`. |
+| Execução longa interrompida | Cada execução gera um CSV novo; rode de novo (os resultados anteriores não são sobrescritos). |
