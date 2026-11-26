@@ -5,5 +5,5 @@ services:
     volumes:
       - ./results:/app/results
       - ./data:/app/data
-    # sobrescreva com: docker compose run --rm detector --dataset mergedataset
-    command: ["--provider", "anthropic"]
+    # roda src.experiment; sobrescreva com: docker compose run --rm detector results/v4 --runs 1 --dataset toy
+    command: ["results/experiment"]

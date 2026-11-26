@@ -42,18 +42,20 @@ Copie `.env.example` para `.env` e preencha:
 source venv/bin/activate
 python3 -m src.conflict_detector --provider anthropic
 python3 -m src.conflict_detector --provider anthropic --dataset mergedataset
+python3 -m src.conflict_detector --provider anthropic --model claude-sonnet-5-5 --dataset mergedataset
 ```
 
 Opções:
 
 - `--provider`: use `anthropic`.
+- `--model`: modelo a usar (padrão: o `MODEL` de `src/providers/<provedor>.py`). O nome do modelo entra no nome do CSV gerado.
 - `--dataset`: nome de um diretório em `data/` que tenha um `dataset.csv` (padrão: `toy`).
 
 Cada caso do dataset é enviado uma vez para cada prompt de `src/prompts.py` (8 prompts: 24 chamadas no `toy`, 632 no `mergedataset`). Os prompts combinam zero-shot ou few-shot (6 exemplos) com quatro variantes de contexto: sem target nem resumos (`none`), só resumos (`summaries`), só target (`target`) e ambos (`both`).
 
 ## Provedor
 
-O modelo e o limite de tamanho do prompt ficam em `src/providers/anthropic.py` (`MODEL`, `MAX_PROMPT_TOKENS`).
+O modelo padrão e o limite de tamanho do prompt ficam em `src/providers/anthropic.py` (`MODEL`, `MAX_PROMPT_TOKENS`). O modelo pode ser trocado com `--model`, sem editar o arquivo.
 
 | Provedor | Modelo | Prompts ignorados acima de |
 |---|---|---|
@@ -126,6 +128,16 @@ As métricas (classe YES = conflito) consideram só as chamadas com resposta YES
 
 ### Várias execuções e modelos
 
+Para rodar o experimento completo de uma vez, `src/experiment.py` executa cada modelo várias vezes e depois gera os relatórios abaixo (padrão: `claude-haiku-5-5`, `claude-sonnet-5-5` e `claude-opus-5-5`, 3 execuções cada, no `mergedataset`):
+
+```
+python3 -m src.experiment results/v3
+python3 -m src.experiment results/v3 --models claude-sonnet-5-5 --runs 3 --cache
+docker compose run --rm detector results/v3
+```
+
+Cada execução é gravada em `<diretório>/<modelo>/<n>.csv`. Execuções que já têm CSV são puladas, então rodar o mesmo comando de novo continua um experimento interrompido.
+
 `src/reports.py` gera todos os relatórios de um diretório com uma pasta por modelo e um CSV por execução (todos com os mesmos casos e prompts):
 
 ```
@@ -151,7 +163,7 @@ Os relatórios existentes são sobrescritos.
 
 # Docker
 
-Forma mais simples de rodar o projeto, sem instalar Python nem dependências. O container usa o provedor **Anthropic**.
+Forma mais simples de rodar o projeto, sem instalar Python nem dependências. Por padrão, o container roda o experimento completo ([`src.experiment`](#várias-execuções-e-modelos)) com o provedor **Anthropic**.
 
 ## Pré-requisitos
 
@@ -186,29 +198,35 @@ Forma mais simples de rodar o projeto, sem instalar Python nem dependências. O 
    docker compose build
    ```
 
-4. **Execute**. Para o dataset `toy` (3 casos, 24 chamadas, bom para testar):
+4. **Execute**. Sem argumentos, roda o experimento completo e grava em `results/experiment/`: `claude-haiku-5-5`, `claude-sonnet-5-5` e `claude-opus-5-5`, 3 execuções cada, no `mergedataset` (cerca de 5.700 chamadas, gera custo na API):
 
    ```
    docker compose run --rm detector
    ```
 
-   Para o `mergedataset` (632 chamadas, gera custo na API):
+   Tudo que vem depois de `detector` substitui o padrão e é repassado ao `src.experiment`, então comece pelo diretório de saída. Para testar com o dataset `toy` (1 modelo, 24 chamadas):
 
    ```
-   docker compose run --rm detector --dataset mergedataset
+   docker compose run --rm detector results/teste --models claude-haiku-5-5 --runs 1 --dataset toy
    ```
 
-   Tudo que vem depois de `detector` é repassado ao programa, então as opções de [Execução](#execucao) funcionam aqui, por exemplo `--cache`:
+   Outras opções, por exemplo `--cache`:
 
    ```
-   docker compose run --rm detector --dataset mergedataset --cache
+   docker compose run --rm detector results/v4 --cache
    ```
 
-5. **Veja o resultado** em `results/<dataset>_anthropic_<data-hora>_response.csv`. A pasta `results/` do container é a mesma do seu computador (volume), então os arquivos continuam lá depois que o container termina.
+   Para uma execução avulsa (um modelo, uma vez), use o `src.conflict_detector` (opções em [Execução](#execucao)):
+
+   ```
+   docker compose run --rm --entrypoint python detector -m src.conflict_detector --provider anthropic --model claude-sonnet-5-5
+   ```
+
+5. **Veja o resultado** em `results/experiment/` (CSVs e relatórios, veja [Várias execuções e modelos](#várias-execuções-e-modelos)). A pasta `results/` do container é a mesma do seu computador (volume), então os arquivos continuam lá depois que o container termina.
 
 ## Gerando métricas e relatórios
 
-Os módulos de métricas também rodam no container; basta trocar o entrypoint:
+O experimento já gera os relatórios no fim. Para gerá-los de novo, ou para outros resultados, os módulos de métricas também rodam no container; basta trocar o entrypoint:
 
 ```
 docker compose run --rm --entrypoint python detector -m src.metrics results/<arquivo>_response.csv
@@ -227,4 +245,4 @@ A pasta `data/` é montada no container, então um novo dataset em `data/<nome>/
 | Erro de autenticação da Anthropic | Chave ausente ou incorreta no `.env`; confira `ANTHROPIC_API_KEY`. |
 | `permission denied` ao apagar ou editar arquivos de `results/` | O container roda como root e criou os arquivos. Rode com `--user "$(id -u):$(id -g)"` (ex.: `docker compose run --rm --user "$(id -u):$(id -g)" detector`) ou ajuste com `sudo chown -R $USER results`. |
 | Mudei o código e nada mudou | Reconstrua a imagem: `docker compose build`. |
-| Execução longa interrompida | Cada execução gera um CSV novo; rode de novo (os resultados anteriores não são sobrescritos). |
+| Execução longa interrompida | Rode o mesmo comando de novo: as execuções que já têm CSV são puladas e o experimento continua de onde parou. |

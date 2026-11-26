@@ -39,24 +39,26 @@ def escrever(caminho, conteudo):
     print(caminho)
 
 
+def gerar_relatorios(diretorio):
+    modelos = carregar_modelos(diretorio)
+    if not modelos:
+        raise SystemExit(f"nenhum CSV encontrado em {diretorio}/<modelo>/")
+    conferir_casos_e_prompts(modelos)
+
+    for nome, execucoes in modelos.items():
+        pasta = diretorio / nome
+        for r in execucoes:
+            escrever(pasta / f"{Path(r.arquivo).stem}_report.md", relatorio(r, titulo=f"{nome}/{r.arquivo}"))
+        escrever(pasta / "report.md", relatorio_modelo(nome, execucoes))
+    escrever(diretorio / "report.md", relatorio_comparativo(modelos, diretorio.name))
+    escrever(diretorio / "divergent_cases.md", relatorio_casos_divergentes(modelos, diretorio.name, diretorio.resolve()))
+
+
 def main():
     parser = argparse.ArgumentParser(description="Gera os relatórios por execução, por modelo e entre modelos.")
     parser.add_argument("diretorio", type=Path, help="diretório com uma pasta de CSVs por modelo, ex.: results/v2")
     args = parser.parse_args()
-
-    modelos = carregar_modelos(args.diretorio)
-    if not modelos:
-        raise SystemExit(f"nenhum CSV encontrado em {args.diretorio}/<modelo>/")
-    conferir_casos_e_prompts(modelos)
-
-    for nome, execucoes in modelos.items():
-        pasta = args.diretorio / nome
-        for r in execucoes:
-            escrever(pasta / f"{Path(r.arquivo).stem}_report.md", relatorio(r, titulo=f"{nome}/{r.arquivo}"))
-        escrever(pasta / "report.md", relatorio_modelo(nome, execucoes))
-    escrever(args.diretorio / "report.md", relatorio_comparativo(modelos, args.diretorio.name))
-    escrever(args.diretorio / "divergent_cases.md",
-             relatorio_casos_divergentes(modelos, args.diretorio.name, args.diretorio.resolve()))
+    gerar_relatorios(args.diretorio)
 
 
 if __name__ == "__main__":

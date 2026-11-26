@@ -55,25 +55,10 @@ def parse_response(response):
     return conflict, (m.group(2) or "").upper(), (m.group(3) or "").strip()
 
 
-def main():
-    parser = argparse.ArgumentParser(description="Detecta conflitos semânticos em merges usando LLMs.")
-    parser.add_argument("--provider", choices=PROVIDERS, default="groq")
-    parser.add_argument("--dataset", choices=DATASETS, default="toy")
-    parser.add_argument("--cache", action="store_true",
-                        help="cache de 1h da parte fixa do prompt (só provedores com SUPPORTS_PREFIX_CACHE)")
-    args = parser.parse_args()
-
-    provider = get_provider(args.provider)
-    if args.cache and not getattr(provider, "SUPPORTS_PREFIX_CACHE", False):
-        parser.error(f"--cache não é suportado pelo provedor {args.provider!r}")
+def run(provider, dataset, output_path, cache=False):
+    """Envia cada caso do dataset para cada prompt e grava as respostas em `output_path` (CSV)."""
     max_prompt_tokens = provider.MAX_PROMPT_TOKENS
-    # data e hora no nome para que uma execução nunca sobrescreva resultados anteriores
-    timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
-    suffix = "_cache" if args.cache else ""
-    output_path = RESULTS_DIR / f"{args.dataset}_{args.provider}_{timestamp}{suffix}_response.csv"
-    RESULTS_DIR.mkdir(exist_ok=True)
-
-    rows = load(args.dataset)
+    rows = load(dataset)
     with open(output_path, "w", newline="", encoding="utf-8-sig") as f:
         output = csv.DictWriter(f, fieldnames=COLUMNS)
         output.writeheader()
@@ -85,7 +70,7 @@ def main():
                     response, status = "", f"skipped: ~{tokens} tokens > {max_prompt_tokens}"
                 else:
                     try:
-                        if args.cache:
+                        if cache:
                             response = provider.ask(text, cache_prefix=PREFIXOS[name].format(**row))
                         else:
                             response = provider.ask(text)
@@ -101,6 +86,29 @@ def main():
                                  "state variable": variable, "analysis": parse_analysis(response),
                                  "status": status})
                 f.flush()
+
+
+def main():
+    parser = argparse.ArgumentParser(description="Detecta conflitos semânticos em merges usando LLMs.")
+    parser.add_argument("--provider", choices=PROVIDERS, default="groq")
+    parser.add_argument("--model", help="modelo a usar (padrão: o MODEL definido em src/providers/<provedor>.py)")
+    parser.add_argument("--dataset", choices=DATASETS, default="toy")
+    parser.add_argument("--cache", action="store_true",
+                        help="cache de 1h da parte fixa do prompt (só provedores com SUPPORTS_PREFIX_CACHE)")
+    args = parser.parse_args()
+
+    provider = get_provider(args.provider, args.model)
+    if args.cache and not getattr(provider, "SUPPORTS_PREFIX_CACHE", False):
+        parser.error(f"--cache não é suportado pelo provedor {args.provider!r}")
+    # data e hora no nome para que uma execução nunca sobrescreva resultados anteriores
+    timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
+    suffix = "_cache" if args.cache else ""
+    model = provider.MODEL.replace("/", "-").replace(":", "-")  # ex.: "openai/gpt-oss-120b", "codellama:7b-instruct"
+    output_path = RESULTS_DIR / f"{args.dataset}_{args.provider}_{model}_{timestamp}{suffix}_response.csv"
+    RESULTS_DIR.mkdir(exist_ok=True)
+
+    print(f"Provedor: {args.provider} | modelo: {provider.MODEL}")
+    run(provider, args.dataset, output_path, cache=args.cache)
 
 
 if __name__ == "__main__":
