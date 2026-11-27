@@ -96,7 +96,7 @@ As 71 classes que contêm os 79 alvos usados em Barbosa et al. (2026), *Assessin
 
 - Código: copiado das pastas `source/` do branch `master` de [spgroup/mergedataset](https://github.com/spgroup/mergedataset). O conteúdo foi conferido com os commits dos repositórios originais (merge, pais e merge base).
 - Alvos e resumos das mudanças: arquivo de entrada do artigo (`inputs/input-smat.json` do [material suplementar](https://doi.org/10.5281/zenodo.20938400)).
-- Rótulos: 29 casos com conflito e 50 sem, como no artigo.
+- Rótulos e justificativas: ground truth de Da Silva et al. (2024), *Detecting semantic conflicts with unit tests*, JSS ([`sample-semantic-conflicts.csv`](https://github.com/leusonmario/papers/blob/master/2022PHDThesis/results/sample-semantic-conflicts.csv), colunas `Locally Observable Interference` e `Locally Observable Interference Description`), que tem 85 casos (28 com conflito). O artigo descarta 6 casos sem conflito (Tabela 1 do artigo) e reclassifica `spring-boot__af20dc6c__ExplodedArchive#getUrl` como conflito. Resultado: 29 casos com conflito e 50 sem, como no artigo.
 
 ## Saída
 
