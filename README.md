@@ -77,9 +77,14 @@ Todo dataset segue a mesma estrutura:
 
 Ao carregar um caso, `{base}` recebe o código completo de BASE e `{left}`, `{right}` e `{merge}` recebem diffs unificados em relação a BASE, o que os prompts informam explicitamente. As demais colunas ficam disponíveis para prompts que as usem (`{target}`, `{left_summary}`, `{right_summary}`).
 
-Os prompts, em `src/prompts.py`, são dois (zero-shot e one-shot), e a resposta final vem no bloco `<resultado>`:
+Os prompts, em `src/prompts.py`, são 8: zero-shot ou few-shot (6 exemplos), cada um em quatro variantes de contexto. Todos recebem o código das quatro versões, pedem a análise no bloco `<analise>` e a resposta final no bloco `<resultado>`:
 
-- `zero_shot_guided` e `one_shot_guided`: ambos usam os resumos do dataset (`left_summary`, `right_summary`) e o `target`, o método que sofreu alteração no merge, como foco da análise.
+- `*_none`: sem `target` e sem resumos;
+- `*_summaries`: com os resumos do dataset (`left_summary`, `right_summary`);
+- `*_target`: com o `target`, o método ou campo alvo, como foco da análise;
+- `*_both`: com o `target` e os resumos.
+
+Os nomes completos são `zero_shot_guided_<variante>` e `few_shot_guided_<variante>`.
 
 ### toy
 
@@ -95,9 +100,9 @@ As 71 classes que contêm os 79 alvos usados em Barbosa et al. (2026), *Assessin
 
 ## Saída
 
-Os resultados serão armazenados em `results/<dataset>_<provider>_<data-hora>_response.csv` (ex.: `toy_anthropic_20261028-004741_response.csv`), então uma nova execução nunca sobrescreve as anteriores.
+Os resultados de `src.conflict_detector` são armazenados em `results/<dataset>_<provider>_<modelo>_<data-hora>_response.csv` (ex.: `toy_anthropic_claude-sonnet-5-5_20261028-004741_response.csv`; com `--cache`, o nome termina em `_cache_response.csv`), então uma nova execução nunca sobrescreve as anteriores. Em nomes de modelo, `/` e `:` viram `-`. O `src.experiment` grava os mesmos CSVs em `<diretório>/<modelo>/<n>.csv` (veja [Várias execuções e modelos](#várias-execuções-e-modelos)).
 
-Colunas (em inglês): `id`, `prompt`, `expected answer` (o `label` do dataset, `YES`/`NO`), `model answer` (`YES`/`NO`, convertido do `SIM`/`NAO` que os prompts pedem), `violated condition` (`A`/`B`/`C`), `state variable` e `status`. As três colunas extraídas da resposta ficam vazias quando o modelo não segue o formato `SIM - Condição A: <variável>` / `NAO`. O `status` pode ser:
+Colunas (em inglês): `id`, `prompt`, `expected answer` (o `label` do dataset, `YES`/`NO`), `model answer` (`YES`/`NO`, convertido do `SIM`/`NAO` que os prompts pedem), `violated condition` (`A`/`B`/`C`), `state variable`, `analysis` (o texto do bloco `<analise>`) e `status`. As colunas `model answer`, `violated condition` e `state variable` ficam vazias quando o modelo não segue o formato `SIM - Condição A: <variável>` / `NAO`, e `analysis` fica vazia quando ele não usa o bloco `<analise>`. O `status` pode ser:
 
 - `ok`: o modelo respondeu;
 - `skipped: ~<tokens estimados> tokens > <limite>`: o prompt passa do limite do provedor e não foi enviado;
