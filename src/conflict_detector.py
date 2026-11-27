@@ -90,7 +90,7 @@ def run(provider, dataset, output_path, cache=False):
 
 def main():
     parser = argparse.ArgumentParser(description="Detecta conflitos semânticos em merges usando LLMs.")
-    parser.add_argument("--provider", choices=PROVIDERS, default="groq")
+    parser.add_argument("--provider", choices=PROVIDERS, default="anthropic")
     parser.add_argument("--model", help="modelo a usar (padrão: o MODEL definido em src/providers/<provedor>.py)")
     parser.add_argument("--dataset", choices=DATASETS, default="toy")
     parser.add_argument("--cache", action="store_true",

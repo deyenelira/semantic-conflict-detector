@@ -47,7 +47,7 @@ python3 -m src.conflict_detector --provider anthropic --model claude-sonnet-5-5 
 
 Opções:
 
-- `--provider`: use `anthropic`.
+- `--provider`: use `anthropic` (padrão).
 - `--model`: modelo a usar (padrão: o `MODEL` de `src/providers/<provedor>.py`). O nome do modelo entra no nome do CSV gerado.
 - `--dataset`: nome de um diretório em `data/` que tenha um `dataset.csv` (padrão: `toy`).
 
@@ -59,7 +59,7 @@ O modelo padrão e o limite de tamanho do prompt ficam em `src/providers/anthrop
 
 | Provedor | Modelo | Prompts ignorados acima de |
 |---|---|---|
-| `anthropic` | `claude-fable-5-1` | ~984k tokens (contexto de 1M menos 16k para a resposta) |
+| `anthropic` | `claude-opus-5-5` | ~984k tokens (contexto de 1M menos 16k para a resposta) |
 
 Prompts maiores que o limite (`MAX_PROMPT_TOKENS`, comparado com uma estimativa do tamanho do prompt) não são enviados ao modelo. A chamada é repetida com espera crescente quando a falha é temporária (ex.: limite de requisições, erro do servidor). Uma recusa do modelo é registrada como erro.
 
