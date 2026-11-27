@@ -115,7 +115,7 @@ Colunas (em inglês): `id`, `prompt`, `expected answer` (o `label` do dataset, `
 `src/metrics.py` lê um CSV de resultados e imprime um relatório em Markdown com as métricas por prompt:
 
 ```
-python3 -m src.metrics results/toy_anthropic_20261102-212945_response.csv
+python3 -m src.metrics results/toy_anthropic_claude-sonnet-5-5_20261102-212945_response.csv
 python3 -m src.metrics results/<arquivo>.csv > relatorio.md   # para salvar
 ```
 
@@ -180,7 +180,7 @@ Forma mais simples de rodar o projeto, sem instalar Python nem dependências. Po
 1. **Entre na pasta do projeto**:
 
    ```
-   cd merge_and_code_review
+   cd semantic-conflict-detector
    ```
 
 2. **Crie o arquivo `.env`** a partir do exemplo e preencha a chave da Anthropic:
@@ -197,7 +197,7 @@ Forma mais simples de rodar o projeto, sem instalar Python nem dependências. Po
 
    O `.env` não é copiado para a imagem; o Compose o injeta só como variáveis de ambiente na execução.
 
-3. **Construa a imagem** (só na primeira vez, ou depois de alterar `src/`, `data/` ou `requirements.txt`):
+3. **Construa a imagem** (só na primeira vez, ou depois de alterar `src/` ou `requirements.txt`; mudanças em `data/` não exigem reconstruir, porque a pasta é montada no container):
 
    ```
    docker compose build
